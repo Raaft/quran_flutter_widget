@@ -1,0 +1,37 @@
+import 'package:quran_widget_flutter/data_source/local/local_data_source/reciter_local_data_source.dart';
+import 'package:quran_widget_flutter/data_source/remote/reciter_api.dart';
+import 'package:quran_widget_flutter/model/apis_response/my_response.dart';
+import 'package:quran_widget_flutter/model/reciter.dart';
+import 'package:quran_widget_flutter/network_helper/apis.dart';
+
+class ReciterRepository {
+  final ReciterLocalDataSource _reciterLocalDataSource = ReciterLocalDataSource();
+  final ReciterApi _reciterApi = ReciterApi();
+
+  Future<List<Reciter>?> fetchRecitersList() async {
+    List<Reciter>? recitersList = await _reciterLocalDataSource.fetchRecitersList();
+    if ((recitersList != null && recitersList.isNotEmpty)) {
+      return recitersList;
+    } else {
+      final MyResponse<Reciter> response = await _reciterApi.fetchRecitersList();
+      if (response.code == Apis.CODE_SUCCESS) {
+        recitersList = response.data as List<Reciter>;
+        _reciterLocalDataSource.saveRecitersList(recitersList);
+      }
+      return recitersList;
+    }
+  }
+
+  Future<Reciter?> fetchReciterById(int reciterId) async {
+    Reciter? reciter = await _reciterLocalDataSource.fetchReciterById(reciterId);
+    if (reciter != null) {
+      return reciter;
+    } else {
+      final MyResponse<Reciter> response = await _reciterApi.fetchReciterById(reciterId);
+      if (response.code == Apis.CODE_SUCCESS) {
+        reciter = response.data as Reciter?;
+      }
+      return reciter;
+    }
+  }
+}
