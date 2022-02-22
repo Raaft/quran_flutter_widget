@@ -20,7 +20,7 @@ class Apis extends Object {
 
   static var tokenValue = "";
 
-  static String BASE_API = "";
+  static String BASE_API = "http://165.232.114.22/api/v1/";
   static String BASE_PATH = "";
   static String IMAGE_URL = "$BASE_PATH";
 
