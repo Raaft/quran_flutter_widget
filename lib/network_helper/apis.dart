@@ -17,6 +17,9 @@ class Apis extends Object {
   static String REQ_EMPTY_DATA = "EmptyData";
   static String REQ_FAILED = "failed";
 
+  static String Authorization = '';
+  static String clientId = '';
+  static String clientSecret = '';
 
   static var tokenValue = "";
 
@@ -31,5 +34,4 @@ class Apis extends Object {
   static String FETCH_ALL_PAGES = "${BASE_PATH}pages/";
   static String FETCH_ALL_RECITATIONS = "${BASE_PATH}recitations/";
   static String FETCH_ALL_RECITERS = "${BASE_PATH}reciters/";
-
 }

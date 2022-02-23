@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/helper/utils.dart';
+import 'package:quran_widget_flutter/plugin_aut/quran_widget_init.dart';
 
 import 'apis.dart';
 
@@ -12,7 +13,7 @@ class DioUtils {
   static Dio? dio;
   static Options? authOptions;
   static CacheOptions cacheOptions =
-  CacheOptions(store: MemCacheStore(), policy: CachePolicy.noCache);
+      CacheOptions(store: MemCacheStore(), policy: CachePolicy.noCache);
 
   static const String REQUEST_GET = "get";
   static const String REQUEST_POST = "post";
@@ -63,19 +64,19 @@ class DioUtils {
     return dio!;
   }
 
-  static Future<Response> request(
-      String requestType,
-      String url, {
-        String? contentType,
-        Map<String, dynamic>? queryParameters,
-        Map<String, dynamic>? headers,
-        dynamic body,
-        Options? requestOption,
-        bool isToCache = true,
-        bool forceRefresh = true,
-        int daysToCache = 30,
-        int hoursToCache = 0,
-      }) async {
+  static Future<Response?>? request(
+    String requestType,
+    String url, {
+    String? contentType,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+    dynamic body,
+    Options? requestOption,
+    bool isToCache = true,
+    bool forceRefresh = true,
+    int daysToCache = 30,
+    int hoursToCache = 0,
+  }) async {
     initDio();
 
     if (Apis.tokenValue.isEmpty) {
@@ -85,6 +86,7 @@ class DioUtils {
     authOptions?.headers?["X-App-Version"] = Q.VERSION_NAME;
     authOptions?.headers?["X-Os-Version"] = Platform.operatingSystemVersion;
     authOptions?.headers?["X-Platform"] = Platform.operatingSystem;
+    authOptions?.headers?["Authorization"] = Apis.Authorization;
 
     if (headers != null && headers.isNotEmpty) {
       headers.keys.forEach((key) {
@@ -100,15 +102,18 @@ class DioUtils {
     if (body != null) Utils.printLongLine("$url : body : ${body.toString()}");
 
     var options = isToCache
-        ? cacheOptions.copyWith(
-        policy: forceRefresh
-            ? CachePolicy.refreshForceCache
-            : CachePolicy.forceCache,
-        maxStale: Duration(days: daysToCache, hours: hoursToCache))
-        .toOptions()
+        ? cacheOptions
+            .copyWith(
+              policy: forceRefresh
+                  ? CachePolicy.refreshForceCache
+                  : CachePolicy.forceCache,
+              maxStale:
+                  Nullable(Duration(days: daysToCache, hours: hoursToCache)),
+            )
+            .toOptions()
         : authOptions;
 
-    if(isToCache) {
+    if (isToCache) {
       options?.headers ??= {};
       options?.headers?.addAll(authOptions!.headers!);
     }
@@ -134,7 +139,6 @@ class DioUtils {
                 print("$url : sent : $sent/$total"),
             onReceiveProgress: (recieved, total) =>
                 print("$url : recieved : $recieved/$total"),
-
           );
           break;
         case REQUEST_PUT:
@@ -165,7 +169,25 @@ class DioUtils {
 
     printResponse(url, response);
 
-    return response!;
+    if (response != null && response.statusCode == 401) {
+      await QuranWidgetInit.init(
+          clientId: Apis.clientId, clientSecret: Apis.clientSecret);
+      return request(
+        requestType,
+        url,
+        contentType: contentType,
+        queryParameters: queryParameters,
+        headers: headers,
+        body: body,
+        requestOption: requestOption,
+        isToCache: isToCache,
+        forceRefresh: forceRefresh,
+        daysToCache: daysToCache,
+        hoursToCache: hoursToCache,
+      );
+    }
+
+    return response;
   }
 
   static printResponse(String url, Response? response) {
@@ -176,7 +198,7 @@ class DioUtils {
     }
   }
 
-  static clearCache(){
+  static clearCache() {
     dio?.interceptors.clear();
   }
 }
