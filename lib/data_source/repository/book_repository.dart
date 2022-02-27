@@ -14,7 +14,7 @@ class BookRepository {
       return booksList;
     } else {
       final MyResponse<Book> response = await _bookApi.fetchBooksList();
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         booksList = response.data as List<Book>;
         _bookLocalDataSource.saveBooksList(booksList);
       }
@@ -28,7 +28,7 @@ class BookRepository {
       return book;
     } else {
       final MyResponse<Book> response = await _bookApi.fetchBookById(bookId);
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         book = response.data as Book?;
       }
       return book;

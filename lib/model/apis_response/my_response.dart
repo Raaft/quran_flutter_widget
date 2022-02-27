@@ -19,18 +19,19 @@ final factories = <Type, Function>{
   Page: (Map<String, dynamic> data) => Page.fromJson(data),
   Part: (Map<String, dynamic> data) => Part.fromJson(data),
   Recitation: (Map<String, dynamic> data) => Recitation.fromJson(data),
-  RecitationVerses: (Map<String, dynamic> data) => RecitationVerses.fromJson(data),
+  RecitationVerses: (Map<String, dynamic> data) =>
+      RecitationVerses.fromJson(data),
   Reciter: (Map<String, dynamic> data) => Reciter.fromJson(data),
   Verse: (Map<String, dynamic> data) => Verse.fromJson(data)
 };
 
 class MyResponse<T extends BaseModel> extends Object {
-  static const TAG = "MyResponse";
+  static const tag = 'MyResponse';
 
   int? _code = -1;
   dynamic _data;
-  String? _error = "";
-  int _type = Apis.LIST;
+  String? _error = '';
+  int _type = Apis.list;
 
   MyResponse.fromJson(Map<String, dynamic> json, int type) {
     // print("$TAG: ${json.toString()}");
@@ -50,14 +51,14 @@ class MyResponse<T extends BaseModel> extends Object {
   }
 
   _checkType(json) {
-    print("$TAG-T_Type: $T");
+    print('$tag-T_Type: $T');
 
     if (json != null) {
       switch (_type) {
-        case Apis.SINGLE:
+        case Apis.single:
           _parseSingle(json);
           break;
-        case Apis.LIST:
+        case Apis.list:
           _parseList(json);
           break;
       }

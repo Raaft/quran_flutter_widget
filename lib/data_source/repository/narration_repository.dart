@@ -17,7 +17,7 @@ class NarrationRepository {
     } else {
       final MyResponse<Narration> response =
           await _narrationApi.fetchNarrationsList();
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         narrationsList = response.data as List<Narration>;
         _narrationLocalDataSource.saveNarrationsList(narrationsList);
       }
@@ -33,7 +33,7 @@ class NarrationRepository {
     } else {
       final MyResponse<Narration> response =
           await _narrationApi.fetchNarrationById(narrationId);
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         narration = response.data as Narration?;
       }
       return narration;

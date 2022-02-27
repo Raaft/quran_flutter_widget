@@ -6,29 +6,29 @@ import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 class ChapterApi {
   Future<MyResponse<Chapter>> fetchChaptersList() async {
     var response =
-        await DioUtils.request(DioUtils.REQUEST_GET, Apis.FETCH_ALL_CHAPTERS);
+        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllCHAPTERS);
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Chapter>.fromJson(response.data, Apis.LIST);
+        return MyResponse<Chapter>.fromJson(response.data, Apis.list);
       } else {
-        return MyResponse<Chapter>.init(Apis.CODE_ERROR, null, null);
+        return MyResponse<Chapter>.init(Apis.codeERROR, null, null);
       }
     } else {
-      return MyResponse<Chapter>.init(Apis.CODE_ERROR, null, null);
+      return MyResponse<Chapter>.init(Apis.codeERROR, null, null);
     }
   }
 
   Future<MyResponse<Chapter>> fetchChapterById(int chapterId) async {
     var response = await DioUtils.request(
-        DioUtils.REQUEST_GET, "${Apis.FETCH_ALL_CHAPTERS}$chapterId");
+        DioUtils.requestGET, '${Apis.fetchAllCHAPTERS}$chapterId');
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Chapter>.fromJson(response.data, Apis.SINGLE);
+        return MyResponse<Chapter>.fromJson(response.data, Apis.single);
       } else {
-        return MyResponse<Chapter>.init(Apis.CODE_ERROR, null, null);
+        return MyResponse<Chapter>.init(Apis.codeERROR, null, null);
       }
     } else {
-      return MyResponse<Chapter>.init(Apis.CODE_ERROR, null, null);
+      return MyResponse<Chapter>.init(Apis.codeERROR, null, null);
     }
   }
 }

@@ -5,16 +5,19 @@ import 'package:quran_widget_flutter/model/reciter.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
 
 class ReciterRepository {
-  final ReciterLocalDataSource _reciterLocalDataSource = ReciterLocalDataSource();
+  final ReciterLocalDataSource _reciterLocalDataSource =
+      ReciterLocalDataSource();
   final ReciterApi _reciterApi = ReciterApi();
 
   Future<List<Reciter>?> fetchRecitersList() async {
-    List<Reciter>? recitersList = await _reciterLocalDataSource.fetchRecitersList();
+    List<Reciter>? recitersList =
+        await _reciterLocalDataSource.fetchRecitersList();
     if ((recitersList != null && recitersList.isNotEmpty)) {
       return recitersList;
     } else {
-      final MyResponse<Reciter> response = await _reciterApi.fetchRecitersList();
-      if (response.code == Apis.CODE_SUCCESS) {
+      final MyResponse<Reciter> response =
+          await _reciterApi.fetchRecitersList();
+      if (response.code == Apis.codeSUCCESS) {
         recitersList = response.data as List<Reciter>;
         _reciterLocalDataSource.saveRecitersList(recitersList);
       }
@@ -23,12 +26,14 @@ class ReciterRepository {
   }
 
   Future<Reciter?> fetchReciterById(int reciterId) async {
-    Reciter? reciter = await _reciterLocalDataSource.fetchReciterById(reciterId);
+    Reciter? reciter =
+        await _reciterLocalDataSource.fetchReciterById(reciterId);
     if (reciter != null) {
       return reciter;
     } else {
-      final MyResponse<Reciter> response = await _reciterApi.fetchReciterById(reciterId);
-      if (response.code == Apis.CODE_SUCCESS) {
+      final MyResponse<Reciter> response =
+          await _reciterApi.fetchReciterById(reciterId);
+      if (response.code == Apis.codeSUCCESS) {
         reciter = response.data as Reciter?;
       }
       return reciter;

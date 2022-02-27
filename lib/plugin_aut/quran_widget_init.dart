@@ -28,8 +28,8 @@ class QuranWidgetInit {
 
     await postData().then((value) {
       var val = AuthPluginModel.fromJson(value.data);
-      Apis.Authorization = '${val.tokenType} ${val.accessToken}';
-      print(' Authorization = ${Apis.Authorization}');
+      Apis.authorization = '${val.tokenType} ${val.accessToken}';
+      print(' Authorization = ${Apis.authorization}');
     });
   }
 

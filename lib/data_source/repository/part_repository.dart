@@ -14,7 +14,7 @@ class PartRepository {
       return partsList;
     } else {
       final MyResponse<Part> response = await _partApi.fetchPartsList();
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         partsList = response.data as List<Part>;
         _partLocalDataSource.savePartsList(partsList);
       }
@@ -28,7 +28,7 @@ class PartRepository {
       return part;
     } else {
       final MyResponse<Part> response = await _partApi.fetchPartById(partId);
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         part = response.data as Part?;
       }
       return part;
