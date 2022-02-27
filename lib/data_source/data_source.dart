@@ -20,6 +20,7 @@ class DataSource {
   DataSource._internalInstance();
   static DataSource get instance => _ds;
 
+  factory DataSource() => instance;
 
   final NarrationRepository _narrationRepository = NarrationRepository();
   final BookRepository _bookRepository = BookRepository();
@@ -27,30 +28,47 @@ class DataSource {
   final PartRepository _partRepository = PartRepository();
   final PageRepository _pageRepository = PageRepository();
   final RecitationRepository _recitationRepository = RecitationRepository();
-  final RecitationVersesRepository _recitationVersesRepository = RecitationVersesRepository();
+  final RecitationVersesRepository _recitationVersesRepository =
+      RecitationVersesRepository();
   final ReciterRepository _reciterRepository = ReciterRepository();
 
-  Future<List<Narration>?> fetchNarrationsList() => _narrationRepository.fetchNarrationsList();
-  Future<Narration?> fetchNarrationById(int narrationId) => _narrationRepository.fetchNarrationById(narrationId);
+  Future<List<Narration>?> fetchNarrationsList() =>
+      _narrationRepository.fetchNarrationsList();
+  Future<Narration?> fetchNarrationById(int narrationId) =>
+      _narrationRepository.fetchNarrationById(narrationId);
 
   Future<List<Book>?> fetchBooksList() => _bookRepository.fetchBooksList();
-  Future<Book?> fetchBookById(int bookId) => _bookRepository.fetchBookById(bookId);
+  Future<Book?> fetchBookById(int bookId) =>
+      _bookRepository.fetchBookById(bookId);
 
-  Future<List<Chapter>?> fetchChaptersList() => _chapterRepository.fetchChaptersList();
-  Future<Chapter?> fetchChapterById(int chapterId) => _chapterRepository.fetchChapterById(chapterId);
+  Future<List<Chapter>?> fetchChaptersList() =>
+      _chapterRepository.fetchChaptersList();
+  Future<Chapter?> fetchChapterById(int chapterId) =>
+      _chapterRepository.fetchChapterById(chapterId);
 
   Future<List<Part>?> fetchPartsList() => _partRepository.fetchPartsList();
-  Future<Part?> fetchPartById(int partId) => _partRepository.fetchPartById(partId);
+  Future<Part?> fetchPartById(int partId) =>
+      _partRepository.fetchPartById(partId);
 
   Future<List<Page>?> fetchPagesList() => _pageRepository.fetchPagesList();
-  Future<Page?> fetchPageById(int pageId) => _pageRepository.fetchPageById(pageId);
+  Future<Page?> fetchPageById(int pageId) =>
+      _pageRepository.fetchPageById(pageId);
 
-  Future<List<Recitation>?> fetchRecitationsList() => _recitationRepository.fetchRecitationsList();
-  Future<Recitation?> fetchRecitationById(int recitationId) => _recitationRepository.fetchRecitationById(recitationId);
+  Future<List<Recitation>?> fetchRecitationsList() =>
+      _recitationRepository.fetchRecitationsList();
+  Future<Recitation?> fetchRecitationById(int recitationId) =>
+      _recitationRepository.fetchRecitationById(recitationId);
 
-  Future<List<RecitationVerses>?> fetchRecitationsVersesList(int recitationId) => _recitationVersesRepository.fetchRecitationsVersesList(recitationId);
-  Future<RecitationVerses?> fetchRecitationVersesById(int recitationId,int recitationVersesId) => _recitationVersesRepository.fetchRecitationVersesById(recitationId,recitationVersesId);
+  Future<List<RecitationVerses>?> fetchRecitationsVersesList(
+          int recitationId) =>
+      _recitationVersesRepository.fetchRecitationsVersesList(recitationId);
+  Future<RecitationVerses?> fetchRecitationVersesById(
+          int recitationId, int recitationVersesId) =>
+      _recitationVersesRepository.fetchRecitationVersesById(
+          recitationId, recitationVersesId);
 
-  Future<List<Reciter>?> fetchRecitersList() => _reciterRepository.fetchRecitersList();
-  Future<Reciter?> fetchReciterById(int reciterId) => _reciterRepository.fetchReciterById(reciterId);
+  Future<List<Reciter>?> fetchRecitersList() =>
+      _reciterRepository.fetchRecitersList();
+  Future<Reciter?> fetchReciterById(int reciterId) =>
+      _reciterRepository.fetchReciterById(reciterId);
 }

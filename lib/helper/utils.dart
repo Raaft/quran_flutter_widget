@@ -1,9 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:quran_widget_flutter/helper/q.dart';
+
 class Utils {
   static double devicePixelRatio() => MediaQueryData().devicePixelRatio;
 
@@ -32,16 +31,15 @@ class Utils {
     return path;
   }*/
 
-
   static void printLongLine(String text) {
     final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
   /*static Future<bool> checkPermission(Permission permission) async {
-    *//*  if (_checkPlatform(permission)) {
+    */ /*  if (_checkPlatform(permission)) {
       return Future.value(true);
-    }*//*
+    }*/ /*
     var permissionStatus = await permission.request();
     if (permissionStatus.isGranted) {
       return Future.value(true);
@@ -114,18 +112,18 @@ class Utils {
   }
 
   static bool validateUsernameREGX(String value) {
-    String pattern =
-        r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]';
+    String pattern = r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]';
     RegExp regExp = new RegExp(pattern);
     bool result = regExp.hasMatch(value);
     return result;
   }
 
   static bool validateNameREGX(String value) {
-    String pattern = r'[!@#$%^&*(),.?":/\[/\]/\\/{}|<>;’_+=~٠١٢٣٤٥٦٧٨٩؟0123456789-]';
+    String pattern =
+        r'[!@#$%^&*(),.?":/\[/\]/\\/{}|<>;’_+=~٠١٢٣٤٥٦٧٨٩؟0123456789-]';
     RegExp regExp = new RegExp(pattern);
     RegExp regExp2 = new RegExp(r"[']");
-    bool result = !regExp.hasMatch(value)&&!regExp2.hasMatch(value);
+    bool result = !regExp.hasMatch(value) && !regExp2.hasMatch(value);
     return result;
   }
 
@@ -153,7 +151,6 @@ class Utils {
       return false;
   }
 
-
   static showDeleteDialog(BuildContext context, Widget child) {
     showGeneralDialog(
       barrierLabel: "Barrier",
@@ -176,8 +173,7 @@ class Utils {
     );
   }
 
-
-  static Widget reversWidget(Widget child){
+  static Widget reversWidget(Widget child) {
     return Transform(
       alignment: Alignment.center,
       transform: Matrix4.rotationY(pi),
