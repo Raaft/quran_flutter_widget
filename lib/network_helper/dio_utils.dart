@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/helper/utils.dart';
-import 'package:quran_widget_flutter/plugin_aut/quran_widget_init.dart';
 
 import 'apis.dart';
 
@@ -15,10 +14,10 @@ class DioUtils {
   static CacheOptions cacheOptions =
       CacheOptions(store: MemCacheStore(), policy: CachePolicy.noCache);
 
-  static const String REQUEST_GET = "get";
-  static const String REQUEST_POST = "post";
-  static const String REQUEST_PUT = "put";
-  static const String REQUEST_DELETE = "delete";
+  static const String requestGET = 'get';
+  static const String requestPOST = 'post';
+  static const String requestPUT = 'put';
+  static const String requestDELETE = 'delete';
 
   static void initDio() {
     if (dio == null) {
@@ -26,30 +25,30 @@ class DioUtils {
       dio?.interceptors.add(DioCacheInterceptor(options: cacheOptions));
       dio?.interceptors.add(InterceptorsWrapper(onRequest:
           (RequestOptions options, RequestInterceptorHandler handler) async {
-        options.queryParameters['appname'] = Q.APP_NAME;
-        options.queryParameters['version'] = Q.VERSION_NAME;
+        options.queryParameters['appname'] = Q.appName;
+        options.queryParameters['version'] = Q.versionName;
         var url = options.path;
 
-        print("$url : REQUEST : METHOD : ${options.method}");
-        print("$url : REQUEST : HEADERS : ${options.headers}");
-        print("$url : REQUEST : QPARAMS : ${options.queryParameters}");
+        print('$url : REQUEST : METHOD : ${options.method}');
+        print('$url : REQUEST : HEADERS : ${options.headers}');
+        print('$url : REQUEST : QPARAMS : ${options.queryParameters}');
 
         return handler.next(options);
       }, onResponse:
           (Response response, ResponseInterceptorHandler handler) async {
         var url = response.realUri.path;
-        print("$url : RESPONSE : ${response.statusCode}");
-        print("$url : RESPONSE : ${response.statusMessage}");
+        print('$url : RESPONSE : ${response.statusCode}');
+        print('$url : RESPONSE : ${response.statusMessage}');
         print("$url : RESPONSE : ${response.data ?? "null"}");
 
         return handler.next(response);
       }, onError: (DioError e, ErrorInterceptorHandler handler) async {
-        var url = "${e.response?.realUri.path}";
-        print("$url : ERROR : ${e.error}");
-        print("$url : ERROR : ${e.message}");
-        print("$url : ERROR : ${e.response?.data}");
-        print("$url : ERROR : ${e.response?.statusCode}");
-        print("$url : ERROR : ${e.response?.statusMessage}");
+        var url = '${e.response?.realUri.path}';
+        print('$url : ERROR : ${e.error}');
+        print('$url : ERROR : ${e.message}');
+        print('$url : ERROR : ${e.response?.data}');
+        print('$url : ERROR : ${e.response?.statusCode}');
+        print('$url : ERROR : ${e.response?.statusMessage}');
 
         return handler.next(e);
       }));
@@ -83,23 +82,24 @@ class DioUtils {
       authOptions?.headers = {};
     }
 
-    authOptions?.headers?["X-App-Version"] = Q.VERSION_NAME;
-    authOptions?.headers?["X-Os-Version"] = Platform.operatingSystemVersion;
-    authOptions?.headers?["X-Platform"] = Platform.operatingSystem;
-    authOptions?.headers?["Authorization"] = Apis.Authorization;
+    authOptions?.headers?['X-App-Version'] = Q.versionName;
+    authOptions?.headers?['X-Os-Version'] = Platform.operatingSystemVersion;
+    authOptions?.headers?['X-Platform'] = Platform.operatingSystem;
+    authOptions?.headers?['Authorization'] = Apis.authorization;
 
     if (headers != null && headers.isNotEmpty) {
-      headers.keys.forEach((key) {
+      for (var key in headers.keys) {
         authOptions?.headers?[key] = headers[key];
-      });
+      }
     }
 
-    if (contentType != null)
+    if (contentType != null) {
       authOptions?.headers?[Headers.contentTypeHeader] = contentType;
+    }
 
-    print("Apis.TOKEN_VALUE ${Apis.tokenValue}");
-    print("$url : headers : ${jsonEncode(authOptions?.headers)}");
-    if (body != null) Utils.printLongLine("$url : body : ${body.toString()}");
+    print('Apis.TOKEN_VALUE ${Apis.tokenValue}');
+    print('$url : headers : ${jsonEncode(authOptions?.headers)}');
+    if (body != null) Utils.printLongLine('$url : body : ${body.toString()}');
 
     var options = isToCache
         ? cacheOptions
@@ -122,38 +122,38 @@ class DioUtils {
 
     try {
       switch (requestType) {
-        case REQUEST_GET:
+        case requestGET:
           response = await dio!.get(
             url,
             queryParameters: queryParameters,
             options: options,
           );
           break;
-        case REQUEST_POST:
+        case requestPOST:
           response = await dio!.post(
             url,
             options: requestOption ?? options,
             queryParameters: queryParameters,
             data: body,
             onSendProgress: (int sent, int total) =>
-                print("$url : sent : $sent/$total"),
+                print('$url : sent : $sent/$total'),
             onReceiveProgress: (recieved, total) =>
-                print("$url : recieved : $recieved/$total"),
+                print('$url : recieved : $recieved/$total'),
           );
           break;
-        case REQUEST_PUT:
+        case requestPUT:
           response = await dio!.put(
             url,
             options: options,
             queryParameters: queryParameters,
             data: body,
             onSendProgress: (int sent, int total) =>
-                print("$url : sent : $sent/$total"),
+                print('$url : sent : $sent/$total'),
             onReceiveProgress: (recieved, total) =>
-                print("$url : recieved : $recieved/$total"),
+                print('$url : recieved : $recieved/$total'),
           );
           break;
-        case REQUEST_DELETE:
+        case requestDELETE:
           response = await dio!.delete(
             url,
             options: options,
@@ -169,7 +169,7 @@ class DioUtils {
 
     printResponse(url, response);
 
-    if (response != null && response.statusCode == 401) {
+    /* if (response != null && response.statusCode == 401) {
       await QuranWidgetInit.init(
           clientId: Apis.clientId, clientSecret: Apis.clientSecret);
       return request(
@@ -185,16 +185,16 @@ class DioUtils {
         daysToCache: daysToCache,
         hoursToCache: hoursToCache,
       );
-    }
+    }*/
 
     return response;
   }
 
   static printResponse(String url, Response? response) {
     if (response != null) {
-      print("$url : ${response.statusCode} ${response.data}");
+      print('$url : ${response.statusCode} ${response.data}');
     } else {
-      print("$url : response == null");
+      print('$url : response == null');
     }
   }
 

@@ -6,29 +6,29 @@ import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 class NarrationApi {
   Future<MyResponse<Narration>> fetchNarrationsList() async {
     var response =
-        await DioUtils.request(DioUtils.REQUEST_GET, Apis.FETCH_ALL_NARRATIONS);
+        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllNARRATIONS);
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Narration>.fromJson(response.data, Apis.LIST);
+        return MyResponse<Narration>.fromJson(response.data, Apis.list);
       } else {
-        return MyResponse<Narration>.init(Apis.CODE_ERROR, null, null);
+        return MyResponse<Narration>.init(Apis.codeERROR, null, null);
       }
     } else {
-      return MyResponse<Narration>.init(Apis.CODE_ERROR, null, null);
+      return MyResponse<Narration>.init(Apis.codeERROR, null, null);
     }
   }
 
   Future<MyResponse<Narration>> fetchNarrationById(int narrationId) async {
     var response = await DioUtils.request(
-        DioUtils.REQUEST_GET, "${Apis.FETCH_ALL_NARRATIONS}$narrationId");
+        DioUtils.requestGET, '${Apis.fetchAllNARRATIONS}$narrationId');
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Narration>.fromJson(response.data, Apis.SINGLE);
+        return MyResponse<Narration>.fromJson(response.data, Apis.single);
       } else {
-        return MyResponse<Narration>.init(Apis.CODE_ERROR, null, null);
+        return MyResponse<Narration>.init(Apis.codeERROR, null, null);
       }
     } else {
-      return MyResponse<Narration>.init(Apis.CODE_ERROR, null, null);
+      return MyResponse<Narration>.init(Apis.codeERROR, null, null);
     }
   }
 }

@@ -1,4 +1,4 @@
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
 import 'package:quran_widget_flutter/model/apis_response/my_response.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
@@ -6,30 +6,30 @@ import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 
 class RecitationApi {
   Future<MyResponse<Recitation>> fetchRecitationsList() async {
-    Response? response = await DioUtils.request(
-        DioUtils.REQUEST_GET, Apis.FETCH_ALL_RECITATIONS);
+    Response? response =
+        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllRECITATIONS);
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Recitation>.fromJson(response.data, Apis.LIST);
+        return MyResponse<Recitation>.fromJson(response.data, Apis.list);
       } else {
-        return MyResponse<Recitation>.init(Apis.CODE_ERROR, null, null);
+        return MyResponse<Recitation>.init(Apis.codeERROR, null, null);
       }
     } else {
-      return MyResponse<Recitation>.init(Apis.CODE_ERROR, null, null);
+      return MyResponse<Recitation>.init(Apis.codeERROR, null, null);
     }
   }
 
   Future<MyResponse<Recitation>> fetchRecitationById(int recitationId) async {
     var response = await DioUtils.request(
-        DioUtils.REQUEST_GET, "${Apis.FETCH_ALL_RECITATIONS}$recitationId");
+        DioUtils.requestGET, '${Apis.fetchAllRECITATIONS}$recitationId');
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Recitation>.fromJson(response.data, Apis.SINGLE);
+        return MyResponse<Recitation>.fromJson(response.data, Apis.single);
       } else {
-        return MyResponse<Recitation>.init(Apis.CODE_ERROR, null, null);
+        return MyResponse<Recitation>.init(Apis.codeERROR, null, null);
       }
     } else {
-      return MyResponse<Recitation>.init(Apis.CODE_ERROR, null, null);
+      return MyResponse<Recitation>.init(Apis.codeERROR, null, null);
     }
   }
 }

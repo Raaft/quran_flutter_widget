@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quran_widget_flutter/helper/q.dart';
 
 class Utils {
-  static double devicePixelRatio() => MediaQueryData().devicePixelRatio;
+  static double devicePixelRatio() => const MediaQueryData().devicePixelRatio;
 
   static double deviceWidthInPixel(BuildContext context) =>
       MediaQuery.of(context).size.width;
@@ -18,7 +18,7 @@ class Utils {
   }
 
   static bool isArabic() {
-    return Q.SELECTED_LOCALE.languageCode == "ar";
+    return Q.selectedLocale.languageCode == Q.languageSettingArabicValue;
   }
 
   /*static Future<String> downloadFile(String url,String fileName) async{
@@ -32,7 +32,7 @@ class Utils {
   }*/
 
   static void printLongLine(String text) {
-    final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
@@ -99,21 +99,21 @@ class Utils {
   static bool validateEmailREGX(String value) {
     String pattern =
         r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     bool result = regExp.hasMatch(value);
     return result;
   }
 
   static bool validatePasswordREGX(String value) {
     String pattern = r'^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     bool result = regExp.hasMatch(value);
     return result;
   }
 
   static bool validateUsernameREGX(String value) {
     String pattern = r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     bool result = regExp.hasMatch(value);
     return result;
   }
@@ -121,8 +121,8 @@ class Utils {
   static bool validateNameREGX(String value) {
     String pattern =
         r'[!@#$%^&*(),.?":/\[/\]/\\/{}|<>;’_+=~٠١٢٣٤٥٦٧٨٩؟0123456789-]';
-    RegExp regExp = new RegExp(pattern);
-    RegExp regExp2 = new RegExp(r"[']");
+    RegExp regExp = RegExp(pattern);
+    RegExp regExp2 = RegExp(r"[']");
     bool result = !regExp.hasMatch(value) && !regExp2.hasMatch(value);
     return result;
   }
@@ -145,18 +145,19 @@ class Utils {
     DateTime currentDay =
         DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day);
 
-    if (currentDay == elementDay)
+    if (currentDay == elementDay) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
 
   static showDeleteDialog(BuildContext context, Widget child) {
     showGeneralDialog(
-      barrierLabel: "Barrier",
+      barrierLabel: 'Barrier',
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 500),
       context: context,
       pageBuilder: (_, __, ___) {
         return Align(
@@ -166,7 +167,8 @@ class Utils {
       },
       transitionBuilder: (_, anim, __, child) {
         return SlideTransition(
-          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
+          position: Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
+              .animate(anim),
           child: child,
         );
       },

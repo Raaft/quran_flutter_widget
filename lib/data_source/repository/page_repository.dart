@@ -14,7 +14,7 @@ class PageRepository {
       return pagesList;
     } else {
       final MyResponse<Page> response = await _pageApi.fetchPagesList();
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         pagesList = response.data as List<Page>;
         _pageLocalDataSource.savePagesList(pagesList);
       }
@@ -28,7 +28,7 @@ class PageRepository {
       return page;
     } else {
       final MyResponse<Page> response = await _pageApi.fetchPageById(pageId);
-      if (response.code == Apis.CODE_SUCCESS) {
+      if (response.code == Apis.codeSUCCESS) {
         page = response.data as Page?;
       }
       return page;
