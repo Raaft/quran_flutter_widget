@@ -8,6 +8,8 @@ class QuranPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
+        padding: EdgeInsets.all(8),
         child: PageView.builder(
       itemCount: 5,
       itemBuilder: (context, index) => Stack(

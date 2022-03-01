@@ -23,8 +23,8 @@ class TafsirPage extends StatelessWidget {
                 height: 50,
               ),
               Text(
-                  ' fear your Lord, who created you from one soul and created from it its mate and dispersed from both of them many men and women. And fear Allah',
-                  style: TextStyle(color: Colors.blue,fontSize: 20)),
+                  ' fear your Lord, who created you from one soul ',
+                  style: TextStyle(color: Colors.blue.shade700,fontSize: 20)),
             ],
           ),
 

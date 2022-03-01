@@ -35,6 +35,7 @@ class QuranWidgetInit {
 
   static Future<Response> postData() async {
     //dio.options.headers = {};
+
     return await dio.post('/o/token/', data: 'grant_type=client_credentials');
   }
 }
