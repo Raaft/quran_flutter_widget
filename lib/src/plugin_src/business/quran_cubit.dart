@@ -8,16 +8,13 @@ part 'quran_state.dart';
 class QuranCubit extends Cubit<QuranState> {
   QuranCubit() : super(QuranInitial());
 
-   QuranCubit get(context) => BlocProvider.of(context);
+  QuranCubit get(context) => BlocProvider.of(context);
 
   PageType? pageType;
 
-  ChangePage({required PageType page}){
+  ChangePage({required PageType page}) {
     print('page type = $page');
-    pageType=page;
+    pageType = page;
     emit(ChangePageState());
   }
-
-
-
 }

@@ -1,4 +1,4 @@
-/*  import '../../../../quran_widget_flutter.dart';
+ import '../../../../quran_widget_flutter.dart';
 
 class ChangePage {
   PageType? page;
@@ -10,4 +10,3 @@ class ChangePage {
     this.page=page;
   }
 }
- */
