@@ -3,7 +3,7 @@ import 'dart:convert' show base64, utf8;
 
 import 'package:dio/dio.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
-import 'package:quran_widget_flutter/plugin_aut/auth_plugin_model.dart';
+import 'package:quran_widget_flutter/plugin_auth/auth_plugin_model.dart';
 
 class QuranWidgetInit {
   static Dio dio = Dio();
@@ -17,11 +17,11 @@ class QuranWidgetInit {
 
     print('code is $encoded');
     dio = Dio(BaseOptions(
-      baseUrl: 'http://165.232.114.22',
+      baseUrl: Apis.baseUrl,
       receiveDataWhenStatusError: true,
       headers: {
         'Authorization': 'Basic $encoded',
-        'Cache-Control': ' no-cache',
+        'Cache-Control': 'no-cache',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     ));
