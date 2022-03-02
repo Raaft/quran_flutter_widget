@@ -28,7 +28,7 @@ final factories = <Type, Function>{
 class MyResponse<T extends BaseModel> extends Object {
   static const tag = 'MyResponse';
 
-  int? _code = 200;
+  int? _code = Apis.codeSUCCESS;
   dynamic _data;
   String? _error = '';
   int _type = Apis.list;
@@ -36,7 +36,7 @@ class MyResponse<T extends BaseModel> extends Object {
   MyResponse.fromJson(dynamic json, int type, {int? code}) {
     // print("$TAG: ${json.toString()}");
     _type = type;
-    _code = code;
+    _code = code ?? Apis.codeSUCCESS;
     _checkType(json);
     /*if (json.containsKey('data')) {
       
@@ -77,7 +77,7 @@ class MyResponse<T extends BaseModel> extends Object {
   _parseList(json) {
     _data = (json as List).map<T>((item) => factories[T]!(item)).toList();
 
-    print('$tag-T_Type: $T list');
+    print('$tag-T_Type: $T $_data');
   }
 
   int? get code => _code;

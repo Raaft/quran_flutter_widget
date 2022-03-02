@@ -18,6 +18,7 @@ class BookRepository {
       final MyResponse<Book> response = await _bookApi.fetchBooksList();
       if (response.code == Apis.codeSUCCESS) {
         booksList = response.data as List<Book>;
+        print('BookRepository $booksList');
         _bookLocalDataSource.saveBooksList(booksList);
       }
       return booksList;
