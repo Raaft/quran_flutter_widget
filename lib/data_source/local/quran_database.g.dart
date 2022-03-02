@@ -226,16 +226,24 @@ class _$NarrationDao extends NarrationDao {
   @override
   Future<List<Narration>> findAllNarrations() async {
     return _queryAdapter.queryList('SELECT * FROM Narration',
-        mapper: (Map<String, Object?> row) => Narration());
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row));
   }
 
   @override
   Stream<Narration?> findNarrationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Narration WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Narration(),
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
         arguments: [id],
         queryableName: 'Narration',
         isView: false);
+  }
+
+  @override
+  Future<List<Narration>> searchInNarration(String qurey) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Narration WHERE name like ?1 or description like ?1',
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
+        arguments: [qurey]);
   }
 
   @override
@@ -303,13 +311,31 @@ class _$BookDao extends BookDao {
   @override
   Future<List<Book>> findAllBooks() async {
     return _queryAdapter.queryList('SELECT * FROM Book',
-        mapper: (Map<String, Object?> row) => Book());
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?));
+  }
+
+  @override
+  Future<List<Book>> searchInBooks(String qurey) async {
+    return _queryAdapter.queryList('SELECT * FROM Book WHERE name like ?1',
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?),
+        arguments: [qurey]);
+  }
+
+  @override
+  Future<List<Book>> findBooksInNarrationId(int narrationId) async {
+    return _queryAdapter.queryList('SELECT * FROM Book WHERE narration_id = ?1',
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?),
+        arguments: [narrationId]);
   }
 
   @override
   Stream<Book?> findBookById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Book WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Book(),
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?),
         arguments: [id],
         queryableName: 'Book',
         isView: false);
@@ -383,6 +409,12 @@ class _$ChapterDao extends ChapterDao {
   }
 
   @override
+  Future<List<Chapter>> searchInChapter(String qurey) async {
+    return _queryAdapter.queryList('SELECT * FROM Chapter WHERE name like ?1',
+        mapper: (Map<String, Object?> row) => Chapter(), arguments: [qurey]);
+  }
+
+  @override
   Future<void> insertChapter(Chapter chapter) async {
     await _chapterInsertionAdapter.insert(chapter, OnConflictStrategy.abort);
   }
@@ -450,6 +482,14 @@ class _$PartDao extends PartDao {
   Future<List<Part>> findAllParts() async {
     return _queryAdapter.queryList('SELECT * FROM Part',
         mapper: (Map<String, Object?> row) => Part());
+  }
+
+  @override
+  Future<List<Part>> searchInPart(String qurey) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Part WHERE name like ?1 or alias like ?1',
+        mapper: (Map<String, Object?> row) => Part(),
+        arguments: [qurey]);
   }
 
   @override
@@ -553,6 +593,15 @@ class _$PageDao extends PageDao {
   }
 
   @override
+  Future<Page?> findPageFilters(int narrationId, int chapterid, int bookId,
+      int partId, int subPartId) async {
+    return _queryAdapter.query(
+        'SELECT * FROM Page WHERE narration_id = ?1 or chapter_id= ?2 or book_id =?3 or part_id =?4 or sub_part_id =?5',
+        mapper: (Map<String, Object?> row) => Page(),
+        arguments: [narrationId, chapterid, bookId, partId, subPartId]);
+  }
+
+  @override
   Future<void> insertPage(Page page) async {
     await _pageInsertionAdapter.insert(page, OnConflictStrategy.abort);
   }
@@ -617,6 +666,14 @@ class _$RecitationDao extends RecitationDao {
   Future<List<Recitation>> findAllRecitations() async {
     return _queryAdapter.queryList('SELECT * FROM Recitation',
         mapper: (Map<String, Object?> row) => Recitation());
+  }
+
+  @override
+  Future<List<Recitation>> findRecitationInNarrationId(int narrationId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Recitation WHERE narration_id = ?1',
+        mapper: (Map<String, Object?> row) => Recitation(),
+        arguments: [narrationId]);
   }
 
   @override
@@ -686,6 +743,14 @@ class _$ReciterDao extends ReciterDao {
     return _queryAdapter.queryList('SELECT * FROM Reciter',
         mapper: (Map<String, Object?> row) =>
             Reciter(row['id'] as int?, row['name'] as String?));
+  }
+
+  @override
+  Future<List<Reciter>> searchInReciter(String qurey) async {
+    return _queryAdapter.queryList('SELECT * FROM Reciter WHERE name like ?1',
+        mapper: (Map<String, Object?> row) =>
+            Reciter(row['id'] as int?, row['name'] as String?),
+        arguments: [qurey]);
   }
 
   @override

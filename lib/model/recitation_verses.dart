@@ -5,7 +5,10 @@ import 'package:quran_widget_flutter/model/verse.dart';
 
 @Entity(tableName: 'RecitationVerses', foreignKeys: [
   ForeignKey(childColumns: ['verse_id'], parentColumns: ['id'], entity: Verse),
-  ForeignKey(childColumns: ['recitation_id'], parentColumns: ['id'], entity: Recitation),
+  ForeignKey(
+      childColumns: ['recitation_id'],
+      parentColumns: ['id'],
+      entity: Recitation),
 ])
 class RecitationVerses extends BaseModel {
   @primaryKey
@@ -19,7 +22,7 @@ class RecitationVerses extends BaseModel {
   String? record;
 
   RecitationVerses();
-  RecitationVerses.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+  RecitationVerses.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     verseId = json['verse_id'];
     verseNumber = json['verse_number'];

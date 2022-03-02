@@ -4,11 +4,13 @@ import 'package:quran_widget_flutter/model/reciter.dart';
 
 import 'base_model.dart';
 
-@Entity(tableName: 'Recitation',foreignKeys: [
-  ForeignKey(childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
-  ForeignKey(childColumns: ['reciter_id'], parentColumns: ['id'], entity: Reciter)
+@Entity(tableName: 'Recitation', foreignKeys: [
+  ForeignKey(
+      childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
+  ForeignKey(
+      childColumns: ['reciter_id'], parentColumns: ['id'], entity: Reciter)
 ])
-class Recitation extends BaseModel{
+class Recitation extends BaseModel {
   @primaryKey
   int? id;
   @ColumnInfo(name: 'narration_id')
@@ -17,7 +19,7 @@ class Recitation extends BaseModel{
   int? reciterId;
 
   Recitation();
-  Recitation.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+  Recitation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     narrationId = json['narration_id'];
     reciterId = json['reciter_id'];

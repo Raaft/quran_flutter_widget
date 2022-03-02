@@ -1,11 +1,15 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
 
-class NarrationLocalDataSource{
-
+class NarrationLocalDataSource {
   Future<List<Narration>?> fetchNarrationsList() async {
     final db = await QuranDatabaseSource.instance.database;
     return db?.narrationDao.findAllNarrations();
+  }
+
+  Future<List<Narration>?> searchInNarration(String qurey) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return db?.narrationDao.searchInNarration('%$qurey%');
   }
 
   Future<Narration?> fetchNarrationById(int narrationId) async {
@@ -15,14 +19,14 @@ class NarrationLocalDataSource{
 
   Future<void> saveNarrationsList(List<Narration> narrationsList) async {
     final db = await QuranDatabaseSource.instance.database;
-    for (var narration in narrationsList) {
+    for (Narration narration in narrationsList) {
       await db?.narrationDao.insertNarration(narration);
     }
   }
 
   Future<void> deleteNarrationsList(List<Narration> narrationsList) async {
     final db = await QuranDatabaseSource.instance.database;
-    for (var narration in narrationsList) {
+    for (Narration narration in narrationsList) {
       await db?.narrationDao.deleteNarration(narration);
     }
   }

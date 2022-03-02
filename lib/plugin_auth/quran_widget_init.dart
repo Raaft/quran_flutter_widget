@@ -8,7 +8,8 @@ import 'package:quran_widget_flutter/plugin_auth/auth_plugin_model.dart';
 class QuranWidgetInit {
   static Dio dio = Dio();
 
-  static init({required String clientId, required String clientSecret}) async {
+  static Future<void> init(
+      {required String clientId, required String clientSecret}) async {
     Apis.clientId = clientId;
     Apis.clientSecret = clientSecret;
 
@@ -16,6 +17,7 @@ class QuranWidgetInit {
     String encoded = base64.encode(utf8.encode(auth));
 
     print('code is $encoded');
+
     dio = Dio(BaseOptions(
       baseUrl: Apis.baseUrl,
       receiveDataWhenStatusError: true,
@@ -26,15 +28,16 @@ class QuranWidgetInit {
       },
     ));
 
-    await postData().then((value) {
+    dio.post('/o/token/', data: 'grant_type=client_credentials').then((value) {
       var val = AuthPluginModel.fromJson(value.data);
       Apis.authorization = '${val.tokenType} ${val.accessToken}';
       print(' Authorization = ${Apis.authorization}');
+    }).catchError((error) {
+      print('Error = ${error.toString()}');
     });
   }
 
   static Future<Response> postData() async {
-    //dio.options.headers = {};
     return await dio.post('/o/token/', data: 'grant_type=client_credentials');
   }
 }

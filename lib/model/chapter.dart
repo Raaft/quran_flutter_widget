@@ -3,16 +3,15 @@ import 'package:floor/floor.dart';
 import 'base_model.dart';
 
 @entity
-class Chapter extends BaseModel{
+class Chapter extends BaseModel {
   @primaryKey
   int? id;
   String? name;
   Chapter();
-  Chapter.fromJson(Map<String, dynamic> json) : super.fromJson(json){
+  Chapter.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
   }
-
 
   @override
   Map<String, dynamic> toJson() {

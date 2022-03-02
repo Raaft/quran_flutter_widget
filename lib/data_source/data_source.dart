@@ -24,6 +24,7 @@ class DataSource {
 
   final NarrationRepository _narrationRepository = NarrationRepository();
   final BookRepository _bookRepository = BookRepository();
+
   final ChapterRepository _chapterRepository = ChapterRepository();
   final PartRepository _partRepository = PartRepository();
   final PageRepository _pageRepository = PageRepository();
@@ -32,12 +33,13 @@ class DataSource {
       RecitationVersesRepository();
   final ReciterRepository _reciterRepository = ReciterRepository();
 
-  Future<List<Narration>?> fetchNarrationsList() =>
-      _narrationRepository.fetchNarrationsList();
+  Future<List<Narration>?> fetchNarrationsList({String? qurey}) =>
+      _narrationRepository.fetchNarrationsList(qurey: qurey);
   Future<Narration?> fetchNarrationById(int narrationId) =>
       _narrationRepository.fetchNarrationById(narrationId);
 
-  Future<List<Book>?> fetchBooksList() => _bookRepository.fetchBooksList();
+  Future<List<Book>?> fetchBooksList({String? qurey, int? narrationId}) =>
+      _bookRepository.fetchBooksList(qurey: qurey, narrationId: narrationId);
   Future<Book?> fetchBookById(int bookId) =>
       _bookRepository.fetchBookById(bookId);
 

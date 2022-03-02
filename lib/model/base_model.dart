@@ -1,5 +1,4 @@
-abstract class BaseModel{
-  BaseModel.fromJson(Map<String, dynamic>? json);
+abstract class BaseModel {
   BaseModel();
   Map<String, dynamic> toJson();
 }

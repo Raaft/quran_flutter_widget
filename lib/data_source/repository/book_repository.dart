@@ -8,8 +8,10 @@ class BookRepository {
   final BookLocalDataSource _bookLocalDataSource = BookLocalDataSource();
   final BookApi _bookApi = BookApi();
 
-  Future<List<Book>?> fetchBooksList() async {
-    List<Book>? booksList = await _bookLocalDataSource.fetchBooksList();
+  Future<List<Book>?> fetchBooksList({String? qurey, int? narrationId}) async {
+    List<Book>? booksList = (qurey != null && qurey.isNotEmpty)
+        ? await _bookLocalDataSource.fetchBooksList()
+        : await _bookLocalDataSource.fetchBooksList();
     if ((booksList != null && booksList.isNotEmpty)) {
       return booksList;
     } else {

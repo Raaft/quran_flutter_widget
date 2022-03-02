@@ -9,6 +9,9 @@ abstract class ChapterDao {
   @Query('SELECT * FROM Chapter WHERE id = :id')
   Stream<Chapter?> findChapterById(int id);
 
+  @Query('SELECT * FROM Chapter WHERE name like :qurey')
+  Future<List<Chapter>> searchInChapter(String qurey);
+
   @insert
   Future<void> insertChapter(Chapter chapter);
 
