@@ -4,9 +4,11 @@ import 'package:quran_widget_flutter/network_helper/apis.dart';
 import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 
 class BookApi {
-  Future<MyResponse<Book>> fetchBooksList() async {
-    var response =
-        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllBOOKS);
+  Future<MyResponse<Book>> fetchBooksList(
+      {String? qurey, int? narrationId}) async {
+    var response = await DioUtils.request(
+        DioUtils.requestGET, Apis.fetchAllBOOKS,
+        queryParameters: {'q': qurey, 'narration': narrationId});
     if (response != null) {
       if (response.statusCode == 200) {
         return MyResponse<Book>.fromJson(response.data, Apis.list);
