@@ -9,14 +9,16 @@ class NarrationRepository {
       NarrationLocalDataSource();
   final NarrationApi _narrationApi = NarrationApi();
 
-  Future<List<Narration>?> fetchNarrationsList() async {
-    List<Narration>? narrationsList =
-        await _narrationLocalDataSource.fetchNarrationsList();
+  Future<List<Narration>?> fetchNarrationsList({String? qurey}) async {
+    List<Narration>? narrationsList = (qurey != null && qurey.isNotEmpty)
+        ? await _narrationLocalDataSource.searchInNarration(qurey)
+        : await _narrationLocalDataSource.fetchNarrationsList();
+
     if ((narrationsList != null && narrationsList.isNotEmpty)) {
       return narrationsList;
     } else {
       final MyResponse<Narration> response =
-          await _narrationApi.fetchNarrationsList();
+          await _narrationApi.fetchNarrationsList(qurey: qurey);
       if (response.code == Apis.codeSUCCESS) {
         narrationsList = response.data as List<Narration>;
         _narrationLocalDataSource.saveNarrationsList(narrationsList);

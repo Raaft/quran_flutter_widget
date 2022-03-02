@@ -3,12 +3,14 @@ import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
 import 'package:quran_widget_flutter/model/page.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
-@Entity(tableName: 'Glyph',foreignKeys: [
-  ForeignKey(childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
+
+@Entity(tableName: 'Glyph', foreignKeys: [
+  ForeignKey(
+      childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
   ForeignKey(childColumns: ['page_id'], parentColumns: ['id'], entity: Page),
   ForeignKey(childColumns: ['verse_id'], parentColumns: ['id'], entity: Verse),
 ])
-class Glyph extends BaseModel{
+class Glyph extends BaseModel {
   @primaryKey
   int? id;
   @ColumnInfo(name: 'verse_id')
@@ -26,7 +28,7 @@ class Glyph extends BaseModel{
   int? maxY;
 
   Glyph();
-  Glyph.fromJson(Map<String, dynamic> json) : super.fromJson(json){
+  Glyph.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     verseId = json['verse_id'];
     pageId = json['page_id'];

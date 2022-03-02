@@ -7,6 +7,10 @@ class ReciterLocalDataSource{
     final db = await QuranDatabaseSource.instance.database;
     return db?.reciterDao.findAllReciters();
   }
+  Future<List<Reciter>?> searchRecitersList(String qurey) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return db?.reciterDao.searchInReciter('%$qurey%');
+  }
 
   Future<Reciter?> fetchReciterById(int reciterId) async {
     final db = await QuranDatabaseSource.instance.database;

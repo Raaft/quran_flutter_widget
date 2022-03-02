@@ -6,14 +6,16 @@ import 'package:quran_widget_flutter/model/narration.dart';
 import 'package:quran_widget_flutter/model/page.dart';
 import 'package:quran_widget_flutter/model/part.dart';
 
-@Entity(tableName: 'Verse',foreignKeys: [
-  ForeignKey(childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
-  ForeignKey(childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
+@Entity(tableName: 'Verse', foreignKeys: [
+  ForeignKey(
+      childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
+  ForeignKey(
+      childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
   ForeignKey(childColumns: ['book_id'], parentColumns: ['id'], entity: Book),
   ForeignKey(childColumns: ['part_id'], parentColumns: ['id'], entity: Part),
   ForeignKey(childColumns: ['page_id'], parentColumns: ['id'], entity: Page),
 ])
-class Verse extends BaseModel{
+class Verse extends BaseModel {
   @primaryKey
   int? id;
   String? text;
@@ -36,7 +38,7 @@ class Verse extends BaseModel{
   int? pageId;
 
   Verse();
-  Verse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+  Verse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     text = json['text'];
     uthmanicText = json['uthmanic_text'];
@@ -66,5 +68,4 @@ class Verse extends BaseModel{
     data['page_id'] = pageId;
     return data;
   }
-
 }

@@ -8,8 +8,10 @@ import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 
 @Entity(tableName: 'Page', foreignKeys: [
-  ForeignKey(childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
-  ForeignKey(childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
+  ForeignKey(
+      childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
+  ForeignKey(
+      childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
   ForeignKey(childColumns: ['book_id'], parentColumns: ['id'], entity: Book),
   ForeignKey(childColumns: ['part_id'], parentColumns: ['id'], entity: Part),
 ])
@@ -36,7 +38,7 @@ class Page extends BaseModel {
   List<Glyph>? glyphs;
 
   Page();
-  Page.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+  Page.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     pageNumber = json['page_number'];
     narrationId = json['narration_id'];

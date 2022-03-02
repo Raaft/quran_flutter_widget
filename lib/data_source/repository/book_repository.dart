@@ -8,14 +8,23 @@ class BookRepository {
   final BookLocalDataSource _bookLocalDataSource = BookLocalDataSource();
   final BookApi _bookApi = BookApi();
 
-  Future<List<Book>?> fetchBooksList() async {
-    List<Book>? booksList = await _bookLocalDataSource.fetchBooksList();
+  Future<List<Book>?> fetchBooksList({String? qurey, int? narrationId}) async {
+    List<Book>? booksList = (narrationId != null && narrationId > 0)
+        ? await _bookLocalDataSource.findBooksInNarrationId(narrationId)
+        : (qurey != null && qurey.isNotEmpty)
+            ? await _bookLocalDataSource.searchInBooks(qurey)
+            : await _bookLocalDataSource.fetchBooksList();
+
+    print('BookRepository 1 $booksList');
+
     if ((booksList != null && booksList.isNotEmpty)) {
       return booksList;
     } else {
-      final MyResponse<Book> response = await _bookApi.fetchBooksList();
+      final MyResponse<Book> response =
+          await _bookApi.fetchBooksList(qurey: qurey, narrationId: narrationId);
       if (response.code == Apis.codeSUCCESS) {
         booksList = response.data as List<Book>;
+        print('BookRepository $booksList');
         _bookLocalDataSource.saveBooksList(booksList);
       }
       return booksList;

@@ -9,9 +9,10 @@ class ChapterRepository {
       ChapterLocalDataSource();
   final ChapterApi _chapterApi = ChapterApi();
 
-  Future<List<Chapter>?> fetchChaptersList() async {
-    List<Chapter>? chaptersList =
-        await _chapterLocalDataSource.fetchChaptersList();
+  Future<List<Chapter>?> fetchChaptersList({String? qurey}) async {
+    List<Chapter>? chaptersList = (qurey != null && qurey.isNotEmpty)
+        ? await _chapterLocalDataSource.searchInChapter(qurey: qurey)
+        : await _chapterLocalDataSource.fetchChaptersList();
     if ((chaptersList != null && chaptersList.isNotEmpty)) {
       return chaptersList;
     } else {

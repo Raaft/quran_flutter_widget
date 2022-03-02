@@ -226,27 +226,35 @@ class _$NarrationDao extends NarrationDao {
   @override
   Future<List<Narration>> findAllNarrations() async {
     return _queryAdapter.queryList('SELECT * FROM Narration',
-        mapper: (Map<String, Object?> row) => Narration());
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row));
   }
 
   @override
   Stream<Narration?> findNarrationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Narration WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Narration(),
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
         arguments: [id],
         queryableName: 'Narration',
         isView: false);
   }
 
   @override
+  Future<List<Narration>> searchInNarration(String qurey) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Narration WHERE name like ?1 or description like ?1',
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
+        arguments: [qurey]);
+  }
+
+  @override
   Future<void> insertNarration(Narration narration) async {
     await _narrationInsertionAdapter.insert(
-        narration, OnConflictStrategy.abort);
+        narration, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateNarration(Narration narration) async {
-    await _narrationUpdateAdapter.update(narration, OnConflictStrategy.abort);
+    await _narrationUpdateAdapter.update(narration, OnConflictStrategy.replace);
   }
 
   @override
@@ -303,13 +311,31 @@ class _$BookDao extends BookDao {
   @override
   Future<List<Book>> findAllBooks() async {
     return _queryAdapter.queryList('SELECT * FROM Book',
-        mapper: (Map<String, Object?> row) => Book());
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?));
+  }
+
+  @override
+  Future<List<Book>> searchInBooks(String qurey) async {
+    return _queryAdapter.queryList('SELECT * FROM Book WHERE name like ?1',
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?),
+        arguments: [qurey]);
+  }
+
+  @override
+  Future<List<Book>> findBooksInNarrationId(int narrationId) async {
+    return _queryAdapter.queryList('SELECT * FROM Book WHERE narration_id = ?1',
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?),
+        arguments: [narrationId]);
   }
 
   @override
   Stream<Book?> findBookById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Book WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Book(),
+        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
+            row['name'] as String?, row['narration_id'] as int?),
         arguments: [id],
         queryableName: 'Book',
         isView: false);
@@ -317,12 +343,12 @@ class _$BookDao extends BookDao {
 
   @override
   Future<void> insertBook(Book book) async {
-    await _bookInsertionAdapter.insert(book, OnConflictStrategy.abort);
+    await _bookInsertionAdapter.insert(book, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateBook(Book book) async {
-    await _bookUpdateAdapter.update(book, OnConflictStrategy.abort);
+    await _bookUpdateAdapter.update(book, OnConflictStrategy.replace);
   }
 
   @override
@@ -370,26 +396,33 @@ class _$ChapterDao extends ChapterDao {
   @override
   Future<List<Chapter>> findAllChapters() async {
     return _queryAdapter.queryList('SELECT * FROM Chapter',
-        mapper: (Map<String, Object?> row) => Chapter());
+        mapper: (Map<String, Object?> row) => Chapter.fromJson(row));
   }
 
   @override
   Stream<Chapter?> findChapterById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Chapter WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Chapter(),
+        mapper: (Map<String, Object?> row) => Chapter.fromJson(row),
         arguments: [id],
         queryableName: 'Chapter',
         isView: false);
   }
 
   @override
+  Future<List<Chapter>> searchInChapter(String qurey) async {
+    return _queryAdapter.queryList('SELECT * FROM Chapter WHERE name like ?1',
+        mapper: (Map<String, Object?> row) => Chapter.fromJson(row),
+        arguments: [qurey]);
+  }
+
+  @override
   Future<void> insertChapter(Chapter chapter) async {
-    await _chapterInsertionAdapter.insert(chapter, OnConflictStrategy.abort);
+    await _chapterInsertionAdapter.insert(chapter, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateChapter(Chapter chapter) async {
-    await _chapterUpdateAdapter.update(chapter, OnConflictStrategy.abort);
+    await _chapterUpdateAdapter.update(chapter, OnConflictStrategy.replace);
   }
 
   @override
@@ -453,6 +486,14 @@ class _$PartDao extends PartDao {
   }
 
   @override
+  Future<List<Part>> searchInPart(String qurey) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Part WHERE name like ?1 or alias like ?1',
+        mapper: (Map<String, Object?> row) => Part(),
+        arguments: [qurey]);
+  }
+
+  @override
   Stream<Part?> findPartById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Part WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Part(),
@@ -463,12 +504,12 @@ class _$PartDao extends PartDao {
 
   @override
   Future<void> insertPart(Part part) async {
-    await _partInsertionAdapter.insert(part, OnConflictStrategy.abort);
+    await _partInsertionAdapter.insert(part, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updatePart(Part part) async {
-    await _partUpdateAdapter.update(part, OnConflictStrategy.abort);
+    await _partUpdateAdapter.update(part, OnConflictStrategy.replace);
   }
 
   @override
@@ -553,13 +594,22 @@ class _$PageDao extends PageDao {
   }
 
   @override
+  Future<Page?> findPageFilters(int narrationId, int chapterid, int bookId,
+      int partId, int subPartId) async {
+    return _queryAdapter.query(
+        'SELECT * FROM Page WHERE narration_id = ?1 or chapter_id= ?2 or book_id =?3 or part_id =?4 or sub_part_id =?5',
+        mapper: (Map<String, Object?> row) => Page(),
+        arguments: [narrationId, chapterid, bookId, partId, subPartId]);
+  }
+
+  @override
   Future<void> insertPage(Page page) async {
-    await _pageInsertionAdapter.insert(page, OnConflictStrategy.abort);
+    await _pageInsertionAdapter.insert(page, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updatePage(Page page) async {
-    await _pageUpdateAdapter.update(page, OnConflictStrategy.abort);
+    await _pageUpdateAdapter.update(page, OnConflictStrategy.replace);
   }
 
   @override
@@ -620,6 +670,14 @@ class _$RecitationDao extends RecitationDao {
   }
 
   @override
+  Future<List<Recitation>> findRecitationInNarrationId(int narrationId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Recitation WHERE narration_id = ?1',
+        mapper: (Map<String, Object?> row) => Recitation(),
+        arguments: [narrationId]);
+  }
+
+  @override
   Stream<Recitation?> findRecitationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Recitation WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Recitation(),
@@ -631,12 +689,13 @@ class _$RecitationDao extends RecitationDao {
   @override
   Future<void> insertRecitation(Recitation recitation) async {
     await _recitationInsertionAdapter.insert(
-        recitation, OnConflictStrategy.abort);
+        recitation, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateRecitation(Recitation recitation) async {
-    await _recitationUpdateAdapter.update(recitation, OnConflictStrategy.abort);
+    await _recitationUpdateAdapter.update(
+        recitation, OnConflictStrategy.replace);
   }
 
   @override
@@ -689,6 +748,14 @@ class _$ReciterDao extends ReciterDao {
   }
 
   @override
+  Future<List<Reciter>> searchInReciter(String qurey) async {
+    return _queryAdapter.queryList('SELECT * FROM Reciter WHERE name like ?1',
+        mapper: (Map<String, Object?> row) =>
+            Reciter(row['id'] as int?, row['name'] as String?),
+        arguments: [qurey]);
+  }
+
+  @override
   Stream<Reciter?> findReciterById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Reciter WHERE id = ?1',
         mapper: (Map<String, Object?> row) =>
@@ -700,12 +767,12 @@ class _$ReciterDao extends ReciterDao {
 
   @override
   Future<void> insertReciter(Reciter reciter) async {
-    await _reciterInsertionAdapter.insert(reciter, OnConflictStrategy.abort);
+    await _reciterInsertionAdapter.insert(reciter, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateReciter(Reciter reciter) async {
-    await _reciterUpdateAdapter.update(reciter, OnConflictStrategy.abort);
+    await _reciterUpdateAdapter.update(reciter, OnConflictStrategy.replace);
   }
 
   @override
@@ -784,13 +851,13 @@ class _$RecitationVersesDao extends RecitationVersesDao {
   @override
   Future<void> insertRecitationVerses(RecitationVerses recitationVerses) async {
     await _recitationVersesInsertionAdapter.insert(
-        recitationVerses, OnConflictStrategy.abort);
+        recitationVerses, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateRecitationVerses(RecitationVerses recitationVerses) async {
     await _recitationVersesUpdateAdapter.update(
-        recitationVerses, OnConflictStrategy.abort);
+        recitationVerses, OnConflictStrategy.replace);
   }
 
   @override
@@ -885,12 +952,12 @@ class _$VerseDao extends VerseDao {
 
   @override
   Future<void> insertVerse(Verse verse) async {
-    await _verseInsertionAdapter.insert(verse, OnConflictStrategy.abort);
+    await _verseInsertionAdapter.insert(verse, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateVerse(Verse verse) async {
-    await _verseUpdateAdapter.update(verse, OnConflictStrategy.abort);
+    await _verseUpdateAdapter.update(verse, OnConflictStrategy.replace);
   }
 
   @override
@@ -982,12 +1049,12 @@ class _$GlyphDao extends GlyphDao {
 
   @override
   Future<void> insertGlyph(Glyph glyph) async {
-    await _glyphInsertionAdapter.insert(glyph, OnConflictStrategy.abort);
+    await _glyphInsertionAdapter.insert(glyph, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateGlyph(Glyph glyph) async {
-    await _glyphUpdateAdapter.update(glyph, OnConflictStrategy.abort);
+    await _glyphUpdateAdapter.update(glyph, OnConflictStrategy.replace);
   }
 
   @override

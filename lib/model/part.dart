@@ -3,7 +3,7 @@ import 'package:floor/floor.dart';
 import 'base_model.dart';
 
 @entity
-class Part extends BaseModel{
+class Part extends BaseModel {
   @primaryKey
   int? id;
   String? name;
@@ -12,7 +12,7 @@ class Part extends BaseModel{
   int? partNumber;
 
   Part();
-  Part.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+  Part.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     alias = json['alias'];

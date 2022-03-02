@@ -4,12 +4,16 @@ import 'package:quran_widget_flutter/network_helper/apis.dart';
 import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 
 class NarrationApi {
-  Future<MyResponse<Narration>> fetchNarrationsList() async {
-    var response =
-        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllNARRATIONS);
+  Future<MyResponse<Narration>> fetchNarrationsList({String? qurey}) async {
+    var response = await DioUtils.request(
+      DioUtils.requestGET,
+      Apis.fetchAllNARRATIONS,
+      queryParameters: {'q': qurey},
+    );
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Narration>.fromJson(response.data, Apis.list);
+        return MyResponse<Narration>.fromJson(response.data, Apis.list,
+            code: response.statusCode);
       } else {
         return MyResponse<Narration>.init(Apis.codeERROR, null, null);
       }

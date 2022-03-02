@@ -1,4 +1,5 @@
 import 'package:floor/floor.dart';
+
 import 'package:quran_widget_flutter/model/narration.dart';
 
 import 'base_model.dart';
@@ -13,12 +14,18 @@ class Book extends BaseModel {
   String? name;
   @ColumnInfo(name: 'narration_id')
   int? narrationId;
-  Book();
-  Book.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
-    id = json['id'];
-    name = json['name'];
-    narrationId = json['narration_id'];
-  }
+
+  Book(
+    this.id,
+    this.name,
+    this.narrationId,
+  );
+
+  factory Book.fromJson(Map<String, dynamic> json) => Book(
+        json['id']?.toInt(),
+        json['name'],
+        json['narration_id']?.toInt(),
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -28,4 +35,32 @@ class Book extends BaseModel {
     data['narration_id'] = narrationId;
     return data;
   }
+
+  Book copyWith({
+    int? id,
+    String? name,
+    int? narrationId,
+  }) {
+    return Book(
+      id ?? this.id,
+      name ?? this.name,
+      narrationId ?? this.narrationId,
+    );
+  }
+
+  @override
+  String toString() => 'Book(id: $id, name: $name, narrationId: $narrationId)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Book &&
+        other.id == id &&
+        other.name == name &&
+        other.narrationId == narrationId;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ narrationId.hashCode;
 }

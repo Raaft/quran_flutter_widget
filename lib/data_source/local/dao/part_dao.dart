@@ -6,6 +6,10 @@ abstract class PartDao {
   @Query('SELECT * FROM Part')
   Future<List<Part>> findAllParts();
 
+  @Query(
+      'SELECT * FROM Part WHERE name like :qurey or alias like :qurey ')
+  Future<List<Part>> searchInPart(String qurey);
+
   @Query('SELECT * FROM Part WHERE id = :id')
   Stream<Part?> findPartById(int id);
 

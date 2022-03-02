@@ -6,6 +6,9 @@ abstract class ReciterDao {
   @Query('SELECT * FROM Reciter')
   Future<List<Reciter>> findAllReciters();
 
+  @Query('SELECT * FROM Reciter WHERE name like :qurey')
+  Future<List<Reciter>> searchInReciter(String qurey);
+
   @Query('SELECT * FROM Reciter WHERE id = :id')
   Stream<Reciter?> findReciterById(int id);
 

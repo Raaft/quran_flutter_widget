@@ -9,6 +9,10 @@ abstract class NarrationDao {
   @Query('SELECT * FROM Narration WHERE id = :id')
   Stream<Narration?> findNarrationById(int id);
 
+  @Query(
+      'SELECT * FROM Narration WHERE name like :qurey or description like :qurey ')
+  Future<List<Narration>> searchInNarration(String qurey);
+
   @insert
   Future<void> insertNarration(Narration narration);
 
