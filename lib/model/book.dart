@@ -24,7 +24,7 @@ class Book extends BaseModel {
   factory Book.fromJson(Map<String, dynamic> json) => Book(
         json['id']?.toInt(),
         json['name'],
-        json['narrationId']?.toInt(),
+        json['narration_id']?.toInt(),
       );
 
   @override

@@ -1,11 +1,15 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
 
-class ChapterLocalDataSource{
-
+class ChapterLocalDataSource {
   Future<List<Chapter>?> fetchChaptersList() async {
     final db = await QuranDatabaseSource.instance.database;
     return db?.chapterDao.findAllChapters();
+  }
+
+  Future<List<Chapter>?> searchInChapter({String? qurey}) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return db?.chapterDao.searchInChapter('%${qurey ?? ''}%');
   }
 
   Future<Chapter?> fetchChapterById(int chapterId) async {

@@ -396,13 +396,13 @@ class _$ChapterDao extends ChapterDao {
   @override
   Future<List<Chapter>> findAllChapters() async {
     return _queryAdapter.queryList('SELECT * FROM Chapter',
-        mapper: (Map<String, Object?> row) => Chapter());
+        mapper: (Map<String, Object?> row) => Chapter.fromJson(row));
   }
 
   @override
   Stream<Chapter?> findChapterById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Chapter WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Chapter(),
+        mapper: (Map<String, Object?> row) => Chapter.fromJson(row),
         arguments: [id],
         queryableName: 'Chapter',
         isView: false);
@@ -411,7 +411,8 @@ class _$ChapterDao extends ChapterDao {
   @override
   Future<List<Chapter>> searchInChapter(String qurey) async {
     return _queryAdapter.queryList('SELECT * FROM Chapter WHERE name like ?1',
-        mapper: (Map<String, Object?> row) => Chapter(), arguments: [qurey]);
+        mapper: (Map<String, Object?> row) => Chapter.fromJson(row),
+        arguments: [qurey]);
   }
 
   @override

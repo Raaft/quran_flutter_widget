@@ -11,7 +11,7 @@ class BookRepository {
 
   Future<List<Book>?> fetchBooksList({String? qurey, int? narrationId}) async {
     List<Book>? booksList = (narrationId != null && narrationId > 0)
-        ? _bookLocalDataSource.findBooksInNarrationId(narrationId) as List<Book>
+        ? await _bookLocalDataSource.findBooksInNarrationId(narrationId)
         : (qurey != null && qurey.isNotEmpty)
             ? await _bookLocalDataSource.searchInBooks(qurey)
             : await _bookLocalDataSource.fetchBooksList();

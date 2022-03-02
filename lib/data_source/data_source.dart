@@ -43,8 +43,8 @@ class DataSource {
   Future<Book?> fetchBookById(int bookId) =>
       _bookRepository.fetchBookById(bookId);
 
-  Future<List<Chapter>?> fetchChaptersList() =>
-      _chapterRepository.fetchChaptersList();
+  Future<List<Chapter>?> fetchChaptersList({String? qurey}) =>
+      _chapterRepository.fetchChaptersList(qurey: qurey);
   Future<Chapter?> fetchChapterById(int chapterId) =>
       _chapterRepository.fetchChapterById(chapterId);
 
