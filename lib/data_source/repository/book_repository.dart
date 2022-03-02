@@ -1,6 +1,5 @@
 import 'package:quran_widget_flutter/data_source/local/local_data_source/book_local_data_source.dart';
 import 'package:quran_widget_flutter/data_source/remote/book_api.dart';
-import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/model/apis_response/my_response.dart';
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
