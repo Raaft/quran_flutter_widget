@@ -14,6 +14,7 @@ import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/model/recitation_verses.dart';
 import 'package:quran_widget_flutter/model/reciter.dart';
+import 'package:quran_widget_flutter/plugin_auth/quran_widget_init.dart';
 
 class DataSource {
   static final DataSource _ds = DataSource._internalInstance();
@@ -23,6 +24,10 @@ class DataSource {
   static DataSource get instance => _ds;
 
   factory DataSource() => instance;
+
+  static Future<void> initialApp(
+          {required String clientId, required String clientSecret}) =>
+      QuranWidgetInit.init(clientId: clientId, clientSecret: clientSecret);
 
   final NarrationRepository _narrationRepository = NarrationRepository();
   final BookRepository _bookRepository = BookRepository();
@@ -47,6 +52,7 @@ class DataSource {
   Future<Book?> fetchBookById(int bookId) =>
       _bookRepository.fetchBookById(bookId);
 
+  //TODO impl search by narration id and reciter on api
   Future<List<Chapter>?> fetchChaptersList({String? qurey}) =>
       _chapterRepository.fetchChaptersList(qurey: qurey);
 
