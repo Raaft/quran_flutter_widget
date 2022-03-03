@@ -2,7 +2,7 @@ import 'package:floor/floor.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
 import 'package:quran_widget_flutter/model/reciter.dart';
 
-import 'base_model.dart';
+import 'package:quran_widget_flutter/model/base_model.dart';
 
 @Entity(tableName: 'Recitation', foreignKeys: [
   ForeignKey(
