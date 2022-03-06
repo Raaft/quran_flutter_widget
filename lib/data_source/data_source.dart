@@ -55,21 +55,20 @@ class DataSource {
   //TODO impl search by narration id and reciter on api
   Future<List<Chapter>?> fetchChaptersList({String? qurey}) =>
       _chapterRepository.fetchChaptersList(qurey: qurey);
-
   Future<Chapter?> fetchChapterById(int chapterId) =>
       _chapterRepository.fetchChapterById(chapterId);
 
-  Future<List<Part>?> fetchPartsList() => _partRepository.fetchPartsList();
-
+  Future<List<Part>?> fetchPartsList({String? qurey}) =>
+      _partRepository.fetchPartsList();
   Future<Part?> fetchPartById(int partId) =>
       _partRepository.fetchPartById(partId);
 
   Future<List<Page>?> fetchPagesList() => _pageRepository.fetchPagesList();
-
   Future<Page?> fetchPageById(int pageId) =>
       _pageRepository.fetchPageById(pageId);
 
-  Future<List<Recitation>?> fetchRecitationsList() =>
+  Future<List<Recitation>?> fetchRecitationsList(
+          {String? qurey, int? reciterId, int? narrationId}) =>
       _recitationRepository.fetchRecitationsList();
 
   Future<Recitation?> fetchRecitationById(int recitationId) =>
@@ -78,7 +77,6 @@ class DataSource {
   Future<List<RecitationVerses>?> fetchRecitationsVersesList(
           int recitationId) =>
       _recitationVersesRepository.fetchRecitationsVersesList(recitationId);
-
   Future<RecitationVerses?> fetchRecitationVersesById(
           int recitationId, int recitationVersesId) =>
       _recitationVersesRepository.fetchRecitationVersesById(

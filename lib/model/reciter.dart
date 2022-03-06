@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
 
 import 'base_model.dart';
@@ -8,7 +10,10 @@ class Reciter extends BaseModel {
   int? id;
   String? name;
 
-  Reciter(this.id, this.name);
+  Reciter(
+    this.id,
+    this.name,
+  );
 
   Reciter.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -22,4 +27,34 @@ class Reciter extends BaseModel {
     data['name'] = name;
     return data;
   }
+
+  Reciter copyWith({
+    int? id,
+    String? name,
+  }) {
+    return Reciter(
+      id ?? this.id,
+      name ?? this.name,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+
+  @override
+  String toString() => 'Reciter(id: $id, name: $name)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Reciter && other.id == id && other.name == name;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
 }

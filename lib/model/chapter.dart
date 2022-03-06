@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
 
 import 'base_model.dart';
@@ -56,4 +58,5 @@ class Chapter extends BaseModel {
 
   @override
   int get hashCode => id.hashCode ^ name.hashCode;
+
 }

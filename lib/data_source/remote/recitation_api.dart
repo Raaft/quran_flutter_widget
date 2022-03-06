@@ -5,12 +5,12 @@ import 'package:quran_widget_flutter/network_helper/apis.dart';
 import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 
 class RecitationApi {
-  Future<MyResponse<Recitation>> fetchRecitationsList() async {
+  Future<MyResponse<Recitation>> fetchRecitationsList({String? qurey, int? reciterId, int? narrationId}) async {
     Response? response =
-        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllRECITATIONS);
+        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllRECITATIONS,queryParameters: {'q':qurey,'narration':narrationId,'reciter':reciterId});
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<Recitation>.fromJson(response.data, Apis.list);
+        return MyResponse<Recitation>.fromJson(response.data, Apis.list,);
       } else {
         return MyResponse<Recitation>.init(Apis.codeERROR, null, null);
       }

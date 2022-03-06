@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
+import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
 import 'package:quran_widget_flutter/model/reciter.dart';
-
-import 'package:quran_widget_flutter/model/base_model.dart';
 
 @Entity(tableName: 'Recitation', foreignKeys: [
   ForeignKey(
@@ -18,7 +19,11 @@ class Recitation extends BaseModel {
   @ColumnInfo(name: 'reciter_id')
   int? reciterId;
 
-  Recitation();
+  Recitation(
+    this.id,
+    this.narrationId,
+    this.reciterId,
+  );
   Recitation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     narrationId = json['narration_id'];
@@ -33,4 +38,41 @@ class Recitation extends BaseModel {
     data['reciter_id'] = reciterId;
     return data;
   }
+
+  Recitation copyWith({
+    int? id,
+    int? narrationId,
+    int? reciterId,
+  }) {
+    return Recitation(
+      id ?? this.id,
+      narrationId ?? this.narrationId,
+      reciterId ?? this.reciterId,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'narrationId': narrationId,
+      'reciterId': reciterId,
+    };
+  }
+
+  @override
+  String toString() =>
+      'Recitation(id: $id, narrationId: $narrationId, reciterId: $reciterId)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Recitation &&
+        other.id == id &&
+        other.narrationId == narrationId &&
+        other.reciterId == reciterId;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ narrationId.hashCode ^ reciterId.hashCode;
 }

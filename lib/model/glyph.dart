@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
@@ -27,7 +29,18 @@ class Glyph extends BaseModel {
   int? minY;
   int? maxY;
 
-  Glyph();
+  Glyph(
+    this.id,
+    this.verseId,
+    this.pageId,
+    this.chapterId,
+    this.lineNumber,
+    this.position,
+    this.minX,
+    this.maxX,
+    this.minY,
+    this.maxY,
+  );
   Glyph.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     verseId = json['verse_id'];
@@ -55,5 +68,82 @@ class Glyph extends BaseModel {
     data['min_y'] = minY;
     data['max_y'] = maxY;
     return data;
+  }
+
+  Glyph copyWith({
+    int? id,
+    int? verseId,
+    int? pageId,
+    int? chapterId,
+    int? lineNumber,
+    int? position,
+    int? minX,
+    int? maxX,
+    int? minY,
+    int? maxY,
+  }) {
+    return Glyph(
+      id ?? this.id,
+      verseId ?? this.verseId,
+      pageId ?? this.pageId,
+      chapterId ?? this.chapterId,
+      lineNumber ?? this.lineNumber,
+      position ?? this.position,
+      minX ?? this.minX,
+      maxX ?? this.maxX,
+      minY ?? this.minY,
+      maxY ?? this.maxY,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'verseId': verseId,
+      'pageId': pageId,
+      'chapterId': chapterId,
+      'lineNumber': lineNumber,
+      'position': position,
+      'minX': minX,
+      'maxX': maxX,
+      'minY': minY,
+      'maxY': maxY,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Glyph(id: $id, verseId: $verseId, pageId: $pageId, chapterId: $chapterId, lineNumber: $lineNumber, position: $position, minX: $minX, maxX: $maxX, minY: $minY, maxY: $maxY)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Glyph &&
+        other.id == id &&
+        other.verseId == verseId &&
+        other.pageId == pageId &&
+        other.chapterId == chapterId &&
+        other.lineNumber == lineNumber &&
+        other.position == position &&
+        other.minX == minX &&
+        other.maxX == maxX &&
+        other.minY == minY &&
+        other.maxY == maxY;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        verseId.hashCode ^
+        pageId.hashCode ^
+        chapterId.hashCode ^
+        lineNumber.hashCode ^
+        position.hashCode ^
+        minX.hashCode ^
+        maxX.hashCode ^
+        minY.hashCode ^
+        maxY.hashCode;
   }
 }

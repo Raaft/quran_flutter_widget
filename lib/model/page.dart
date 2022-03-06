@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
+import 'package:flutter/foundation.dart';
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
@@ -37,7 +40,18 @@ class Page extends BaseModel {
   @ignore
   List<Glyph>? glyphs;
 
-  Page();
+  Page(
+    this.id,
+    this.pageNumber,
+    this.narrationId,
+    this.chapterId,
+    this.bookId,
+    this.partId,
+    this.subPartId,
+    this.image,
+    this.verses,
+    this.glyphs,
+  );
   Page.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     pageNumber = json['page_number'];
@@ -80,5 +94,101 @@ class Page extends BaseModel {
       data['glyphs'] = glyphs!.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  Page copyWith({
+    int? id,
+    int? pageNumber,
+    int? narrationId,
+    int? chapterId,
+    int? bookId,
+    int? partId,
+    int? subPartId,
+    String? image,
+    List<Verse>? verses,
+    List<Glyph>? glyphs,
+  }) {
+    return Page(
+      id ?? this.id,
+      pageNumber ?? this.pageNumber,
+      narrationId ?? this.narrationId,
+      chapterId ?? this.chapterId,
+      bookId ?? this.bookId,
+      partId ?? this.partId,
+      subPartId ?? this.subPartId,
+      image ?? this.image,
+      verses ?? this.verses,
+      glyphs ?? this.glyphs,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'pageNumber': pageNumber,
+      'narrationId': narrationId,
+      'chapterId': chapterId,
+      'bookId': bookId,
+      'partId': partId,
+      'subPartId': subPartId,
+      'image': image,
+      'verses': verses?.map((x) => x?.toJson())?.toList(),
+      'glyphs': glyphs?.map((x) => x?.toJson())?.toList(),
+    };
+  }
+
+  factory Page.fromMap(Map<String, dynamic> map) {
+    return Page(
+      map['id']?.toInt(),
+      map['pageNumber']?.toInt(),
+      map['narrationId']?.toInt(),
+      map['chapterId']?.toInt(),
+      map['bookId']?.toInt(),
+      map['partId']?.toInt(),
+      map['subPartId']?.toInt(),
+      map['image'],
+      map['verses'] != null
+          ? List<Verse>.from(map['verses']?.map((x) => Verse.fromJson(x)))
+          : null,
+      map['glyphs'] != null
+          ? List<Glyph>.from(map['glyphs']?.map((x) => Glyph.fromJson(x)))
+          : null,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Page(id: $id, pageNumber: $pageNumber, narrationId: $narrationId, chapterId: $chapterId, bookId: $bookId, partId: $partId, subPartId: $subPartId, image: $image, verses: $verses, glyphs: $glyphs)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Page &&
+        other.id == id &&
+        other.pageNumber == pageNumber &&
+        other.narrationId == narrationId &&
+        other.chapterId == chapterId &&
+        other.bookId == bookId &&
+        other.partId == partId &&
+        other.subPartId == subPartId &&
+        other.image == image &&
+        listEquals(other.verses, verses) &&
+        listEquals(other.glyphs, glyphs);
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        pageNumber.hashCode ^
+        narrationId.hashCode ^
+        chapterId.hashCode ^
+        bookId.hashCode ^
+        partId.hashCode ^
+        subPartId.hashCode ^
+        image.hashCode ^
+        verses.hashCode ^
+        glyphs.hashCode;
   }
 }

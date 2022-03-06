@@ -311,31 +311,27 @@ class _$BookDao extends BookDao {
   @override
   Future<List<Book>> findAllBooks() async {
     return _queryAdapter.queryList('SELECT * FROM Book',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?));
+        mapper: (Map<String, Object?> row) => Book.fromJson(row));
   }
 
   @override
   Future<List<Book>> searchInBooks(String qurey) async {
     return _queryAdapter.queryList('SELECT * FROM Book WHERE name like ?1',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?),
+        mapper: (Map<String, Object?> row) => Book.fromJson(row),
         arguments: [qurey]);
   }
 
   @override
   Future<List<Book>> findBooksInNarrationId(int narrationId) async {
     return _queryAdapter.queryList('SELECT * FROM Book WHERE narration_id = ?1',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?),
+        mapper: (Map<String, Object?> row) => Book.fromJson(row),
         arguments: [narrationId]);
   }
 
   @override
   Stream<Book?> findBookById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Book WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?),
+        mapper: (Map<String, Object?> row) => Book.fromJson(row),
         arguments: [id],
         queryableName: 'Book',
         isView: false);
@@ -482,21 +478,21 @@ class _$PartDao extends PartDao {
   @override
   Future<List<Part>> findAllParts() async {
     return _queryAdapter.queryList('SELECT * FROM Part',
-        mapper: (Map<String, Object?> row) => Part());
+        mapper: (Map<String, Object?> row) => Part.fromJson(row));
   }
 
   @override
   Future<List<Part>> searchInPart(String qurey) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Part WHERE name like ?1 or alias like ?1',
-        mapper: (Map<String, Object?> row) => Part(),
+        mapper: (Map<String, Object?> row) => Part.fromJson(row),
         arguments: [qurey]);
   }
 
   @override
   Stream<Part?> findPartById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Part WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Part(),
+        mapper: (Map<String, Object?> row) => Part.fromJson(row),
         arguments: [id],
         queryableName: 'Part',
         isView: false);
@@ -581,13 +577,13 @@ class _$PageDao extends PageDao {
   @override
   Future<List<Page>> findAllPages() async {
     return _queryAdapter.queryList('SELECT * FROM Page',
-        mapper: (Map<String, Object?> row) => Page());
+        mapper: (Map<String, Object?> row) => Page.fromJson(row));
   }
 
   @override
   Stream<Page?> findPageById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Page WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Page(),
+        mapper: (Map<String, Object?> row) => Page.fromJson(row),
         arguments: [id],
         queryableName: 'Page',
         isView: false);
@@ -598,7 +594,7 @@ class _$PageDao extends PageDao {
       int partId, int subPartId) async {
     return _queryAdapter.query(
         'SELECT * FROM Page WHERE narration_id = ?1 or chapter_id= ?2 or book_id =?3 or part_id =?4 or sub_part_id =?5',
-        mapper: (Map<String, Object?> row) => Page(),
+        mapper: (Map<String, Object?> row) => Page.fromJson(row),
         arguments: [narrationId, chapterid, bookId, partId, subPartId]);
   }
 
@@ -666,21 +662,21 @@ class _$RecitationDao extends RecitationDao {
   @override
   Future<List<Recitation>> findAllRecitations() async {
     return _queryAdapter.queryList('SELECT * FROM Recitation',
-        mapper: (Map<String, Object?> row) => Recitation());
+        mapper: (Map<String, Object?> row) => Recitation.fromJson(row));
   }
 
   @override
   Future<List<Recitation>> findRecitationInNarrationId(int narrationId) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Recitation WHERE narration_id = ?1',
-        mapper: (Map<String, Object?> row) => Recitation(),
+        mapper: (Map<String, Object?> row) => Recitation.fromJson(row),
         arguments: [narrationId]);
   }
 
   @override
   Stream<Recitation?> findRecitationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Recitation WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Recitation(),
+        mapper: (Map<String, Object?> row) => Recitation.fromJson(row),
         arguments: [id],
         queryableName: 'Recitation',
         isView: false);
@@ -744,14 +740,14 @@ class _$ReciterDao extends ReciterDao {
   Future<List<Reciter>> findAllReciters() async {
     return _queryAdapter.queryList('SELECT * FROM Reciter',
         mapper: (Map<String, Object?> row) =>
-            Reciter(row['id'] as int?, row['name'] as String?));
+            Reciter.fromJson(row));
   }
 
   @override
   Future<List<Reciter>> searchInReciter(String qurey) async {
     return _queryAdapter.queryList('SELECT * FROM Reciter WHERE name like ?1',
         mapper: (Map<String, Object?> row) =>
-            Reciter(row['id'] as int?, row['name'] as String?),
+            Reciter.fromJson(row),
         arguments: [qurey]);
   }
 
@@ -759,7 +755,7 @@ class _$ReciterDao extends ReciterDao {
   Stream<Reciter?> findReciterById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Reciter WHERE id = ?1',
         mapper: (Map<String, Object?> row) =>
-            Reciter(row['id'] as int?, row['name'] as String?),
+            Reciter.fromJson(row),
         arguments: [id],
         queryableName: 'Reciter',
         isView: false);
@@ -835,14 +831,14 @@ class _$RecitationVersesDao extends RecitationVersesDao {
   @override
   Future<List<RecitationVerses>> findAllRecitationsVerses() async {
     return _queryAdapter.queryList('SELECT * FROM RecitationVerses',
-        mapper: (Map<String, Object?> row) => RecitationVerses());
+        mapper: (Map<String, Object?> row) => RecitationVerses.fromJson(row));
   }
 
   @override
   Stream<RecitationVerses?> findRecitationVersesById(int id) {
     return _queryAdapter.queryStream(
         'SELECT * FROM RecitationVerses WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => RecitationVerses(),
+        mapper: (Map<String, Object?> row) => RecitationVerses.fromJson(row),
         arguments: [id],
         queryableName: 'RecitationVerses',
         isView: false);
@@ -938,13 +934,13 @@ class _$VerseDao extends VerseDao {
   @override
   Future<List<Verse>> findAllVerses() async {
     return _queryAdapter.queryList('SELECT * FROM Verse',
-        mapper: (Map<String, Object?> row) => Verse());
+        mapper: (Map<String, Object?> row) => Verse.fromJson(row));
   }
 
   @override
   Stream<Verse?> findVerseById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Verse WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Verse(),
+        mapper: (Map<String, Object?> row) => Verse.fromJson(row),
         arguments: [id],
         queryableName: 'Verse',
         isView: false);
@@ -1035,13 +1031,13 @@ class _$GlyphDao extends GlyphDao {
   @override
   Future<List<Glyph>> findAllGlyphs() async {
     return _queryAdapter.queryList('SELECT * FROM Glyph',
-        mapper: (Map<String, Object?> row) => Glyph());
+        mapper: (Map<String, Object?> row) => Glyph.fromJson(row));
   }
 
   @override
   Stream<Glyph?> findGlyphById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Glyph WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Glyph(),
+        mapper: (Map<String, Object?> row) => Glyph.fromJson(row),
         arguments: [id],
         queryableName: 'Glyph',
         isView: false);
