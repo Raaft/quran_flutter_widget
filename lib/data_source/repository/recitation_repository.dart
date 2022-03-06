@@ -9,8 +9,8 @@ class RecitationRepository {
       RecitationLocalDataSource();
   final RecitationApi _recitationApi = RecitationApi();
 
-  Future<List<Recitation>?> fetchRecitationsList() async {
-    List<Recitation>? recitationsList =
+  Future<List<Recitation>?> fetchRecitationsList({String? qurey, int? reciterId, int? narrationId}) async {
+    List<Recitation>? recitationsList =(reciterId !=null && narrationId != null)? await _recitationLocalDataSource.fetchRecitationsList() :
         await _recitationLocalDataSource.fetchRecitationsList();
     if ((recitationsList != null && recitationsList.isNotEmpty)) {
       return recitationsList;

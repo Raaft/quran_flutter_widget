@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
@@ -21,7 +23,13 @@ class RecitationVerses extends BaseModel {
   int? recitationId;
   String? record;
 
-  RecitationVerses();
+  RecitationVerses(
+    this.id,
+    this.verseId,
+    this.verseNumber,
+    this.recitationId,
+    this.record,
+  );
   RecitationVerses.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     verseId = json['verse_id'];
@@ -39,5 +47,57 @@ class RecitationVerses extends BaseModel {
     data['recitation_id'] = recitationId;
     data['record'] = record;
     return data;
+  }
+
+  RecitationVerses copyWith({
+    int? id,
+    int? verseId,
+    int? verseNumber,
+    int? recitationId,
+    String? record,
+  }) {
+    return RecitationVerses(
+      id ?? this.id,
+      verseId ?? this.verseId,
+      verseNumber ?? this.verseNumber,
+      recitationId ?? this.recitationId,
+      record ?? this.record,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'verseId': verseId,
+      'verseNumber': verseNumber,
+      'recitationId': recitationId,
+      'record': record,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'RecitationVerses(id: $id, verseId: $verseId, verseNumber: $verseNumber, recitationId: $recitationId, record: $record)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is RecitationVerses &&
+        other.id == id &&
+        other.verseId == verseId &&
+        other.verseNumber == verseNumber &&
+        other.recitationId == recitationId &&
+        other.record == record;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        verseId.hashCode ^
+        verseNumber.hashCode ^
+        recitationId.hashCode ^
+        record.hashCode;
   }
 }
