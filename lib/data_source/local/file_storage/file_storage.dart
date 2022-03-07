@@ -1,13 +1,67 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-
 import 'package:path_provider/path_provider.dart';
 
 class FileStorage {
-  static Future<String> get _localPath async {
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File?> _createFile(String savePath) async {
+    String temp = await _localPath;
+
+    File? file;
+
+    try {
+      file = File(temp + savePath);
+      file = await file.create();
+    } catch (e) {
+      print('createFile Error  ' + e.toString());
+    }
+    return file;
+  }
+
+  var dio = Dio();
+
+  Future<File?> download2(String url, String savePath,
+      Function(int, int) showDownloadProgress) async {
+    try {
+      Response response = await dio.get(
+        url,
+        onReceiveProgress: showDownloadProgress,
+        //Received data with List<int>
+        options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            }),
+      );
+
+      print(response.headers);
+
+      var file = await _createFile(savePath);
+
+      var raf = file!.openSync(mode: FileMode.write);
+      // response.data is List<int> type
+      raf.writeFromSync(response.data);
+      await raf.close();
+
+      return file;
+    } catch (e) {
+      print('error ' + e.toString());
+    }
+    return null;
+  }
+}
+
+
+/**
+ *  static Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
     return directory.path;
@@ -45,4 +99,4 @@ class FileStorage {
     // Write the file
     return file.writeAsBytes(bytes.data!);
   }
-}
+ */
