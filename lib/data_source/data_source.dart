@@ -87,4 +87,8 @@ class DataSource {
 
   Future<Reciter?> fetchReciterById(int reciterId) =>
       _reciterRepository.fetchReciterById(reciterId);
+
+  Future<void> downloadChapter({int? chapterId, int? recitationId}) async {}
+
+  Future<void> downloadBook({int? bookId, int? narrationId}) async {}
 }
