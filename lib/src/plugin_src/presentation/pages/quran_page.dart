@@ -20,7 +20,7 @@ class QuranPage extends StatelessWidget {
               // Image.asset('assets/img/quranImg.jpg'),
               CustomPaint(
                 painter: OpenPainter(
-                  offset: Offset(20, 65),
+                  offset: const Offset(20, 65),
                 ),
               ),
 
