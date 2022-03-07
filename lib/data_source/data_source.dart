@@ -9,7 +9,7 @@ import 'package:quran_widget_flutter/data_source/repository/reciter_repository.d
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
-import 'package:quran_widget_flutter/model/page.dart';
+import 'package:quran_widget_flutter/model/page.dart'as page;
 import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/model/recitation_verses.dart';
@@ -63,8 +63,8 @@ class DataSource {
   Future<Part?> fetchPartById(int partId) =>
       _partRepository.fetchPartById(partId);
 
-  Future<List<Page>?> fetchPagesList() => _pageRepository.fetchPagesList();
-  Future<Page?> fetchPageById(int pageId) =>
+  Future<List<page.Page>?> fetchPagesList() => _pageRepository.fetchPagesList();
+  Future<page.Page?> fetchPageById(int pageId) =>
       _pageRepository.fetchPageById(pageId);
 
   Future<List<Recitation>?> fetchRecitationsList(
@@ -91,4 +91,10 @@ class DataSource {
   Future<void> downloadChapter({int? chapterId, int? recitationId}) async {}
 
   Future<void> downloadBook({int? bookId, int? narrationId}) async {}
+  /*  VoidCallback onPressFun;
+
+  void onPress(VoidCallback onPress) {
+    onPressFun= onPress;
+  }
+  void onLongPress(VoidCallback onLongPress)=>onLongPress*/
 }

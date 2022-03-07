@@ -13,11 +13,10 @@ class QuranCubit extends Cubit<QuranState> {
 
   List<Page> pages = [];
 
-  fetchPages({String? qurey}) {
+  fetchPages() {
     try {
       DataSource.instance.fetchPagesList().then((value) async {
         if (value!.isNotEmpty) {
-
           pages = value;
           emit(PagesFetchedState());
         } else {
@@ -28,5 +27,16 @@ class QuranCubit extends Cubit<QuranState> {
       print(e.toString());
       emit(PagesFetchErrorState());
     }
+  }
+
+  onPress() {
+    print(' Press Done');
+
+    emit(OnPressState());
+  }
+
+  onLongPress() {
+    print('Long Press Done');
+    emit(onLongPress());
   }
 }
