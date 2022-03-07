@@ -8,8 +8,8 @@ class QuranPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(8),
+      color: Colors.white,
+        padding: const EdgeInsets.all(8),
         child: PageView.builder(
           itemCount: 5,
           itemBuilder: (context, index) => Stack(
@@ -25,6 +25,16 @@ class QuranPage extends StatelessWidget {
               ),
             ],
           ),
+<<<<<<< HEAD
         ));
+=======
+          // Image.asset('assets/img/quranImg.jpg'),
+          CustomPaint(
+            painter: OpenPainter(offset: const Offset(20, 65),),
+          ),
+        ],
+      ),
+    ));
+>>>>>>> e8f127f36b17d6fba0b2979ff11b01af06e1f926
   }
 }

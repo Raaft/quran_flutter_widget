@@ -8,7 +8,7 @@ import 'package:quran_widget_flutter/src/plugin_src/presentation/pages/tajwid_pa
 import 'package:quran_widget_flutter/src/plugin_src/presentation/pages/translation_page.dart';
 
 class QuranWidget extends StatelessWidget {
-  QuranWidget({
+  const QuranWidget({
     Key? key,
     required this.page,
   }) : super(key: key);
@@ -36,25 +36,25 @@ Widget body(QuranCubit cubit, PageType page) {
   switch (page) {
     case PageType.quran:
       {
-        return QuranPage();
+        return const QuranPage();
       }
 
     case PageType.tafsir:
       {
-        return TafsirPage();
+        return const TafsirPage();
       }
     case PageType.tajwid:
       {
-        return TajwidPage();
+        return const TajwidPage();
       }
     case PageType.translation:
       {
-        return TranslationPage();
+        return const TranslationPage();
       }
 
     default:
       {
-        return QuranPage();
+        return const QuranPage();
       }
   }
 }
