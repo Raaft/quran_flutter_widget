@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:floor/floor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quran_widget_flutter/model/base_model.dart';
@@ -132,8 +130,8 @@ class Page extends BaseModel {
       'partId': partId,
       'subPartId': subPartId,
       'image': image,
-      'verses': verses?.map((x) => x?.toJson())?.toList(),
-      'glyphs': glyphs?.map((x) => x?.toJson())?.toList(),
+      'verses': verses?.map((x) => x.toJson()).toList(),
+      'glyphs': glyphs?.map((x) => x.toJson()).toList(),
     };
   }
 
