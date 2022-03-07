@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/point_widget.dart';
+import '../widgets/paint_point.dart';
 
 class TajwidPage extends StatelessWidget {
   const TajwidPage({Key? key}) : super(key: key);
 
+  final offset1 = const Offset(50, 200);
+  final offset2 = const Offset(50, 300);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,9 +30,7 @@ class TajwidPage extends StatelessWidget {
                 ],
               ),
 
-              CustomPaint(
-                painter: OpenPainter(offset: const Offset(20,205)),
-              ),
+              paintPoint(offset1,offset2,(){},(){}),
             ],
           ),
         ));
