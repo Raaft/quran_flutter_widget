@@ -8,7 +8,7 @@ class TafsirPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
         child: PageView.builder(
       itemCount: 5,
       itemBuilder: (context, index) => Stack(
@@ -19,7 +19,7 @@ class TafsirPage extends StatelessWidget {
               Image.network(
                 'https://df61994948e9a54a5259-ad04094bac72ed4d481dba65a1920e88.ssl.cf1.rackcdn.com/4_1.png',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Text(
@@ -29,7 +29,7 @@ class TafsirPage extends StatelessWidget {
           ),
 
           CustomPaint(
-            painter: OpenPainter(offset: Offset(20,205)),
+            painter: OpenPainter(offset: const Offset(20,205)),
           ),
         ],
       ),
