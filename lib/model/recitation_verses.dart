@@ -20,6 +20,7 @@ class RecitationVerses extends BaseModel {
   @ColumnInfo(name: 'recitation_id')
   int? recitationId;
   String? record;
+  String? recordLocal;
 
   RecitationVerses(
     this.id,

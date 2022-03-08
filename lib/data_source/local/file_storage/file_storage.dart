@@ -18,7 +18,7 @@ class FileStorage {
 
     try {
       file = File(temp + savePath);
-      file = await file.create();
+      file = await file.create(recursive: true);
     } catch (e) {
       print('createFile Error  ' + e.toString());
     }
@@ -27,12 +27,17 @@ class FileStorage {
 
   var dio = Dio();
 
-  Future<File?> download2(String url, String savePath,
-      Function(int, int) showDownloadProgress) async {
+  Future<File?> download2(
+      {required String url,
+      required String savePath,
+      required Function(int, int) showDownloadProgress}) async {
+    print('Path $url');
+
     try {
       Response response = await dio.get(
         url,
         onReceiveProgress: showDownloadProgress,
+
         //Received data with List<int>
         options: Options(
             responseType: ResponseType.bytes,

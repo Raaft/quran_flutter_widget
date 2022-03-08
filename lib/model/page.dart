@@ -32,6 +32,7 @@ class Page extends BaseModel {
   @ColumnInfo(name: 'sub_part_id')
   int? subPartId;
   String? image;
+  String? localImage;
 
   @ignore
   List<Verse>? verses;
