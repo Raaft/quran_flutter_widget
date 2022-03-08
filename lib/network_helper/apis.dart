@@ -15,9 +15,9 @@ class Apis extends Object {
 
   static var tokenValue = '';
 
-  //static String baseUrl = 'http://165.232.114.22/';
-  static String baseUrl = 'http://192.168.1.36:5000/';
-  static String basePath = baseUrl + 'api/v1/';
+  static String baseUrl = 'http://165.232.114.22';
+  // static String baseUrl = 'http://192.168.1.36:5000/';
+  static String basePath = baseUrl + '/api/v1/';
   static String imageUrl = basePath;
 
   static String fetchAllNARRATIONS = '${basePath}narrations/';

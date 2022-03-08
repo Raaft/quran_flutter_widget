@@ -1,8 +1,8 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
 import 'package:quran_widget_flutter/model/page.dart';
+import 'package:quran_widget_flutter/model/verse.dart';
 
-class PageLocalDataSource{
-
+class PageLocalDataSource {
   Future<List<Page>?> fetchPagesList() async {
     final db = await QuranDatabaseSource.instance.database;
     return db?.pageDao.findAllPages();
@@ -17,12 +17,12 @@ class PageLocalDataSource{
     final db = await QuranDatabaseSource.instance.database;
     for (var page in pagesList) {
       await db?.pageDao.insertPage(page);
-      if(page.verses!=null) {
+      if (page.verses != null) {
         for (var verse in page.verses!) {
           await db?.verseDao.insertVerse(verse);
         }
       }
-      if(page.glyphs!=null) {
+      if (page.glyphs != null) {
         for (var glyph in page.glyphs!) {
           await db?.glyphDao.insertGlyph(glyph);
         }
@@ -34,16 +34,21 @@ class PageLocalDataSource{
     final db = await QuranDatabaseSource.instance.database;
     for (var page in pagesList) {
       await db?.pageDao.deletePage(page);
-      if(page.verses!=null) {
+      if (page.verses != null) {
         for (var verse in page.verses!) {
           await db?.verseDao.insertVerse(verse);
         }
       }
-      if(page.glyphs!=null) {
+      if (page.glyphs != null) {
         for (var glyph in page.glyphs!) {
           await db?.glyphDao.insertGlyph(glyph);
         }
       }
     }
+  }
+
+  updateVerse(Page page) async {
+    final db = await QuranDatabaseSource.instance.database;
+    db!.pageDao.updatePage(page);
   }
 }

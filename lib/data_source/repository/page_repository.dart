@@ -8,8 +8,9 @@ class PageRepository {
   final PageLocalDataSource _pageLocalDataSource = PageLocalDataSource();
   final PageApi _pageApi = PageApi();
 
-  Future<List<Page>?> fetchPagesList() async {
+  Future<List<Page>?> fetchPagesList({int? bookId}) async {
     List<Page>? pagesList = await _pageLocalDataSource.fetchPagesList();
+
     if ((pagesList != null && pagesList.isNotEmpty)) {
       return pagesList;
     } else {

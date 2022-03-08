@@ -1,3 +1,4 @@
+import 'package:quran_widget_flutter/data_source/local/file_storage/download_book.dart';
 import 'package:quran_widget_flutter/data_source/repository/book_repository.dart';
 import 'package:quran_widget_flutter/data_source/repository/chapter_repository.dart';
 import 'package:quran_widget_flutter/data_source/repository/narration_repository.dart';
@@ -9,7 +10,7 @@ import 'package:quran_widget_flutter/data_source/repository/reciter_repository.d
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
-import 'package:quran_widget_flutter/model/page.dart'as page;
+import 'package:quran_widget_flutter/model/page.dart' as page;
 import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/model/recitation_verses.dart';
@@ -63,19 +64,28 @@ class DataSource {
   Future<Part?> fetchPartById(int partId) =>
       _partRepository.fetchPartById(partId);
 
-  Future<List<page.Page>?> fetchPagesList() => _pageRepository.fetchPagesList();
+  Future<List<page.Page>?> fetchPagesList({
+    int? bookId,
+    int? narrationId,
+  }) =>
+      _pageRepository.fetchPagesList(bookId: bookId);
   Future<page.Page?> fetchPageById(int pageId) =>
       _pageRepository.fetchPageById(pageId);
 
-  Future<List<Recitation>?> fetchRecitationsList(
-          {String? qurey, int? reciterId, int? narrationId}) =>
+  Future<List<Recitation>?> fetchRecitationsList({
+    String? qurey,
+    int? reciterId,
+    int? narrationId,
+  }) =>
       _recitationRepository.fetchRecitationsList();
 
   Future<Recitation?> fetchRecitationById(int recitationId) =>
       _recitationRepository.fetchRecitationById(recitationId);
 
-  Future<List<RecitationVerses>?> fetchRecitationsVersesList(
-          int recitationId) =>
+  Future<List<RecitationVerses>?> fetchRecitationsVersesList({
+    int? chapterId,
+    required int recitationId,
+  }) =>
       _recitationVersesRepository.fetchRecitationsVersesList(recitationId);
   Future<RecitationVerses?> fetchRecitationVersesById(
           int recitationId, int recitationVersesId) =>
@@ -90,7 +100,12 @@ class DataSource {
 
   Future<void> downloadChapter({int? chapterId, int? recitationId}) async {}
 
-  Future<void> downloadBook({int? bookId, int? narrationId}) async {}
+  Future<void> downloadBook(
+      {int? bookId, int? narrationId, Function(double)? retunProgress}) async {
+    DownloadBook.startDownload(
+        bookId: bookId, narrationId: narrationId, retunProgress: retunProgress);
+  }
+
   /*  VoidCallback onPressFun;
 
   void onPress(VoidCallback onPress) {
