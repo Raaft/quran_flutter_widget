@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:quran_widget_flutter/model/page.dart';
 
 import '../../../data_source/data_source.dart';
-import '../../../model/page.dart';
 
 part 'quran_state.dart';
 
@@ -14,6 +14,7 @@ class QuranCubit extends Cubit<QuranState> {
   List<Page> pages = [];
 
   fetchPages() {
+    emit(PagesFetchLoadingState());
     try {
       DataSource.instance.fetchPagesList().then((value) async {
         if (value!.isNotEmpty) {
