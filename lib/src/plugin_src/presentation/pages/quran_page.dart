@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
+import 'package:quran_widget_flutter/model/page.dart'as page;
 
 
 class QuranPage extends StatelessWidget {
@@ -18,7 +19,8 @@ class QuranPage extends StatelessWidget {
             listener: (context, state) {},
             builder: (context, state) {
               var cubit = QuranCubit().get(context);
-              List quran = cubit.quran;
+           List<page.Page>? quran = cubit.pages;
+           print(quran);
 
               return Container(
                   color: Colors.white,
@@ -32,12 +34,13 @@ class QuranPage extends StatelessWidget {
                         ),
                         // Image.asset('assets/img/quranImg.jpg'),
                         paintPoint(offset1, offset2, () {}, () {}),*/
+                        (state is PagesFetchLoadingState)?const Center(child:  CircularProgressIndicator()):
                         ListView.builder(
-                            itemCount: quran.length,
+                            itemCount: quran[0].verses!.length,
                             itemBuilder: (context, index) => GestureDetector(
                                   onLongPress: () {},
                                   onTap: () {},
-                                  child: Text(quran[index]+'  $index',style: const TextStyle(fontSize: 25,fontFamily: Q.qaloon),textAlign: TextAlign.center),
+                                  child: Text(quran[0].verses![index].uthmanicText.toString(),style: const TextStyle(fontSize: 25,fontFamily: Q.qaloon),textAlign: TextAlign.center),
                                 ))
                         // Image.asset('assets/img/quranImg.jpg'),
                       ],
