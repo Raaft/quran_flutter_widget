@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
-
 class QuranPage extends StatelessWidget {
   const QuranPage({Key? key}) : super(key: key);
 
@@ -37,7 +36,11 @@ class QuranPage extends StatelessWidget {
                             itemBuilder: (context, index) => GestureDetector(
                                   onLongPress: () {},
                                   onTap: () {},
-                                  child: Text(quran[index]+'  $index',style: const TextStyle(fontSize: 25,fontFamily: Q.qaloon),textAlign: TextAlign.center),
+                                  child: Text(quran[index],
+                                      style: const TextStyle(
+                                          fontSize: 25,
+                                          fontFamily: Q.allahNames),
+                                      textAlign: TextAlign.center),
                                 ))
                         // Image.asset('assets/img/quranImg.jpg'),
                       ],
