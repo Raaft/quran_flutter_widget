@@ -30,11 +30,23 @@ class QuranPage extends StatelessWidget {
                     itemBuilder: (context, index) => Stack(
                       children: [
                         if ((state is PagesFetchedState))
-                          Text('PagesFetchedState'),
+                          const Text('PagesFetchedState', style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontFamily: Q.qaloon),
+                            textAlign: TextAlign.center,),
                         if ((state is PagesFetchLoadingState))
-                          Text('PagesFetchLoadingState'),
+                          const Text('PagesFetchLoadingState', style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontFamily: Q.qaloon),
+                            textAlign: TextAlign.center,),
                         if ((state is PagesFetchErrorState))
-                          Text('PagesFetchErrorState'),
+                          const Text('PagesFetchErrorState', style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontFamily: Q.qaloon),
+              textAlign: TextAlign.center,),
                         (state is PagesFetchLoadingState)
                             ? const Center(child: CircularProgressIndicator())
                             : ListView.builder(
@@ -49,7 +61,7 @@ class QuranPage extends StatelessWidget {
                                           color: Colors.black,
                                           fontSize: 25,
                                           fontFamily: Q.qaloon),
-                                      textAlign: TextAlign.center),
+                                      textAlign: TextAlign.center,),
                                 ),
                               ),
                         // Image.asset('assets/img/quranImg.jpg'),
