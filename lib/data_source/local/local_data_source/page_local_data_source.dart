@@ -1,6 +1,5 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
 import 'package:quran_widget_flutter/model/page.dart';
-import 'package:quran_widget_flutter/model/verse.dart';
 
 class PageLocalDataSource {
   Future<List<Page>?> fetchPagesList() async {

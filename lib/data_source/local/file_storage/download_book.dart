@@ -1,13 +1,11 @@
 import 'package:quran_widget_flutter/data_source/data_source.dart';
 import 'package:quran_widget_flutter/data_source/local/file_storage/file_storage.dart';
-import 'package:quran_widget_flutter/data_source/local/local_data_source/book_local_data_source.dart';
 import 'package:quran_widget_flutter/data_source/local/local_data_source/page_local_data_source.dart';
 import 'package:quran_widget_flutter/model/page.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
 
 class DownloadBook {
   static final PageLocalDataSource _pageLocalDataSource = PageLocalDataSource();
-  final BookLocalDataSource _bookLocalDataSource = BookLocalDataSource();
 
   static startDownload(
       {int? bookId, int? narrationId, Function(double)? retunProgress}) async {
