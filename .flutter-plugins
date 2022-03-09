@@ -1,9 +1,9 @@
 # This is a generated file; do not edit or check into version control.
-flutter_downloader=/home/shady/.pub-cache/hosted/pub.dartlang.org/flutter_downloader-1.7.2/
-path_provider=/home/shady/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.9/
-path_provider_android=/home/shady/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.12/
-path_provider_ios=/home/shady/.pub-cache/hosted/pub.dartlang.org/path_provider_ios-2.0.8/
-path_provider_linux=/home/shady/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.5/
-path_provider_macos=/home/shady/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.5/
-path_provider_windows=/home/shady/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.0.5/
-sqflite=/home/shady/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.2/
+flutter_downloader=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_downloader-1.7.2/
+path_provider=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.9/
+path_provider_android=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.12/
+path_provider_ios=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_ios-2.0.8/
+path_provider_linux=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.5/
+path_provider_macos=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.5/
+path_provider_windows=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.0.5/
+sqflite=/home/cattleegret/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.2/
