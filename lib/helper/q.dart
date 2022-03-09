@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Q extends Object {
+class Q  {
   /// *** Constants ***
 
   static const bool isConnect = false;

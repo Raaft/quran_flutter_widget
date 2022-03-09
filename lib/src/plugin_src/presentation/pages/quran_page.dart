@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
-import '../widgets/paint_point.dart';
 
 class QuranPage extends StatelessWidget {
-  QuranPage({Key? key}) : super(key: key);
+  const QuranPage({Key? key}) : super(key: key);
 
   final offset1 = const Offset(50, 400);
   final offset2 = const Offset(200, 400);
@@ -37,7 +37,7 @@ class QuranPage extends StatelessWidget {
                             itemBuilder: (context, index) => GestureDetector(
                                   onLongPress: () {},
                                   onTap: () {},
-                                  child: Text(quran[index]),
+                                  child: Text(quran[index]+'  $index',style: const TextStyle(fontSize: 25,fontFamily: Q.qaloon),textAlign: TextAlign.center),
                                 ))
                         // Image.asset('assets/img/quranImg.jpg'),
                       ],

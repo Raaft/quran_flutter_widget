@@ -36,7 +36,7 @@ Widget body(QuranCubit cubit, PageType page) {
   switch (page) {
     case PageType.quran:
       {
-        return  QuranPage();
+        return  const QuranPage();
       }
 
     case PageType.tafsir:
@@ -54,7 +54,7 @@ Widget body(QuranCubit cubit, PageType page) {
 
     default:
       {
-        return  QuranPage();
+        return  const QuranPage();
       }
   }
 }
