@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:quran_widget_flutter/model/page.dart';
+import 'package:quran_widget_flutter/model/verse.dart';
 
 import '../../../data_source/data_source.dart';
 
@@ -11,14 +13,20 @@ class QuranCubit extends Cubit<QuranState> {
 
   QuranCubit get(context) => BlocProvider.of(context);
 
-  List<Page> pages = [];
+  List<Verse> verses = [];
 
   fetchPages() {
     emit(PagesFetchLoadingState());
     try {
       DataSource.instance.fetchPagesList().then((value) async {
-        if (value!.isNotEmpty) {
-          pages = value;
+        print('Pages $value');
+        if (value != null && value.isNotEmpty) {
+          for (var element in value) {
+            if (element.verses != null && element.verses!.isNotEmpty) {
+              verses = element.verses!;
+              break;
+            }
+          }
           emit(PagesFetchedState());
         } else {
           emit(PagesFetchErrorState());

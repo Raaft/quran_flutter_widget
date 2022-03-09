@@ -12,6 +12,11 @@ class PageRepository {
     List<Page>? pagesList = await _pageLocalDataSource.fetchPagesList();
 
     if ((pagesList != null && pagesList.isNotEmpty)) {
+      for (var element in pagesList) {
+        element.verses =
+            await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
+      }
+
       return pagesList;
     } else {
       final MyResponse<Page> response = await _pageApi.fetchPagesList();
@@ -19,6 +24,7 @@ class PageRepository {
         pagesList = response.data as List<Page>;
         _pageLocalDataSource.savePagesList(pagesList);
       }
+
       return pagesList;
     }
   }
