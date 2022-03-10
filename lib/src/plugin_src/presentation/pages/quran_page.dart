@@ -142,7 +142,7 @@ class QuranPage extends StatelessWidget {
                         .toString());
                   },
                   onTap: () {
-                    onLongTap(pages[indexPage]
+                    onTap(pages[indexPage]
                         .verses![index]
                         .uthmanicText
                         .toString());
