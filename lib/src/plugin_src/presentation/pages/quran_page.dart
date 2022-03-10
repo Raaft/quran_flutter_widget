@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
 class QuranPage extends StatelessWidget {
-  const QuranPage({Key? key}) : super(key: key);
+  const QuranPage({
+    Key? key,
+    required this.onTap,
+    required this.onLongTap,
+  }) : super(key: key);
+
+  final Function(String data) onTap;
+  final Function(String data) onLongTap;
 
   final offset1 = const Offset(50, 400);
   final offset2 = const Offset(200, 400);
@@ -99,8 +107,8 @@ class QuranPage extends StatelessWidget {
   }
 
   Widget _viewData(List<page.Page> pages) {
-    if (pages != null) {
-      List<page.Page>? pagesf = <page.Page>[];
+    if (pages.isNotEmpty) {
+      List<page.Page> pagesf = <page.Page>[];
       for (var element in pages) {
         if (element.verses != null && element.verses!.isNotEmpty) {
           pagesf.add(element);
@@ -127,8 +135,18 @@ class QuranPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: pages[indexPage].verses!.length,
                 itemBuilder: (context, index) => GestureDetector(
-                  onLongPress: () {},
-                  onTap: () {},
+                  onLongPress: () {
+                    onLongTap(pages[indexPage]
+                        .verses![index]
+                        .uthmanicText
+                        .toString());
+                  },
+                  onTap: () {
+                    onLongTap(pages[indexPage]
+                        .verses![index]
+                        .uthmanicText
+                        .toString());
+                  },
                   child: Text(
                     pages[indexPage].verses![index].uthmanicText.toString(),
                     style: const TextStyle(
