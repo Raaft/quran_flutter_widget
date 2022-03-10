@@ -1,8 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:quran_widget_flutter/model/verse.dart';
 
 import '../../../data_source/data_source.dart';
-import '../../../model/page.dart';
 
 part 'quran_state.dart';
 
@@ -11,13 +13,19 @@ class QuranCubit extends Cubit<QuranState> {
 
   QuranCubit get(context) => BlocProvider.of(context);
 
-  List<Page> pages = [];
+  List<Verse> verses = [];
 
   fetchPages() {
+    emit(PagesFetchLoadingState());
     try {
-      DataSource.instance.fetchPagesList().then((value) async {
-        if (value!.isNotEmpty) {
-          pages = value;
+      DataSource.instance.fetchPageById( 2).then((value) async {
+        print('Pages $value');
+        if (value != null ) {
+
+            if (value.verses != null && value.verses!.isNotEmpty) {
+              verses = value.verses!;
+
+          }
           emit(PagesFetchedState());
         } else {
           emit(PagesFetchErrorState());
@@ -41,7 +49,8 @@ class QuranCubit extends Cubit<QuranState> {
   }
 
   final List<String> quran = [
-'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ  ١	',
+    'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ  ١	',
+    'ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ ٣',
     'الحمد لله رب العالمين	',
     'الرحمن الرحيم	',
     'مالك يوم الدين	',

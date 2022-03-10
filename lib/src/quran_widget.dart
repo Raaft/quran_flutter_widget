@@ -18,7 +18,7 @@ class QuranWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => QuranCubit(),
+      create: (context) => QuranCubit()..fetchPages(),
       child: BlocConsumer<QuranCubit, QuranState>(
         listener: (context, state) {
           print(page.toString());
@@ -36,7 +36,7 @@ Widget body(QuranCubit cubit, PageType page) {
   switch (page) {
     case PageType.quran:
       {
-        return  const QuranPage();
+        return   const QuranPage();
       }
 
     case PageType.tafsir:

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_widget_flutter/helper/q.dart';
+import 'package:quran_widget_flutter/model/verse.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
-
+import 'package:quran_widget_flutter/model/page.dart' as page;
 
 class QuranPage extends StatelessWidget {
   const QuranPage({Key? key}) : super(key: key);
@@ -18,7 +19,8 @@ class QuranPage extends StatelessWidget {
             listener: (context, state) {},
             builder: (context, state) {
               var cubit = QuranCubit().get(context);
-              List quran = cubit.quran;
+              List<Verse>? verses = cubit.verses;
+              print('verses ' + verses.toString());
 
               return Container(
                   color: Colors.white,
@@ -27,18 +29,41 @@ class QuranPage extends StatelessWidget {
                     itemCount: 5,
                     itemBuilder: (context, index) => Stack(
                       children: [
-                        /* Image.network(
-                          'https://www.researchgate.net/profile/Amirul-Ramzani-Radzid/publication/326224590/figure/fig1/AS:645292835753984@1530861209990/Example-of-text-image-Mushaf-Al-Quran-from-Mushaf-AlMadinah-Quran-Majeed-page-3.png',
-                        ),
-                        // Image.asset('assets/img/quranImg.jpg'),
-                        paintPoint(offset1, offset2, () {}, () {}),*/
-                        ListView.builder(
-                            itemCount: quran.length,
-                            itemBuilder: (context, index) => GestureDetector(
+                        if ((state is PagesFetchedState))
+                          const Text('PagesFetchedState', style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontFamily: Q.qaloon),
+                            textAlign: TextAlign.center,),
+                        if ((state is PagesFetchLoadingState))
+                          const Text('PagesFetchLoadingState', style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontFamily: Q.qaloon),
+                            textAlign: TextAlign.center,),
+                        if ((state is PagesFetchErrorState))
+                          const Text('PagesFetchErrorState', style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontFamily: Q.qaloon),
+              textAlign: TextAlign.center,),
+                        (state is PagesFetchLoadingState)
+                            ? const Center(child: CircularProgressIndicator())
+                            : ListView.builder(
+                                itemCount: verses.length,
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
                                   onLongPress: () {},
                                   onTap: () {},
-                                  child: Text(quran[index]+'  $index',style: const TextStyle(fontSize: 25,fontFamily: Q.qaloon),textAlign: TextAlign.center),
-                                ))
+                                  child: Text(
+                                      verses[index].uthmanicText.toString(),
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 25,
+                                          fontFamily: Q.qaloon),
+                                      textAlign: TextAlign.center,),
+                                ),
+                              ),
                         // Image.asset('assets/img/quranImg.jpg'),
                       ],
                     ),

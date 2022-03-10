@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quran_widget_flutter/network_helper/apis.dart';
 
 class FileStorage {
   Future<String> get _localPath async {
@@ -40,12 +41,15 @@ class FileStorage {
 
         //Received data with List<int>
         options: Options(
+          headers: {'Authorization': Apis.authorization},
             responseType: ResponseType.bytes,
             followRedirects: false,
             validateStatus: (status) {
               return status! < 500;
             }),
       );
+
+  //    authOptions?.headers?['Authorization'] = Apis.authorization;
 
       print(response.headers);
 
