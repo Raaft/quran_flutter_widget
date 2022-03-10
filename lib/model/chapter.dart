@@ -7,10 +7,10 @@ class Chapter extends BaseModel {
   @primaryKey
   int? id;
   String? name;
-  Chapter(
+  Chapter({
     this.id,
     this.name,
-  );
+  });
 
   @override
   Map<String, dynamic> toJson() {
@@ -25,8 +25,8 @@ class Chapter extends BaseModel {
     String? name,
   }) {
     return Chapter(
-      id ?? this.id,
-      name ?? this.name,
+      id: id ?? this.id,
+      name: name ?? this.name,
     );
   }
 
@@ -39,8 +39,8 @@ class Chapter extends BaseModel {
 
   factory Chapter.fromJson(Map<String, dynamic> map) {
     return Chapter(
-      map['id']?.toInt(),
-      map['name'],
+      id: map['id']?.toInt(),
+      name: map['name'],
     );
   }
 

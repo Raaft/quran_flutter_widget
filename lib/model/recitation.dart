@@ -5,16 +5,15 @@ import 'package:quran_widget_flutter/model/reciter.dart';
 
 @Entity(tableName: 'Recitation', foreignKeys: [
   ForeignKey(
-      childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
-  ForeignKey(
-      childColumns: ['reciter_id'], parentColumns: ['id'], entity: Reciter)
+      childColumns: ['narration'], parentColumns: ['id'], entity: Narration),
+  ForeignKey(childColumns: ['reciter'], parentColumns: ['id'], entity: Reciter)
 ])
 class Recitation extends BaseModel {
   @primaryKey
   int? id;
-  @ColumnInfo(name: 'narration_id')
+  @ColumnInfo(name: 'narration')
   int? narrationId;
-  @ColumnInfo(name: 'reciter_id')
+  @ColumnInfo(name: 'reciter')
   int? reciterId;
 
   Recitation(
@@ -22,18 +21,19 @@ class Recitation extends BaseModel {
     this.narrationId,
     this.reciterId,
   );
+
   Recitation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    narrationId = json['narration_id'];
-    reciterId = json['reciter_id'];
+    narrationId = json['narration'];
+    reciterId = json['reciter'];
   }
 
   @override
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = id;
-    data['narration_id'] = narrationId;
-    data['reciter_id'] = reciterId;
+    data['narration'] = narrationId;
+    data['reciter'] = reciterId;
     return data;
   }
 
@@ -52,8 +52,8 @@ class Recitation extends BaseModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'narrationId': narrationId,
-      'reciterId': reciterId,
+      'narration': narrationId,
+      'reciter': reciterId,
     };
   }
 

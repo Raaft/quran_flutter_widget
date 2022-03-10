@@ -17,6 +17,8 @@ class BookRepository {
 
     print('BookRepository 1 $booksList');
 
+    booksList = null;
+
     if ((booksList != null && booksList.isNotEmpty)) {
       return booksList;
     } else {

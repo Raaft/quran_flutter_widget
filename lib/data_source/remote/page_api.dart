@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:quran_widget_flutter/model/apis_response/my_response.dart';
-import 'package:quran_widget_flutter/model/page.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
 import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
@@ -36,8 +35,8 @@ class PageApi {
   }
 
   fetchPagesListDown({int? bookId, int? narrationId}) async {
-    var _fromString;
-  await  FileStorage()
+    dynamic _fromString;
+    await FileStorage()
         .download2(
             url: Apis.fetchAllPAGES + '?book=1&narration=1&download=1',
             savePath: '/saveToFetch.json',
@@ -51,9 +50,8 @@ class PageApi {
         // Read the file
         var response = await file.readAsString();
 
-        _fromString  = jsonDecode(response);
+        _fromString = jsonDecode(response);
         print('file down path $_fromString');
-
       },
     );
 

@@ -6,33 +6,27 @@ import 'base_model.dart';
 
 @Entity(tableName: 'Book', foreignKeys: [
   ForeignKey(
-      childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration)
+      childColumns: ['narration'], parentColumns: ['id'], entity: Narration)
 ])
 class Book extends BaseModel {
   @primaryKey
   int? id;
   String? name;
-  @ColumnInfo(name: 'narration_id')
+  @ColumnInfo(name: 'narration')
   int? narrationId;
 
-  Book(
+  Book({
     this.id,
     this.name,
     this.narrationId,
-  );
-
-  factory Book.fromJson(Map<String, dynamic> json) => Book(
-        json['id']?.toInt(),
-        json['name'],
-        json['narration_id']?.toInt(),
-      );
+  });
 
   @override
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
-    data['narration_id'] = narrationId;
+    data['narration'] = narrationId;
     return data;
   }
 
@@ -42,9 +36,25 @@ class Book extends BaseModel {
     int? narrationId,
   }) {
     return Book(
-      id ?? this.id,
-      name ?? this.name,
-      narrationId ?? this.narrationId,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      narrationId: narrationId ?? this.narrationId,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'narration': narrationId,
+    };
+  }
+
+  factory Book.fromJson(Map<String, dynamic> map) {
+    return Book(
+      id: map['id']?.toInt(),
+      name: map['name'],
+      narrationId: map['narration']?.toInt(),
     );
   }
 

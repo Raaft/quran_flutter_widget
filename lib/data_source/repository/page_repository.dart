@@ -37,7 +37,8 @@ class PageRepository {
     int? bookId,
     int? narrationId,
   }) async {
-    List<Page>? pagesList = await _pageLocalDataSource.fetchPagesList();
+    List<Page>? pagesList;
+    //await _pageLocalDataSource.findChapterPage(bookId: bookId, chapterid: 1, narrationId: narrationId);
 
     if ((pagesList != null && pagesList.isNotEmpty)) {
       for (var element in pagesList) {
@@ -51,15 +52,16 @@ class PageRepository {
       try {
         List<Page>? pagesList;
 
-        final MyResponse<Page> response = await _pageApi.fetchPagesListDown(bookId: bookId, narrationId: narrationId);
+        final MyResponse<Page> response = await _pageApi.fetchPagesListDown(
+            bookId: bookId, narrationId: narrationId);
 
         print('done returen');
 
         if (response.code == Apis.codeSUCCESS) {
           pagesList = response.data as List<Page>;
           print('ResponseDownload ${pagesList.whereType()} $pagesList ');
-          _pageLocalDataSource.savePagesList(pagesList);
-        }else{
+          //  _pageLocalDataSource.savePagesList(pagesList);
+        } else {
           print('else $response');
         }
 
@@ -74,7 +76,7 @@ class PageRepository {
   Future<Page?> fetchPageById(int pageId) async {
     Page? page = await _pageLocalDataSource.fetchPageById(pageId);
     if (page != null) {
-      page.verses =  await _pageLocalDataSource.fetchVerseById(page.id ?? 0);
+      page.verses = await _pageLocalDataSource.fetchVerseById(page.id ?? 0);
       print('getVerse ${page.verses}');
       return page;
     } else {

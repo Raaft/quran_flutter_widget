@@ -1,6 +1,5 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
 import 'package:quran_widget_flutter/model/page.dart';
-import 'package:quran_widget_flutter/model/verse.dart';
 
 class PageLocalDataSource {
   Future<List<Page>?> fetchPagesList({
@@ -9,6 +8,16 @@ class PageLocalDataSource {
   }) async {
     final db = await QuranDatabaseSource.instance.database;
     return db?.pageDao.findAllPages();
+  }
+
+  Future<List<Page>?> findChapterPage({
+    int? bookId,
+    int? narrationId,
+    int? chapterid,
+  }) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return db?.pageDao
+        .findChapterPage(narrationId ?? 0, bookId ?? 0, chapterid ?? 0);
   }
 
   Future<Page?> fetchPageById(int pageId) async {
