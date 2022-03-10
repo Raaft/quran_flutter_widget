@@ -1,9 +1,11 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
 import 'package:quran_widget_flutter/model/page.dart';
-import 'package:quran_widget_flutter/model/verse.dart';
 
 class PageLocalDataSource {
-  Future<List<Page>?> fetchPagesList() async {
+  Future<List<Page>?> fetchPagesList({
+    int? bookId,
+    int? narrationId,
+  }) async {
     final db = await QuranDatabaseSource.instance.database;
     return db?.pageDao.findAllPages();
   }
