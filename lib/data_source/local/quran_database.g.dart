@@ -116,7 +116,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_id` INTEGER, `verse_number` INTEGER, `recitation_id` INTEGER, `record` TEXT, `recordLocal` TEXT, FOREIGN KEY (`verse_id`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`recitation_id`) REFERENCES `Recitation` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration_id` INTEGER, `chapter_id` INTEGER, `book_id` INTEGER, `part_id` INTEGER, `page_id` INTEGER, FOREIGN KEY (`narration_id`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter_id`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book_id`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part_id`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page_id`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration_id` INTEGER, `chapter_id` INTEGER, `book_id` INTEGER, `part_id` INTEGER, `page` INTEGER, FOREIGN KEY (`narration_id`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter_id`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book_id`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part_id`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page_id`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse_id` INTEGER, `page_id` INTEGER, `chapter_id` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER, FOREIGN KEY (`chapter_id`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page_id`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`verse_id`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
 
@@ -916,7 +916,7 @@ class _$VerseDao extends VerseDao {
                   'chapter_id': item.chapterId,
                   'book_id': item.bookId,
                   'part_id': item.partId,
-                  'page_id': item.pageId
+                  'page': item.pageId
                 },
             changeListener),
         _verseUpdateAdapter = UpdateAdapter(
@@ -934,7 +934,7 @@ class _$VerseDao extends VerseDao {
                   'chapter_id': item.chapterId,
                   'book_id': item.bookId,
                   'part_id': item.partId,
-                  'page_id': item.pageId
+                  'page': item.pageId
                 },
             changeListener),
         _verseDeletionAdapter = DeletionAdapter(
@@ -952,7 +952,7 @@ class _$VerseDao extends VerseDao {
                   'chapter_id': item.chapterId,
                   'book_id': item.bookId,
                   'part_id': item.partId,
-                  'page_id': item.pageId
+                  'page': item.pageId
                 },
             changeListener);
 
@@ -982,12 +982,12 @@ class _$VerseDao extends VerseDao {
             row['chapter_id'] as int?,
             row['book_id'] as int?,
             row['part_id'] as int?,
-            row['page_id'] as int?));
+            row['page'] as int?));
   }
 
   @override
   Future<List<Verse>> findAllVersesPage(int page) async {
-    return _queryAdapter.queryList('SELECT * FROM Verse WHERE page_id = ?1',
+    return _queryAdapter.queryList('SELECT * FROM Verse WHERE page = ?1',
         mapper: (Map<String, Object?> row) => Verse(
             row['id'] as int?,
             row['text'] as String?,
@@ -999,7 +999,7 @@ class _$VerseDao extends VerseDao {
             row['chapter_id'] as int?,
             row['book_id'] as int?,
             row['part_id'] as int?,
-            row['page_id'] as int?),
+            row['page'] as int?),
         arguments: [page]);
   }
 
@@ -1017,7 +1017,7 @@ class _$VerseDao extends VerseDao {
             row['chapter_id'] as int?,
             row['book_id'] as int?,
             row['part_id'] as int?,
-            row['page_id'] as int?),
+            row['page'] as int?),
         arguments: [id],
         queryableName: 'Verse',
         isView: false);

@@ -18,6 +18,7 @@ class DioUtils {
   static const String requestPOST = 'post';
   static const String requestPUT = 'put';
   static const String requestDELETE = 'delete';
+  static const String requestDownload = 'download';
 
   static void initDio() {
     if (dio == null) {

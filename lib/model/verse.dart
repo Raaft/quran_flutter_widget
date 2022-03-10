@@ -34,7 +34,7 @@ class Verse extends BaseModel {
   int? bookId;
   @ColumnInfo(name: 'part_id')
   int? partId;
-  @ColumnInfo(name: 'page_id')
+  @ColumnInfo(name: 'page')
   int? pageId;
 
   Verse(

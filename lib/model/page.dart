@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:floor/floor.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
@@ -24,15 +21,15 @@ class Page extends BaseModel {
   int? id;
   @ColumnInfo(name: 'page_number')
   int? pageNumber;
-  @ColumnInfo(name: 'narration')
+  @ColumnInfo(name: 'narration_id')
   int? narrationId;
-  @ColumnInfo(name: 'chapters')
-  List<int>? chapterId;
-  @ColumnInfo(name: 'book')
+  @ColumnInfo(name: 'chapter_id')
+  int? chapterId;
+  @ColumnInfo(name: 'book_id')
   int? bookId;
-  @ColumnInfo(name: 'part')
+  @ColumnInfo(name: 'part_id')
   int? partId;
-  @ColumnInfo(name: 'sub_part')
+  @ColumnInfo(name: 'sub_part_id')
   int? subPartId;
   String? image;
   String? localImage;
@@ -42,7 +39,7 @@ class Page extends BaseModel {
   @ignore
   List<Glyph>? glyphs;
 
-  Page({
+  Page(
     this.id,
     this.pageNumber,
     this.narrationId,
@@ -51,10 +48,32 @@ class Page extends BaseModel {
     this.partId,
     this.subPartId,
     this.image,
-    this.localImage,
     this.verses,
     this.glyphs,
-  });
+  );
+  Page.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    pageNumber = json['page_number'];
+    narrationId = json['narration_id'];
+    chapterId = json['chapter_id'];
+    bookId = json['book_id'];
+    partId = json['part_id'];
+    subPartId = json['sub_part_id'];
+    image = json['image'];
+
+    if (json['verses'] != null) {
+      verses = <Verse>[];
+      json['verses'].forEach((v) {
+        verses!.add(Verse.fromJson(v));
+      });
+    }
+    if (json['glyphs'] != null) {
+      glyphs = <Glyph>[];
+      json['glyphs'].forEach((v) {
+        glyphs!.add(Glyph.fromJson(v));
+      });
+    }
+  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -80,27 +99,25 @@ class Page extends BaseModel {
     int? id,
     int? pageNumber,
     int? narrationId,
-    List<int>? chapterId,
+    int? chapterId,
     int? bookId,
     int? partId,
     int? subPartId,
     String? image,
-    String? localImage,
     List<Verse>? verses,
     List<Glyph>? glyphs,
   }) {
     return Page(
-      id: id ?? this.id,
-      pageNumber: pageNumber ?? this.pageNumber,
-      narrationId: narrationId ?? this.narrationId,
-      chapterId: chapterId ?? this.chapterId,
-      bookId: bookId ?? this.bookId,
-      partId: partId ?? this.partId,
-      subPartId: subPartId ?? this.subPartId,
-      image: image ?? this.image,
-      localImage: localImage ?? this.localImage,
-      verses: verses ?? this.verses,
-      glyphs: glyphs ?? this.glyphs,
+      id ?? this.id,
+      pageNumber ?? this.pageNumber,
+      narrationId ?? this.narrationId,
+      chapterId ?? this.chapterId,
+      bookId ?? this.bookId,
+      partId ?? this.partId,
+      subPartId ?? this.subPartId,
+      image ?? this.image,
+      verses ?? this.verses,
+      glyphs ?? this.glyphs,
     );
   }
 
@@ -114,29 +131,33 @@ class Page extends BaseModel {
       'partId': partId,
       'subPartId': subPartId,
       'image': image,
-      'localImage': localImage,
-      'verses': verses?.map((x) => x?.toMap())?.toList(),
-      'glyphs': glyphs?.map((x) => x?.toMap())?.toList(),
+      'verses': verses?.map((x) => x.toJson()).toList(),
+      'glyphs': glyphs?.map((x) => x.toJson()).toList(),
     };
   }
 
   factory Page.fromMap(Map<String, dynamic> map) {
     return Page(
-      id: map['id']?.toInt(),
-      pageNumber: map['pageNumber']?.toInt(),
-      narrationId: map['narrationId']?.toInt(),
-      chapterId: List<int>.from(JsonDecoder(map['chapterId'])),
-      bookId: map['bookId']?.toInt(),
-      partId: map['partId']?.toInt(),
-      subPartId: map['subPartId']?.toInt(),
-      image: map['image'],
-      localImage: map['localImage'],
+      map['id']?.toInt(),
+      map['pageNumber']?.toInt(),
+      map['narrationId']?.toInt(),
+      map['chapterId']?.toInt(),
+      map['bookId']?.toInt(),
+      map['partId']?.toInt(),
+      map['subPartId']?.toInt(),
+      map['image'],
+      map['verses'] != null
+          ? List<Verse>.from(map['verses']?.map((x) => Verse.fromJson(x)))
+          : null,
+      map['glyphs'] != null
+          ? List<Glyph>.from(map['glyphs']?.map((x) => Glyph.fromJson(x)))
+          : null,
     );
   }
 
   @override
   String toString() {
-    return 'Page(id: $id, pageNumber: $pageNumber, narrationId: $narrationId, chapterId: $chapterId, bookId: $bookId, partId: $partId, subPartId: $subPartId, image: $image, localImage: $localImage, verses: $verses, glyphs: $glyphs)';
+    return 'Page(id: $id, pageNumber: $pageNumber, narrationId: $narrationId, chapterId: $chapterId, bookId: $bookId, partId: $partId, subPartId: $subPartId, image: $image, verses: $verses, glyphs: $glyphs)';
   }
 
   @override
@@ -147,12 +168,11 @@ class Page extends BaseModel {
         other.id == id &&
         other.pageNumber == pageNumber &&
         other.narrationId == narrationId &&
-        listEquals(other.chapterId, chapterId) &&
+        other.chapterId == chapterId &&
         other.bookId == bookId &&
         other.partId == partId &&
         other.subPartId == subPartId &&
         other.image == image &&
-        other.localImage == localImage &&
         listEquals(other.verses, verses) &&
         listEquals(other.glyphs, glyphs);
   }
@@ -167,12 +187,7 @@ class Page extends BaseModel {
         partId.hashCode ^
         subPartId.hashCode ^
         image.hashCode ^
-        localImage.hashCode ^
         verses.hashCode ^
         glyphs.hashCode;
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Page.fromJson(String source) => Page.fromMap(json.decode(source));
 }

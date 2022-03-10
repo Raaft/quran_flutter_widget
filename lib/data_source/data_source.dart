@@ -69,6 +69,11 @@ class DataSource {
     int? narrationId,
   }) =>
       _pageRepository.fetchPagesList(bookId: bookId);
+  Future<List<page.Page>?> fetchPagesListDown({
+    int? bookId,
+    int? narrationId,
+  }) =>
+      _pageRepository.fetchPagesListDown(bookId: bookId,narrationId: narrationId);
   Future<page.Page?> fetchPageById(int pageId) =>
       _pageRepository.fetchPageById(pageId);
 
