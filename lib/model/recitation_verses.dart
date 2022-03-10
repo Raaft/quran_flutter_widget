@@ -1,23 +1,22 @@
 import 'package:floor/floor.dart';
+
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 
 @Entity(tableName: 'RecitationVerses', foreignKeys: [
-  ForeignKey(childColumns: ['verse_id'], parentColumns: ['id'], entity: Verse),
+  ForeignKey(childColumns: ['verse'], parentColumns: ['id'], entity: Verse),
   ForeignKey(
-      childColumns: ['recitation_id'],
-      parentColumns: ['id'],
-      entity: Recitation),
+      childColumns: ['recitation'], parentColumns: ['id'], entity: Recitation),
 ])
 class RecitationVerses extends BaseModel {
   @primaryKey
   int? id;
-  @ColumnInfo(name: 'verse_id')
+  @ColumnInfo(name: 'verse')
   int? verseId;
   @ColumnInfo(name: 'verse_number')
   int? verseNumber;
-  @ColumnInfo(name: 'recitation_id')
+  @ColumnInfo(name: 'recitation')
   int? recitationId;
   String? record;
   String? recordLocal;
@@ -28,22 +27,16 @@ class RecitationVerses extends BaseModel {
     this.verseNumber,
     this.recitationId,
     this.record,
+    this.recordLocal,
   );
-  RecitationVerses.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    verseId = json['verse_id'];
-    verseNumber = json['verse_number'];
-    recitationId = json['recitation_id'];
-    record = json['record'];
-  }
 
   @override
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = id;
-    data['verse_id'] = verseId;
+    data['verse'] = verseId;
     data['verse_number'] = verseNumber;
-    data['recitation_id'] = recitationId;
+    data['recitation'] = recitationId;
     data['record'] = record;
     return data;
   }
@@ -54,6 +47,7 @@ class RecitationVerses extends BaseModel {
     int? verseNumber,
     int? recitationId,
     String? record,
+    String? recordLocal,
   }) {
     return RecitationVerses(
       id ?? this.id,
@@ -61,22 +55,24 @@ class RecitationVerses extends BaseModel {
       verseNumber ?? this.verseNumber,
       recitationId ?? this.recitationId,
       record ?? this.record,
+      recordLocal ?? this.recordLocal,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'verseId': verseId,
-      'verseNumber': verseNumber,
-      'recitationId': recitationId,
-      'record': record,
-    };
+  factory RecitationVerses.fromJson(Map<String, dynamic> map) {
+    return RecitationVerses(
+      map['id']?.toInt(),
+      map['verse']?.toInt(),
+      map['verse_number']?.toInt(),
+      map['recitation']?.toInt(),
+      map['record'],
+      map['recordLocal'],
+    );
   }
 
   @override
   String toString() {
-    return 'RecitationVerses(id: $id, verseId: $verseId, verseNumber: $verseNumber, recitationId: $recitationId, record: $record)';
+    return 'RecitationVerses(id: $id, verseId: $verseId, verseNumber: $verseNumber, recitationId: $recitationId, record: $record, recordLocal: $recordLocal)';
   }
 
   @override
@@ -88,7 +84,8 @@ class RecitationVerses extends BaseModel {
         other.verseId == verseId &&
         other.verseNumber == verseNumber &&
         other.recitationId == recitationId &&
-        other.record == record;
+        other.record == record &&
+        other.recordLocal == recordLocal;
   }
 
   @override
@@ -97,6 +94,7 @@ class RecitationVerses extends BaseModel {
         verseId.hashCode ^
         verseNumber.hashCode ^
         recitationId.hashCode ^
-        record.hashCode;
+        record.hashCode ^
+        recordLocal.hashCode;
   }
 }

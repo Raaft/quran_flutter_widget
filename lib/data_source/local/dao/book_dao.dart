@@ -9,7 +9,7 @@ abstract class BookDao {
   @Query('SELECT * FROM Book WHERE name like :qurey')
   Future<List<Book>> searchInBooks(String qurey);
 
-  @Query('SELECT * FROM Book WHERE narration_id = :narrationId')
+  @Query('SELECT * FROM Book WHERE narration = :narrationId')
   Future<List<Book>> findBooksInNarrationId(int narrationId);
 
   @Query('SELECT * FROM Book WHERE id = :id')

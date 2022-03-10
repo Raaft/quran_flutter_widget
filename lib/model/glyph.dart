@@ -1,23 +1,23 @@
 import 'package:floor/floor.dart';
+
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
 import 'package:quran_widget_flutter/model/page.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 
 @Entity(tableName: 'Glyph', foreignKeys: [
-  ForeignKey(
-      childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
-  ForeignKey(childColumns: ['page_id'], parentColumns: ['id'], entity: Page),
-  ForeignKey(childColumns: ['verse_id'], parentColumns: ['id'], entity: Verse),
+  ForeignKey(childColumns: ['chapter'], parentColumns: ['id'], entity: Chapter),
+  ForeignKey(childColumns: ['page'], parentColumns: ['id'], entity: Page),
+  ForeignKey(childColumns: ['verse'], parentColumns: ['id'], entity: Verse),
 ])
 class Glyph extends BaseModel {
   @primaryKey
   int? id;
-  @ColumnInfo(name: 'verse_id')
+  @ColumnInfo(name: 'verse')
   int? verseId;
-  @ColumnInfo(name: 'page_id')
+  @ColumnInfo(name: 'page')
   int? pageId;
-  @ColumnInfo(name: 'chapter_id')
+  @ColumnInfo(name: 'chapter')
   int? chapterId;
   @ColumnInfo(name: 'line_number')
   int? lineNumber;
@@ -39,26 +39,14 @@ class Glyph extends BaseModel {
     this.minY,
     this.maxY,
   );
-  Glyph.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    verseId = json['verse_id'];
-    pageId = json['page_id'];
-    chapterId = json['chapter_id'];
-    lineNumber = json['line_number'];
-    position = json['position'];
-    minX = json['min_x'];
-    maxX = json['max_x'];
-    minY = json['min_y'];
-    maxY = json['max_y'];
-  }
 
   @override
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = id;
-    data['verse_id'] = verseId;
-    data['page_id'] = pageId;
-    data['chapter_id'] = chapterId;
+    data['verse'] = verseId;
+    data['page'] = pageId;
+    data['chapter'] = chapterId;
     data['line_number'] = lineNumber;
     data['position'] = position;
     data['min_x'] = minX;
@@ -97,16 +85,31 @@ class Glyph extends BaseModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'verseId': verseId,
-      'pageId': pageId,
-      'chapterId': chapterId,
-      'lineNumber': lineNumber,
+      'verse': verseId,
+      'page': pageId,
+      'chapter': chapterId,
+      'line_number': lineNumber,
       'position': position,
       'minX': minX,
       'maxX': maxX,
       'minY': minY,
       'maxY': maxY,
     };
+  }
+
+  factory Glyph.fromJson(Map<String, dynamic> map) {
+    return Glyph(
+      map['id']?.toInt(),
+      map['verse']?.toInt(),
+      map['page']?.toInt(),
+      map['chapter']?.toInt(),
+      map['line_number']?.toInt(),
+      map['position']?.toInt(),
+      map['minX']?.toInt(),
+      map['maxX']?.toInt(),
+      map['minY']?.toInt(),
+      map['maxY']?.toInt(),
+    );
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:floor/floor.dart';
+
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
@@ -8,12 +9,11 @@ import 'package:quran_widget_flutter/model/part.dart';
 
 @Entity(tableName: 'Verse', foreignKeys: [
   ForeignKey(
-      childColumns: ['narration_id'], parentColumns: ['id'], entity: Narration),
-  ForeignKey(
-      childColumns: ['chapter_id'], parentColumns: ['id'], entity: Chapter),
-  ForeignKey(childColumns: ['book_id'], parentColumns: ['id'], entity: Book),
-  ForeignKey(childColumns: ['part_id'], parentColumns: ['id'], entity: Part),
-  ForeignKey(childColumns: ['page_id'], parentColumns: ['id'], entity: Page),
+      childColumns: ['narration'], parentColumns: ['id'], entity: Narration),
+  ForeignKey(childColumns: ['chapter'], parentColumns: ['id'], entity: Chapter),
+  ForeignKey(childColumns: ['book'], parentColumns: ['id'], entity: Book),
+  ForeignKey(childColumns: ['part'], parentColumns: ['id'], entity: Part),
+  ForeignKey(childColumns: ['page'], parentColumns: ['id'], entity: Page),
 ])
 class Verse extends BaseModel {
   @primaryKey
@@ -26,18 +26,19 @@ class Verse extends BaseModel {
   @ColumnInfo(name: 'line_end')
   int? lineEnd;
   String? image;
-  @ColumnInfo(name: 'narration_id')
+  @ColumnInfo(name: 'narration')
   int? narrationId;
-  @ColumnInfo(name: 'chapter_id')
+  @ColumnInfo(name: 'chapter')
   int? chapterId;
-  @ColumnInfo(name: 'book_id')
+  @ColumnInfo(name: 'book')
   int? bookId;
-  @ColumnInfo(name: 'part_id')
+  @ColumnInfo(name: 'part')
   int? partId;
   @ColumnInfo(name: 'page')
   int? pageId;
-
-  Verse(
+  @ColumnInfo(name: 'verse_number')
+  int? verseNumber;
+  Verse({
     this.id,
     this.text,
     this.uthmanicText,
@@ -49,38 +50,8 @@ class Verse extends BaseModel {
     this.bookId,
     this.partId,
     this.pageId,
-  );
-
-  Verse.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    text = json['text'];
-    uthmanicText = json['uthmanic_text'];
-    lineStart = json['line_start'];
-    lineEnd = json['line_end'];
-    image = json['image'];
-    narrationId = json['narration_id'];
-    chapterId = json['chapter_id'];
-    bookId = json['book_id'];
-    partId = json['part_id'];
-    pageId = json['page_id'];
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['id'] = id;
-    data['text'] = text;
-    data['uthmanic_text'] = uthmanicText;
-    data['line_start'] = lineStart;
-    data['line_end'] = lineEnd;
-    data['image'] = image;
-    data['narration_id'] = narrationId;
-    data['chapter_id'] = chapterId;
-    data['book_id'] = bookId;
-    data['part_id'] = partId;
-    data['page_id'] = pageId;
-    return data;
-  }
+    this.verseNumber,
+  });
 
   Verse copyWith({
     int? id,
@@ -94,36 +65,71 @@ class Verse extends BaseModel {
     int? bookId,
     int? partId,
     int? pageId,
+    int? verseNumber,
   }) {
     return Verse(
-      id ?? this.id,
-      text ?? this.text,
-      uthmanicText ?? this.uthmanicText,
-      lineStart ?? this.lineStart,
-      lineEnd ?? this.lineEnd,
-      image ?? this.image,
-      narrationId ?? this.narrationId,
-      chapterId ?? this.chapterId,
-      bookId ?? this.bookId,
-      partId ?? this.partId,
-      pageId ?? this.pageId,
+      id: id ?? this.id,
+      text: text ?? this.text,
+      uthmanicText: uthmanicText ?? this.uthmanicText,
+      lineStart: lineStart ?? this.lineStart,
+      lineEnd: lineEnd ?? this.lineEnd,
+      image: image ?? this.image,
+      narrationId: narrationId ?? this.narrationId,
+      chapterId: chapterId ?? this.chapterId,
+      bookId: bookId ?? this.bookId,
+      partId: partId ?? this.partId,
+      pageId: pageId ?? this.pageId,
+      verseNumber: verseNumber ?? this.verseNumber,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  @override
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'text': text,
-      'uthmanicText': uthmanicText,
-      'lineStart': lineStart,
-      'lineEnd': lineEnd,
+      'uthmanic_text': uthmanicText,
+      'line_start': lineStart,
+      'line_end': lineEnd,
       'image': image,
-      'narrationId': narrationId,
-      'chapterId': chapterId,
-      'bookId': bookId,
-      'partId': partId,
-      'pageId': pageId,
+      'narration': narrationId,
+      'chapter': chapterId,
+      'book': bookId,
+      'part': partId,
+      'page': pageId,
+      'verse_number': verseNumber,
     };
+  }
+
+/*
+        "id": 12  73,
+        "text": "\u0628\u0633\u0645 \u0627\u0644\u0644\u0647 \u0627\u0644\u0631\u062d\u0645\u0646 \u0627\u0644\u0631\u062d\u064a\u0645",
+        "uthmanic_text": "\u0628\u0650\u0633\u06e1\u0645\u0650 \u0671\u0644\u0644\u0651\u064e\u0647\u0650 \u0671\u0644\u0631\u0651\u064e\u062d\u06e1\u0645\u064e\u0670\u0646\u0650 \u0671\u0644\u0631\u0651\u064e\u062d\u0650\u064a\u0645\u0650\u00a0\u0661",
+        "line_start": 2,
+        "line_end": 2,
+        "image": null,
+        "book": 1,
+        "part": 1,
+        "page": 2,
+        "narration": 1,
+        "chapter": 1,
+        "verse_number": 1 */
+
+  factory Verse.fromJson(Map<String, dynamic> map) {
+    return Verse(
+      id: map['id']?.toInt(),
+      text: map['text'],
+      uthmanicText: map['uthmanic_text'],
+      lineStart: map['line_start']?.toInt(),
+      lineEnd: map['line_end']?.toInt(),
+      image: map['image'],
+      narrationId: map['narration']?.toInt(),
+      chapterId: map['chapter']?.toInt(),
+      bookId: map['book']?.toInt(),
+      partId: map['part']?.toInt(),
+      pageId: map['page']?.toInt(),
+      verseNumber: map['verse_number']?.toInt(),
+    );
   }
 
   @override
@@ -161,6 +167,7 @@ class Verse extends BaseModel {
         chapterId.hashCode ^
         bookId.hashCode ^
         partId.hashCode ^
-        pageId.hashCode;
+        pageId.hashCode ^
+        verseNumber.hashCode;
   }
 }

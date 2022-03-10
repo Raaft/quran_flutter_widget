@@ -6,7 +6,7 @@ abstract class RecitationDao {
   @Query('SELECT * FROM Recitation')
   Future<List<Recitation>> findAllRecitations();
 
-  @Query('SELECT * FROM Recitation WHERE narration_id = :narrationId')
+  @Query('SELECT * FROM Recitation WHERE narration = :narrationId')
   Future<List<Recitation>> findRecitationInNarrationId(int narrationId);
 
   @Query('SELECT * FROM Recitation WHERE id = :id')

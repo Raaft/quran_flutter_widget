@@ -1,8 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:quran_widget_flutter/model/verse.dart';
+import 'package:quran_widget_flutter/model/page.dart';
 
 import '../../../data_source/data_source.dart';
 
@@ -13,27 +11,27 @@ class QuranCubit extends Cubit<QuranState> {
 
   QuranCubit get(context) => BlocProvider.of(context);
 
-  List<Verse> verses = [];
+  List<Page> pages = [];
 
   fetchPages() {
     emit(PagesFetchLoadingState());
     try {
-      DataSource.instance.fetchPageById( 2).then((value) async {
-        print('Pages $value');
-        if (value != null ) {
-
-            if (value.verses != null && value.verses!.isNotEmpty) {
-              verses = value.verses!;
-
-          }
-          emit(PagesFetchedState());
+      DataSource.instance
+          .fetchPagesListDown(bookId: 1, narrationId: 1)
+          .then((value) async {
+        print('Pages QuranCubit  $value');
+        if (value != null) {
+          pages = value;
+          emit(PagesFetchedState(pages: pages));
         } else {
-          emit(PagesFetchErrorState());
+          emit(PagesFetchErrorState(error: 'No Data'));
         }
+      }).onError((error, stackTrace) {
+        emit(PagesFetchErrorState(error: 'OnError' + error.toString()));
       });
     } catch (e) {
       print(e.toString());
-      emit(PagesFetchErrorState());
+      emit(PagesFetchErrorState(error: 'CatchError' + e.toString()));
     }
   }
 

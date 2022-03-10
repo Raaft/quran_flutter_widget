@@ -102,23 +102,23 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Narration` (`id` INTEGER, `name` TEXT, `description` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Book` (`id` INTEGER, `name` TEXT, `narration_id` INTEGER, FOREIGN KEY (`narration_id`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Book` (`id` INTEGER, `name` TEXT, `narration` INTEGER, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Chapter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Part` (`id` INTEGER, `name` TEXT, `alias` TEXT, `part_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration_id` INTEGER, `chapter_id` INTEGER, `book_id` INTEGER, `part_id` INTEGER, `sub_part_id` INTEGER, `image` TEXT, `localImage` TEXT, FOREIGN KEY (`narration_id`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter_id`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book_id`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part_id`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration_id` INTEGER, `reciter_id` INTEGER, FOREIGN KEY (`narration_id`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter_id`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Reciter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_id` INTEGER, `verse_number` INTEGER, `recitation_id` INTEGER, `record` TEXT, `recordLocal` TEXT, FOREIGN KEY (`verse_id`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`recitation_id`) REFERENCES `Recitation` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `record` TEXT, `recordLocal` TEXT, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`recitation`) REFERENCES `Recitation` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration_id` INTEGER, `chapter_id` INTEGER, `book_id` INTEGER, `part_id` INTEGER, `page` INTEGER, FOREIGN KEY (`narration_id`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter_id`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book_id`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part_id`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page_id`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse_id` INTEGER, `page_id` INTEGER, `chapter_id` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER, FOREIGN KEY (`chapter_id`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page_id`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`verse_id`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse` INTEGER, `page` INTEGER, `chapter` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -272,7 +272,7 @@ class _$BookDao extends BookDao {
             (Book item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'narration_id': item.narrationId
+                  'narration': item.narrationId
                 },
             changeListener),
         _bookUpdateAdapter = UpdateAdapter(
@@ -282,7 +282,7 @@ class _$BookDao extends BookDao {
             (Book item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'narration_id': item.narrationId
+                  'narration': item.narrationId
                 },
             changeListener),
         _bookDeletionAdapter = DeletionAdapter(
@@ -292,7 +292,7 @@ class _$BookDao extends BookDao {
             (Book item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'narration_id': item.narrationId
+                  'narration': item.narrationId
                 },
             changeListener);
 
@@ -311,31 +311,39 @@ class _$BookDao extends BookDao {
   @override
   Future<List<Book>> findAllBooks() async {
     return _queryAdapter.queryList('SELECT * FROM Book',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?));
+        mapper: (Map<String, Object?> row) => Book(
+            id: row['id'] as int?,
+            name: row['name'] as String?,
+            narrationId: row['narration'] as int?));
   }
 
   @override
   Future<List<Book>> searchInBooks(String qurey) async {
     return _queryAdapter.queryList('SELECT * FROM Book WHERE name like ?1',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?),
+        mapper: (Map<String, Object?> row) => Book(
+            id: row['id'] as int?,
+            name: row['name'] as String?,
+            narrationId: row['narration'] as int?),
         arguments: [qurey]);
   }
 
   @override
   Future<List<Book>> findBooksInNarrationId(int narrationId) async {
-    return _queryAdapter.queryList('SELECT * FROM Book WHERE narration_id = ?1',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?),
+    return _queryAdapter.queryList('SELECT * FROM Book WHERE narration = ?1',
+        mapper: (Map<String, Object?> row) => Book(
+            id: row['id'] as int?,
+            name: row['name'] as String?,
+            narrationId: row['narration'] as int?),
         arguments: [narrationId]);
   }
 
   @override
   Stream<Book?> findBookById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Book WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Book(row['id'] as int?,
-            row['name'] as String?, row['narration_id'] as int?),
+        mapper: (Map<String, Object?> row) => Book(
+            id: row['id'] as int?,
+            name: row['name'] as String?,
+            narrationId: row['narration'] as int?),
         arguments: [id],
         queryableName: 'Book',
         isView: false);
@@ -397,14 +405,14 @@ class _$ChapterDao extends ChapterDao {
   Future<List<Chapter>> findAllChapters() async {
     return _queryAdapter.queryList('SELECT * FROM Chapter',
         mapper: (Map<String, Object?> row) =>
-            Chapter(row['id'] as int?, row['name'] as String?));
+            Chapter(id: row['id'] as int?, name: row['name'] as String?));
   }
 
   @override
   Stream<Chapter?> findChapterById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Chapter WHERE id = ?1',
         mapper: (Map<String, Object?> row) =>
-            Chapter(row['id'] as int?, row['name'] as String?),
+            Chapter(id: row['id'] as int?, name: row['name'] as String?),
         arguments: [id],
         queryableName: 'Chapter',
         isView: false);
@@ -414,7 +422,7 @@ class _$ChapterDao extends ChapterDao {
   Future<List<Chapter>> searchInChapter(String qurey) async {
     return _queryAdapter.queryList('SELECT * FROM Chapter WHERE name like ?1',
         mapper: (Map<String, Object?> row) =>
-            Chapter(row['id'] as int?, row['name'] as String?),
+            Chapter(id: row['id'] as int?, name: row['name'] as String?),
         arguments: [qurey]);
   }
 
@@ -542,11 +550,11 @@ class _$PageDao extends PageDao {
             (Page item) => <String, Object?>{
                   'id': item.id,
                   'page_number': item.pageNumber,
-                  'narration_id': item.narrationId,
-                  'chapter_id': item.chapterId,
-                  'book_id': item.bookId,
-                  'part_id': item.partId,
-                  'sub_part_id': item.subPartId,
+                  'narration': item.narrationId,
+                  'chapter': item.chapterId,
+                  'book': item.bookId,
+                  'part': item.partId,
+                  'sub_part': item.subPartId,
                   'image': item.image,
                   'localImage': item.localImage
                 },
@@ -558,11 +566,11 @@ class _$PageDao extends PageDao {
             (Page item) => <String, Object?>{
                   'id': item.id,
                   'page_number': item.pageNumber,
-                  'narration_id': item.narrationId,
-                  'chapter_id': item.chapterId,
-                  'book_id': item.bookId,
-                  'part_id': item.partId,
-                  'sub_part_id': item.subPartId,
+                  'narration': item.narrationId,
+                  'chapter': item.chapterId,
+                  'book': item.bookId,
+                  'part': item.partId,
+                  'sub_part': item.subPartId,
                   'image': item.image,
                   'localImage': item.localImage
                 },
@@ -574,11 +582,11 @@ class _$PageDao extends PageDao {
             (Page item) => <String, Object?>{
                   'id': item.id,
                   'page_number': item.pageNumber,
-                  'narration_id': item.narrationId,
-                  'chapter_id': item.chapterId,
-                  'book_id': item.bookId,
-                  'part_id': item.partId,
-                  'sub_part_id': item.subPartId,
+                  'narration': item.narrationId,
+                  'chapter': item.chapterId,
+                  'book': item.bookId,
+                  'part': item.partId,
+                  'sub_part': item.subPartId,
                   'image': item.image,
                   'localImage': item.localImage
                 },
@@ -599,13 +607,31 @@ class _$PageDao extends PageDao {
   @override
   Future<List<Page>> findAllPages() async {
     return _queryAdapter.queryList('SELECT * FROM Page',
-        mapper: (Map<String, Object?> row) => Page.fromJson(row));
+        mapper: (Map<String, Object?> row) => Page(
+            id: row['id'] as int?,
+            pageNumber: row['page_number'] as int?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            subPartId: row['sub_part'] as int?,
+            image: row['image'] as String?,
+            localImage: row['localImage'] as String?));
   }
 
   @override
   Stream<Page?> findPageById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Page WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Page.fromJson(row),
+        mapper: (Map<String, Object?> row) => Page(
+            id: row['id'] as int?,
+            pageNumber: row['page_number'] as int?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            subPartId: row['sub_part'] as int?,
+            image: row['image'] as String?,
+            localImage: row['localImage'] as String?),
         arguments: [id],
         queryableName: 'Page',
         isView: false);
@@ -615,9 +641,27 @@ class _$PageDao extends PageDao {
   Future<Page?> findPageFilters(int narrationId, int chapterid, int bookId,
       int partId, int subPartId) async {
     return _queryAdapter.query(
-        'SELECT * FROM Page WHERE narration_id = ?1 or chapter_id= ?2 or book_id =?3 or part_id =?4 or sub_part_id =?5',
-        mapper: (Map<String, Object?> row) => Page.fromJson(row),
+        'SELECT * FROM Page WHERE narration = ?1 or chapter= ?2 or book =?3 or part =?4 or sub_part =?5',
+        mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, chapterId: row['chapter'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
         arguments: [narrationId, chapterid, bookId, partId, subPartId]);
+  }
+
+  @override
+  Future<List<Page>?> findChapterPage(
+      int narrationId, int chapterid, int bookId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Page WHERE narration = ?1 aad chapter= ?2 and book =?3',
+        mapper: (Map<String, Object?> row) => Page(
+            id: row['id'] as int?,
+            pageNumber: row['page_number'] as int?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            subPartId: row['sub_part'] as int?,
+            image: row['image'] as String?,
+            localImage: row['localImage'] as String?),
+        arguments: [narrationId, chapterid, bookId]);
   }
 
   @override
@@ -644,8 +688,8 @@ class _$RecitationDao extends RecitationDao {
             'Recitation',
             (Recitation item) => <String, Object?>{
                   'id': item.id,
-                  'narration_id': item.narrationId,
-                  'reciter_id': item.reciterId
+                  'narration': item.narrationId,
+                  'reciter': item.reciterId
                 },
             changeListener),
         _recitationUpdateAdapter = UpdateAdapter(
@@ -654,8 +698,8 @@ class _$RecitationDao extends RecitationDao {
             ['id'],
             (Recitation item) => <String, Object?>{
                   'id': item.id,
-                  'narration_id': item.narrationId,
-                  'reciter_id': item.reciterId
+                  'narration': item.narrationId,
+                  'reciter': item.reciterId
                 },
             changeListener),
         _recitationDeletionAdapter = DeletionAdapter(
@@ -664,8 +708,8 @@ class _$RecitationDao extends RecitationDao {
             ['id'],
             (Recitation item) => <String, Object?>{
                   'id': item.id,
-                  'narration_id': item.narrationId,
-                  'reciter_id': item.reciterId
+                  'narration': item.narrationId,
+                  'reciter': item.reciterId
                 },
             changeListener);
 
@@ -685,15 +729,15 @@ class _$RecitationDao extends RecitationDao {
   Future<List<Recitation>> findAllRecitations() async {
     return _queryAdapter.queryList('SELECT * FROM Recitation',
         mapper: (Map<String, Object?> row) => Recitation(row['id'] as int?,
-            row['narration_id'] as int?, row['reciter_id'] as int?));
+            row['narration'] as int?, row['reciter'] as int?));
   }
 
   @override
   Future<List<Recitation>> findRecitationInNarrationId(int narrationId) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Recitation WHERE narration_id = ?1',
+        'SELECT * FROM Recitation WHERE narration = ?1',
         mapper: (Map<String, Object?> row) => Recitation(row['id'] as int?,
-            row['narration_id'] as int?, row['reciter_id'] as int?),
+            row['narration'] as int?, row['reciter'] as int?),
         arguments: [narrationId]);
   }
 
@@ -701,7 +745,7 @@ class _$RecitationDao extends RecitationDao {
   Stream<Recitation?> findRecitationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Recitation WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Recitation(row['id'] as int?,
-            row['narration_id'] as int?, row['reciter_id'] as int?),
+            row['narration'] as int?, row['reciter'] as int?),
         arguments: [id],
         queryableName: 'Recitation',
         isView: false);
@@ -809,9 +853,9 @@ class _$RecitationVersesDao extends RecitationVersesDao {
             'RecitationVerses',
             (RecitationVerses item) => <String, Object?>{
                   'id': item.id,
-                  'verse_id': item.verseId,
+                  'verse': item.verseId,
                   'verse_number': item.verseNumber,
-                  'recitation_id': item.recitationId,
+                  'recitation': item.recitationId,
                   'record': item.record,
                   'recordLocal': item.recordLocal
                 },
@@ -822,9 +866,9 @@ class _$RecitationVersesDao extends RecitationVersesDao {
             ['id'],
             (RecitationVerses item) => <String, Object?>{
                   'id': item.id,
-                  'verse_id': item.verseId,
+                  'verse': item.verseId,
                   'verse_number': item.verseNumber,
-                  'recitation_id': item.recitationId,
+                  'recitation': item.recitationId,
                   'record': item.record,
                   'recordLocal': item.recordLocal
                 },
@@ -835,9 +879,9 @@ class _$RecitationVersesDao extends RecitationVersesDao {
             ['id'],
             (RecitationVerses item) => <String, Object?>{
                   'id': item.id,
-                  'verse_id': item.verseId,
+                  'verse': item.verseId,
                   'verse_number': item.verseNumber,
-                  'recitation_id': item.recitationId,
+                  'recitation': item.recitationId,
                   'record': item.record,
                   'recordLocal': item.recordLocal
                 },
@@ -860,10 +904,11 @@ class _$RecitationVersesDao extends RecitationVersesDao {
     return _queryAdapter.queryList('SELECT * FROM RecitationVerses',
         mapper: (Map<String, Object?> row) => RecitationVerses(
             row['id'] as int?,
-            row['verse_id'] as int?,
+            row['verse'] as int?,
             row['verse_number'] as int?,
-            row['recitation_id'] as int?,
-            row['record'] as String?));
+            row['recitation'] as int?,
+            row['record'] as String?,
+            row['recordLocal'] as String?));
   }
 
   @override
@@ -872,10 +917,11 @@ class _$RecitationVersesDao extends RecitationVersesDao {
         'SELECT * FROM RecitationVerses WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RecitationVerses(
             row['id'] as int?,
-            row['verse_id'] as int?,
+            row['verse'] as int?,
             row['verse_number'] as int?,
-            row['recitation_id'] as int?,
-            row['record'] as String?),
+            row['recitation'] as int?,
+            row['record'] as String?,
+            row['recordLocal'] as String?),
         arguments: [id],
         queryableName: 'RecitationVerses',
         isView: false);
@@ -912,10 +958,10 @@ class _$VerseDao extends VerseDao {
                   'line_start': item.lineStart,
                   'line_end': item.lineEnd,
                   'image': item.image,
-                  'narration_id': item.narrationId,
-                  'chapter_id': item.chapterId,
-                  'book_id': item.bookId,
-                  'part_id': item.partId,
+                  'narration': item.narrationId,
+                  'chapter': item.chapterId,
+                  'book': item.bookId,
+                  'part': item.partId,
                   'page': item.pageId
                 },
             changeListener),
@@ -930,10 +976,10 @@ class _$VerseDao extends VerseDao {
                   'line_start': item.lineStart,
                   'line_end': item.lineEnd,
                   'image': item.image,
-                  'narration_id': item.narrationId,
-                  'chapter_id': item.chapterId,
-                  'book_id': item.bookId,
-                  'part_id': item.partId,
+                  'narration': item.narrationId,
+                  'chapter': item.chapterId,
+                  'book': item.bookId,
+                  'part': item.partId,
                   'page': item.pageId
                 },
             changeListener),
@@ -948,10 +994,10 @@ class _$VerseDao extends VerseDao {
                   'line_start': item.lineStart,
                   'line_end': item.lineEnd,
                   'image': item.image,
-                  'narration_id': item.narrationId,
-                  'chapter_id': item.chapterId,
-                  'book_id': item.bookId,
-                  'part_id': item.partId,
+                  'narration': item.narrationId,
+                  'chapter': item.chapterId,
+                  'book': item.bookId,
+                  'part': item.partId,
                   'page': item.pageId
                 },
             changeListener);
@@ -972,34 +1018,34 @@ class _$VerseDao extends VerseDao {
   Future<List<Verse>> findAllVerses() async {
     return _queryAdapter.queryList('SELECT * FROM Verse',
         mapper: (Map<String, Object?> row) => Verse(
-            row['id'] as int?,
-            row['text'] as String?,
-            row['uthmanic_text'] as String?,
-            row['line_start'] as int?,
-            row['line_end'] as int?,
-            row['image'] as String?,
-            row['narration_id'] as int?,
-            row['chapter_id'] as int?,
-            row['book_id'] as int?,
-            row['part_id'] as int?,
-            row['page'] as int?));
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            uthmanicText: row['uthmanic_text'] as String?,
+            lineStart: row['line_start'] as int?,
+            lineEnd: row['line_end'] as int?,
+            image: row['image'] as String?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            pageId: row['page'] as int?));
   }
 
   @override
   Future<List<Verse>> findAllVersesPage(int page) async {
     return _queryAdapter.queryList('SELECT * FROM Verse WHERE page = ?1',
         mapper: (Map<String, Object?> row) => Verse(
-            row['id'] as int?,
-            row['text'] as String?,
-            row['uthmanic_text'] as String?,
-            row['line_start'] as int?,
-            row['line_end'] as int?,
-            row['image'] as String?,
-            row['narration_id'] as int?,
-            row['chapter_id'] as int?,
-            row['book_id'] as int?,
-            row['part_id'] as int?,
-            row['page'] as int?),
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            uthmanicText: row['uthmanic_text'] as String?,
+            lineStart: row['line_start'] as int?,
+            lineEnd: row['line_end'] as int?,
+            image: row['image'] as String?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            pageId: row['page'] as int?),
         arguments: [page]);
   }
 
@@ -1007,17 +1053,17 @@ class _$VerseDao extends VerseDao {
   Stream<Verse?> findVerseById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Verse WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Verse(
-            row['id'] as int?,
-            row['text'] as String?,
-            row['uthmanic_text'] as String?,
-            row['line_start'] as int?,
-            row['line_end'] as int?,
-            row['image'] as String?,
-            row['narration_id'] as int?,
-            row['chapter_id'] as int?,
-            row['book_id'] as int?,
-            row['part_id'] as int?,
-            row['page'] as int?),
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            uthmanicText: row['uthmanic_text'] as String?,
+            lineStart: row['line_start'] as int?,
+            lineEnd: row['line_end'] as int?,
+            image: row['image'] as String?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            pageId: row['page'] as int?),
         arguments: [id],
         queryableName: 'Verse',
         isView: false);
@@ -1047,9 +1093,9 @@ class _$GlyphDao extends GlyphDao {
             'Glyph',
             (Glyph item) => <String, Object?>{
                   'id': item.id,
-                  'verse_id': item.verseId,
-                  'page_id': item.pageId,
-                  'chapter_id': item.chapterId,
+                  'verse': item.verseId,
+                  'page': item.pageId,
+                  'chapter': item.chapterId,
                   'line_number': item.lineNumber,
                   'position': item.position,
                   'minX': item.minX,
@@ -1064,9 +1110,9 @@ class _$GlyphDao extends GlyphDao {
             ['id'],
             (Glyph item) => <String, Object?>{
                   'id': item.id,
-                  'verse_id': item.verseId,
-                  'page_id': item.pageId,
-                  'chapter_id': item.chapterId,
+                  'verse': item.verseId,
+                  'page': item.pageId,
+                  'chapter': item.chapterId,
                   'line_number': item.lineNumber,
                   'position': item.position,
                   'minX': item.minX,
@@ -1081,9 +1127,9 @@ class _$GlyphDao extends GlyphDao {
             ['id'],
             (Glyph item) => <String, Object?>{
                   'id': item.id,
-                  'verse_id': item.verseId,
-                  'page_id': item.pageId,
-                  'chapter_id': item.chapterId,
+                  'verse': item.verseId,
+                  'page': item.pageId,
+                  'chapter': item.chapterId,
                   'line_number': item.lineNumber,
                   'position': item.position,
                   'minX': item.minX,
@@ -1110,9 +1156,9 @@ class _$GlyphDao extends GlyphDao {
     return _queryAdapter.queryList('SELECT * FROM Glyph',
         mapper: (Map<String, Object?> row) => Glyph(
             row['id'] as int?,
-            row['verse_id'] as int?,
-            row['page_id'] as int?,
-            row['chapter_id'] as int?,
+            row['verse'] as int?,
+            row['page'] as int?,
+            row['chapter'] as int?,
             row['line_number'] as int?,
             row['position'] as int?,
             row['minX'] as int?,
@@ -1126,9 +1172,9 @@ class _$GlyphDao extends GlyphDao {
     return _queryAdapter.queryStream('SELECT * FROM Glyph WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Glyph(
             row['id'] as int?,
-            row['verse_id'] as int?,
-            row['page_id'] as int?,
-            row['chapter_id'] as int?,
+            row['verse'] as int?,
+            row['page'] as int?,
+            row['chapter'] as int?,
             row['line_number'] as int?,
             row['position'] as int?,
             row['minX'] as int?,

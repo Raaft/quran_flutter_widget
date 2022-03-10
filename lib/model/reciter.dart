@@ -13,11 +13,6 @@ class Reciter extends BaseModel {
     this.name,
   );
 
-  Reciter.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-  }
-
   @override
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -41,6 +36,13 @@ class Reciter extends BaseModel {
       'id': id,
       'name': name,
     };
+  }
+
+  factory Reciter.fromJson(Map<String, dynamic> map) {
+    return Reciter(
+      map['id']?.toInt(),
+      map['name'],
+    );
   }
 
   @override

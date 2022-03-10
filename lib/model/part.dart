@@ -17,12 +17,6 @@ class Part extends BaseModel {
     this.alias,
     this.partNumber,
   );
-  Part.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    alias = json['alias'];
-    partNumber = json['part_number'];
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -48,13 +42,13 @@ class Part extends BaseModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'alias': alias,
-      'partNumber': partNumber,
-    };
+  factory Part.fromJson(Map<String, dynamic> map) {
+    return Part(
+      map['id']?.toInt(),
+      map['name'],
+      map['alias'],
+      map['part_number']?.toInt(),
+    );
   }
 
   @override
