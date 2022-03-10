@@ -12,6 +12,7 @@ class QuranCubit extends Cubit<QuranState> {
   QuranCubit get(context) => BlocProvider.of(context);
 
   List<Page> pages = [];
+  bool selected=false;
 
   fetchPages() {
     emit(PagesFetchLoadingState());
@@ -41,9 +42,10 @@ class QuranCubit extends Cubit<QuranState> {
     emit(OnPressState());
   }
 
-  onLongPress() {
+  onLongPress(int index) {
     print('Long Press Done');
-    emit(onLongPress());
+    selected=!selected;
+    emit(OnLongPressState());
   }
 
   final List<String> quran = [

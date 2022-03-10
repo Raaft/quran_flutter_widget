@@ -41,7 +41,7 @@ class PageApi {
             url: Apis.fetchAllPAGES + '?book=1&narration=1&download=1',
             savePath: '/saveToFetch.json',
             showDownloadProgress: (v, t) {
-              print('precess  ${v / t * 100} %');
+              // print('precess  ${v / t * 100} %');
             })
         .then(
       (value) async {

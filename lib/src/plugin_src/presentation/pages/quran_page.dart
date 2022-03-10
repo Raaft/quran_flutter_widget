@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
-class QuranPage extends StatelessWidget {
-  const QuranPage({Key? key}) : super(key: key);
+class QuranPage extends StatefulWidget {
+  const QuranPage({
+    Key? key,
+    required this.onTap,
+    required this.onLongTap,
+    required this.cubit,
+  }) : super(key: key);
 
+  final Function(String data) onTap;
+  final Function(String data) onLongTap;
+
+  final QuranCubit cubit;
+
+  @override
+  State<QuranPage> createState() => _QuranPageState();
+}
+
+class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
+
   final offset2 = const Offset(200, 400);
+  var selectedindex;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +41,7 @@ class QuranPage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (state is PagesFetchedState) {
-          return _viewData(state.pages);
+          return _viewData(state.pages, widget.cubit);
         } else {
           return _errorView((state as PagesFetchErrorState).error);
         }
@@ -98,9 +116,9 @@ class QuranPage extends StatelessWidget {
     );
   }
 
-  Widget _viewData(List<page.Page> pages) {
-    if (pages != null) {
-      List<page.Page>? pagesf = <page.Page>[];
+  Widget _viewData(List<page.Page> pages, QuranCubit cubit) {
+    if (pages.isNotEmpty) {
+      List<page.Page> pagesf = <page.Page>[];
       for (var element in pages) {
         if (element.verses != null && element.verses!.isNotEmpty) {
           pagesf.add(element);
@@ -127,11 +145,27 @@ class QuranPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: pages[indexPage].verses!.length,
                 itemBuilder: (context, index) => GestureDetector(
-                  onLongPress: () {},
-                  onTap: () {},
+                  onLongPress: () {
+                    setState(() {
+                      selectedindex = index;
+                    });
+                    widget.onLongTap(pages[indexPage]
+                        .verses![index]
+                        .uthmanicText
+                        .toString());
+                  },
+                  onTap: () {
+                    widget.onTap(pages[indexPage]
+                        .verses![index]
+                        .uthmanicText
+                        .toString());
+                  },
                   child: Text(
                     pages[indexPage].verses![index].uthmanicText.toString(),
-                    style: const TextStyle(
+                    style:  TextStyle(
+                        backgroundColor: (index == selectedindex)
+                            ? Colors.yellow.withOpacity(.2)
+                            : Colors.white.withOpacity(0),
                         color: Colors.black,
                         fontSize: 25,
                         fontFamily: Q.hafs15),
