@@ -9,7 +9,9 @@ class ReciterRepository {
       ReciterLocalDataSource();
   final ReciterApi _reciterApi = ReciterApi();
 
-  Future<List<Reciter>?> fetchRecitersList({String? qurey}) async {
+  Future<List<Reciter>?> fetchRecitersList({
+    String? qurey,
+  }) async {
     List<Reciter>? recitersList = (qurey != null && qurey.isNotEmpty)
         ? await _reciterLocalDataSource.searchRecitersList(qurey)
         : await _reciterLocalDataSource.fetchRecitersList();

@@ -1,20 +1,28 @@
 import 'package:floor/floor.dart';
 
 import 'package:quran_widget_flutter/model/base_model.dart';
-import 'package:quran_widget_flutter/model/book.dart';
-import 'package:quran_widget_flutter/model/chapter.dart';
-import 'package:quran_widget_flutter/model/narration.dart';
-import 'package:quran_widget_flutter/model/page.dart';
-import 'package:quran_widget_flutter/model/part.dart';
 
-@Entity(tableName: 'Verse', foreignKeys: [
+/*
+ foreignKeys: [
   ForeignKey(
       childColumns: ['narration'], parentColumns: ['id'], entity: Narration),
   ForeignKey(childColumns: ['chapter'], parentColumns: ['id'], entity: Chapter),
   ForeignKey(childColumns: ['book'], parentColumns: ['id'], entity: Book),
   ForeignKey(childColumns: ['part'], parentColumns: ['id'], entity: Part),
   ForeignKey(childColumns: ['page'], parentColumns: ['id'], entity: Page),
-])
+]
+ */
+
+@Entity(
+  tableName: 'Verse',
+)
+
+/* DatabaseException(FOREIGN KEY constraint failed (code 787 SQLITE_CONSTRAINT_FOREIGNKEY)) sql 
+'INSERT OR ABORT INTO Verse 
+(id, text, uthmanic_text, line_start, line_end, image, narration, chapter, book, part, page, verse_number) VALUES
+ (?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)' args [1, بسم الله الرحمن الرحيم, بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ ١, 2, 2, 1, 1, 1, 1, 1, 1]
+*/
+
 class Verse extends BaseModel {
   @primaryKey
   int? id;

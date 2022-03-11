@@ -38,7 +38,8 @@ class PageApi {
     dynamic _fromString;
     await FileStorage()
         .download2(
-            url: Apis.fetchAllPAGES + '?book=1&narration=1&download=1',
+            url:
+                Apis.fetchAllPAGES + '?book=1&narration=1&chapter=2&download=1',
             savePath: '/saveToFetch.json',
             showDownloadProgress: (v, t) {
               // print('precess  ${v / t * 100} %');

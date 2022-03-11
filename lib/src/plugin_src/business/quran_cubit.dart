@@ -18,7 +18,7 @@ class QuranCubit extends Cubit<QuranState> {
     emit(PagesFetchLoadingState());
     try {
       DataSource.instance
-          .fetchPagesListDown(bookId: 1, narrationId: 1)
+          .fetchPagesList(bookId: 1, narrationId: 1)
           .then((value) async {
         print('Pages QuranCubit  $value');
         if (value != null) {

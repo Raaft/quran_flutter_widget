@@ -32,19 +32,23 @@ class _QuranPageState extends State<QuranPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<QuranCubit, QuranState>(
       builder: (context, state) {
-        if (state is PagesFetchLoadingState) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is QuranInitial) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is PagesFetchedState) {
-          return _viewData(state.pages, widget.cubit);
-        } else {
-          return _errorView((state as PagesFetchErrorState).error);
-        }
+        return Stack(
+          children: [
+            if (state is PagesFetchLoadingState)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            if (state is QuranInitial)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            if (state is QuranInitial)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            if (state is PagesFetchErrorState) _errorView(state.error),
+          ],
+        );
       },
     );
   }
@@ -106,11 +110,11 @@ class _QuranPageState extends State<QuranPage> {
   }
 
   Center _errorView(String error) {
-    return const Center(
+    return Center(
       child: Text(
-        'PagesFetchErrorState',
-        style:
-            TextStyle(color: Colors.black, fontSize: 25, fontFamily: Q.qaloon),
+        'PagesFetchErrorState $error',
+        style: const TextStyle(
+            color: Colors.black, fontSize: 25, fontFamily: Q.qaloon),
         textAlign: TextAlign.center,
       ),
     );
@@ -161,14 +165,11 @@ class _QuranPageState extends State<QuranPage> {
                         .toString());
                   },
                   child: Text(
-                    pages[indexPage].verses![index].uthmanicText.toString(),
-                    style:  TextStyle(
-                        backgroundColor: (index == selectedIndex)
-                            ? Colors.yellow.withOpacity(.2)
-                            : Colors.white.withOpacity(0),
+                    pages[indexPage].verses![index].text.toString(),
+                    style: const TextStyle(
                         color: Colors.black,
                         fontSize: 25,
-                        fontFamily: Q.hafs15),
+                        fontFamily: Q.quranKarim),
                     textAlign: TextAlign.start,
                   ),
                 ),
