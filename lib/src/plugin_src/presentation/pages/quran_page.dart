@@ -26,7 +26,7 @@ class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
 
   final offset2 = const Offset(200, 400);
-  var selectedindex;
+  int? selectedIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +147,7 @@ class _QuranPageState extends State<QuranPage> {
                 itemBuilder: (context, index) => GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      selectedindex = index;
+                      selectedIndex = index;
                     });
                     widget.onLongTap(pages[indexPage]
                         .verses![index]
@@ -163,7 +163,7 @@ class _QuranPageState extends State<QuranPage> {
                   child: Text(
                     pages[indexPage].verses![index].uthmanicText.toString(),
                     style:  TextStyle(
-                        backgroundColor: (index == selectedindex)
+                        backgroundColor: (index == selectedIndex)
                             ? Colors.yellow.withOpacity(.2)
                             : Colors.white.withOpacity(0),
                         color: Colors.black,
