@@ -26,7 +26,8 @@ class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
 
   final offset2 = const Offset(200, 400);
-  var _selectedIndex;
+  List<int> selectedIndex = [];
+  bool isSelectedVeirse = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +150,28 @@ class _QuranPageState extends State<QuranPage> {
                 itemBuilder: (context, index) => GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      _selectedIndex = index;
+                      if (selectedIndex.contains(index)) {
+                        selectedIndex.remove(index);
+                      } else {
+                        selectedIndex.add(index);
+                      }
+                      selectedIndex.sort();
+                      if (selectedIndex.isNotEmpty) {
+                        isSelectedVeirse = true;
+                      } else {
+                        isSelectedVeirse = false;
+                      }
+                      print('List of versis before $selectedIndex');
+
+                      /* for(int num in selectedIndex){
+                        if(selectedIndex.contains(index+1) == false && selectedIndex.last != index){
+                          selectedIndex.add(index+1);
+                        }
+                        return null; // No missing value
+                      }
+                      selectedIndex.sort();
+
+                      print('List of versis before $selectedIndex');*/
                     });
                     widget.onLongTap(pages[indexPage]
                         .verses![index]
@@ -157,6 +179,33 @@ class _QuranPageState extends State<QuranPage> {
                         .toString());
                   },
                   onTap: () {
+                    if(isSelectedVeirse){
+
+                      setState(() {
+                        if (selectedIndex.contains(index)) {
+                          selectedIndex.remove(index);
+                        } else {
+                          selectedIndex.add(index);
+                        }
+                        selectedIndex.sort();
+                        if (selectedIndex.isNotEmpty) {
+                          isSelectedVeirse = true;
+                        } else {
+                          isSelectedVeirse = false;
+                        }
+                        print('List of versis before $selectedIndex');
+
+                        /* for(int num in selectedIndex){
+                        if(selectedIndex.contains(index+1) == false && selectedIndex.last != index){
+                          selectedIndex.add(index+1);
+                        }
+                        return null; // No missing value
+                      }
+                      selectedIndex.sort();
+
+                      print('List of versis before $selectedIndex');*/
+                      });
+                    }
                     widget.onTap(pages[indexPage]
                         .verses![index]
                         .uthmanicText
@@ -165,6 +214,7 @@ class _QuranPageState extends State<QuranPage> {
                   child: Text(
                     pages[indexPage].verses![index].uthmanicText.toString(),
                     style: TextStyle(
+<<<<<<< HEAD
                       backgroundColor: (index == _selectedIndex)
                           ? Colors.yellow.withOpacity(.2)
                           : Colors.white.withOpacity(0),
@@ -172,6 +222,14 @@ class _QuranPageState extends State<QuranPage> {
                       fontSize: 25,
                       fontFamily: Q.hafs17,
                     ),
+=======
+                        backgroundColor: (selectedIndex.contains(index))
+                            ? Colors.yellow.withOpacity(.2)
+                            : Colors.white.withOpacity(0),
+                        color: Colors.black,
+                        fontSize: 25,
+                        fontFamily: Q.hafs15),
+>>>>>>> 8a99380eec34bc8088453110fe405811e2417ce6
                     textAlign: TextAlign.start,
                   ),
                 ),
