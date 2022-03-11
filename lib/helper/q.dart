@@ -18,6 +18,7 @@ class Q {
   static const String tn = 'assets/fonts/uthmantn1ver10_0.ttf';
   static const String tn1b = 'assets/fonts/uthmantn8b_ver10.ttf';
   static const String allahNames = 'assets/fonts/allah_names.ttf';
+  static const String quranKarim = 'assets/fonts/quran_karim.ttf';
 
   static const String versionName = '';
   static const String appName = 'Quran Widget';

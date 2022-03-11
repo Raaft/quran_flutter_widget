@@ -108,7 +108,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Part` (`id` INTEGER, `name` TEXT, `alias` TEXT, `part_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `chapters` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
@@ -116,7 +116,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `record` TEXT, `recordLocal` TEXT, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`recitation`) REFERENCES `Recitation` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`book`) REFERENCES `Book` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`part`) REFERENCES `Part` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, `verse_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse` INTEGER, `page` INTEGER, `chapter` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
 
@@ -551,7 +551,7 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapter': item.chapterId,
+                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -567,7 +567,7 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapter': item.chapterId,
+                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -583,7 +583,7 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapter': item.chapterId,
+                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -611,7 +611,7 @@ class _$PageDao extends PageDao {
             id: row['id'] as int?,
             pageNumber: row['page_number'] as int?,
             narrationId: row['narration'] as int?,
-            chapterId: row['chapter'] as int?,
+            chapterId: row['chapters'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
             subPartId: row['sub_part'] as int?,
@@ -626,7 +626,7 @@ class _$PageDao extends PageDao {
             id: row['id'] as int?,
             pageNumber: row['page_number'] as int?,
             narrationId: row['narration'] as int?,
-            chapterId: row['chapter'] as int?,
+            chapterId: row['chapters'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
             subPartId: row['sub_part'] as int?,
@@ -642,7 +642,7 @@ class _$PageDao extends PageDao {
       int partId, int subPartId) async {
     return _queryAdapter.query(
         'SELECT * FROM Page WHERE narration = ?1 or chapter= ?2 or book =?3 or part =?4 or sub_part =?5',
-        mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, chapterId: row['chapter'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
+        mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, chapterId: row['chapters'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
         arguments: [narrationId, chapterid, bookId, partId, subPartId]);
   }
 
@@ -650,12 +650,12 @@ class _$PageDao extends PageDao {
   Future<List<Page>?> findChapterPage(
       int narrationId, int chapterid, int bookId) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Page WHERE narration = ?1 aad chapter= ?2 and book =?3',
+        'SELECT * FROM Page WHERE narration = ?1 and chapter= ?2 and book =?3',
         mapper: (Map<String, Object?> row) => Page(
             id: row['id'] as int?,
             pageNumber: row['page_number'] as int?,
             narrationId: row['narration'] as int?,
-            chapterId: row['chapter'] as int?,
+            chapterId: row['chapters'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
             subPartId: row['sub_part'] as int?,
@@ -962,7 +962,8 @@ class _$VerseDao extends VerseDao {
                   'chapter': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
-                  'page': item.pageId
+                  'page': item.pageId,
+                  'verse_number': item.verseNumber
                 },
             changeListener),
         _verseUpdateAdapter = UpdateAdapter(
@@ -980,7 +981,8 @@ class _$VerseDao extends VerseDao {
                   'chapter': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
-                  'page': item.pageId
+                  'page': item.pageId,
+                  'verse_number': item.verseNumber
                 },
             changeListener),
         _verseDeletionAdapter = DeletionAdapter(
@@ -998,7 +1000,8 @@ class _$VerseDao extends VerseDao {
                   'chapter': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
-                  'page': item.pageId
+                  'page': item.pageId,
+                  'verse_number': item.verseNumber
                 },
             changeListener);
 
@@ -1028,7 +1031,8 @@ class _$VerseDao extends VerseDao {
             chapterId: row['chapter'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
-            pageId: row['page'] as int?));
+            pageId: row['page'] as int?,
+            verseNumber: row['verse_number'] as int?));
   }
 
   @override
@@ -1045,7 +1049,8 @@ class _$VerseDao extends VerseDao {
             chapterId: row['chapter'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
-            pageId: row['page'] as int?),
+            pageId: row['page'] as int?,
+            verseNumber: row['verse_number'] as int?),
         arguments: [page]);
   }
 
@@ -1063,7 +1068,8 @@ class _$VerseDao extends VerseDao {
             chapterId: row['chapter'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
-            pageId: row['page'] as int?),
+            pageId: row['page'] as int?,
+            verseNumber: row['verse_number'] as int?),
         arguments: [id],
         queryableName: 'Verse',
         isView: false);

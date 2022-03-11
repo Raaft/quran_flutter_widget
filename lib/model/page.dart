@@ -1,20 +1,21 @@
 import 'package:floor/floor.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:quran_widget_flutter/model/base_model.dart';
-import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/glyph.dart';
-import 'package:quran_widget_flutter/model/narration.dart';
-import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 
-@Entity(tableName: 'Page', foreignKeys: [
-  ForeignKey(
-      childColumns: ['narration'], parentColumns: ['id'], entity: Narration),
+/*
+ foreignKeys: [
+ // ForeignKey( childColumns: ['narration'], parentColumns: ['id'], entity: Narration),
   //ForeignKey(childColumns: ['chapter'], parentColumns: ['id'], entity: Chapter),
-  ForeignKey(childColumns: ['book'], parentColumns: ['id'], entity: Book),
-  ForeignKey(childColumns: ['part'], parentColumns: ['id'], entity: Part),
-])
+ // ForeignKey(childColumns: ['book'], parentColumns: ['id'], entity: Book),
+  //ForeignKey(childColumns: ['part'], parentColumns: ['id'], entity: Part),
+]
+ */
+
+@Entity(
+  tableName: 'Page',
+)
 class Page extends BaseModel {
   @primaryKey
   int? id;
@@ -22,7 +23,7 @@ class Page extends BaseModel {
   int? pageNumber;
   @ColumnInfo(name: 'narration')
   int? narrationId;
-  @ColumnInfo(name: 'chapter')
+  @ColumnInfo(name: 'chapters')
   int? chapterId;
   @ColumnInfo(name: 'book')
   int? bookId;
@@ -32,6 +33,13 @@ class Page extends BaseModel {
   int? subPartId;
   String? image;
   String? localImage;
+
+  /*
+  DatabaseException(FOREIGN     KEY constraint failed (code 787 SQLITE_CONSTRAINT_FOREIGNKEY)) sql 
+  'INSERT OR ABORT INTO Page 
+  (id, page_number, narration, chapters, book, part, sub_part, image, localImage) VALUES
+   (?, ?,            ?,         ?,      ?,    ?,     NULL,    NULL, NULL)' args [1, 1, 1, 1, 1, 1]
+   */
 
   @ignore
   List<Verse>? verses;
@@ -58,7 +66,7 @@ class Page extends BaseModel {
     data['id'] = id;
     data['page_number'] = pageNumber;
     data['narration'] = narrationId;
-    data['chapter'] = chapterId;
+    data['chapters'] = chapterId;
     data['book'] = bookId;
     data['part'] = partId;
     data['sub_part'] = subPartId;
@@ -72,51 +80,10 @@ class Page extends BaseModel {
     return data;
   }
 
-  Page copyWith({
-    int? id,
-    int? pageNumber,
-    int? narrationId,
-    int? chapterId,
-    int? bookId,
-    int? partId,
-    int? subPartId,
-    String? image,
-    String? localImage,
-    List<Verse>? verses,
-    List<Glyph>? glyphs,
-  }) {
-    return Page(
-      id: id ?? this.id,
-      pageNumber: pageNumber ?? this.pageNumber,
-      narrationId: narrationId ?? this.narrationId,
-      chapterId: chapterId ?? this.chapterId,
-      bookId: bookId ?? this.bookId,
-      partId: partId ?? this.partId,
-      subPartId: subPartId ?? this.subPartId,
-      image: image ?? this.image,
-      localImage: localImage ?? this.localImage,
-      verses: verses ?? this.verses,
-      glyphs: glyphs ?? this.glyphs,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'page_number': pageNumber,
-      'narration': narrationId,
-      'chapter': chapterId,
-      'book': bookId,
-      'part': partId,
-      'sub_part': subPartId,
-      'image': image,
-      'localImage': localImage,
-    };
-  }
-
   factory Page.fromJson(Map<String, dynamic> map) {
     List<Verse>? verses;
     List<Glyph>? glyphs;
+    int chapter = 0;
     if (map['verses'] != null) {
       verses = <Verse>[];
       map['verses'].forEach((v) {
@@ -129,55 +96,23 @@ class Page extends BaseModel {
         glyphs!.add(Glyph.fromJson(v));
       });
     }
+    if (map['chapters'] != null) {
+      glyphs = <Glyph>[];
+      map['chapters'].forEach((v) {
+        chapter = v;
+      });
+    }
     return Page(
         id: map['id']?.toInt(),
-        pageNumber: map['pageNumber']?.toInt(),
+        pageNumber: map['page_number']?.toInt(),
         narrationId: map['narration']?.toInt(),
-        chapterId: map['chapter']?.toInt(),
+        chapterId: chapter,
         bookId: map['book']?.toInt(),
         partId: map['part']?.toInt(),
-        subPartId: map['subPart']?.toInt(),
+        subPartId: map['sub_part']?.toInt(),
         image: map['image'],
         localImage: map['localImage'],
         verses: verses,
         glyphs: glyphs);
-  }
-
-  @override
-  String toString() {
-    return 'Page(id: $id, pageNumber: $pageNumber, narrationId: $narrationId, chapterId: $chapterId, bookId: $bookId, partId: $partId, subPartId: $subPartId, image: $image, localImage: $localImage, verses: $verses, glyphs: $glyphs)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Page &&
-        other.id == id &&
-        other.pageNumber == pageNumber &&
-        other.narrationId == narrationId &&
-        other.chapterId == chapterId &&
-        other.bookId == bookId &&
-        other.partId == partId &&
-        other.subPartId == subPartId &&
-        other.image == image &&
-        other.localImage == localImage &&
-        listEquals(other.verses, verses) &&
-        listEquals(other.glyphs, glyphs);
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        pageNumber.hashCode ^
-        narrationId.hashCode ^
-        chapterId.hashCode ^
-        bookId.hashCode ^
-        partId.hashCode ^
-        subPartId.hashCode ^
-        image.hashCode ^
-        localImage.hashCode ^
-        verses.hashCode ^
-        glyphs.hashCode;
   }
 }
