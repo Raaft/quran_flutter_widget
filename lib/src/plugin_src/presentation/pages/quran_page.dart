@@ -26,7 +26,7 @@ class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
 
   final offset2 = const Offset(200, 400);
-  int? selectedIndex;
+  var selectedIndex;
 
   @override
   Widget build(BuildContext context) {
