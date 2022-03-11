@@ -26,8 +26,13 @@ class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
 
   final offset2 = const Offset(200, 400);
-  List<int> selectedIndex = [];
+  Map<int, List<int>> selectedIndex = {};
   bool isSelectedVeirse = false;
+
+  int firstIndex = 0;
+  int lastIndex = 0;
+  int firstIndexPage = 0;
+  int lastIndexPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -150,28 +155,39 @@ class _QuranPageState extends State<QuranPage> {
                 itemBuilder: (context, index) => GestureDetector(
                   onLongPress: () {
                     setState(() {
-                      if (selectedIndex.contains(index)) {
-                        selectedIndex.remove(index);
-                      } else {
-                        selectedIndex.add(index);
-                      }
-                      selectedIndex.sort();
-                      if (selectedIndex.isNotEmpty) {
+                      if (!isSelectedVeirse) {
+                        firstIndex = index;
+                        firstIndexPage = indexPage;
+                        selectedIndex.addAll({
+                          indexPage: [index]
+                        });
                         isSelectedVeirse = true;
-                      } else {
-                        isSelectedVeirse = false;
                       }
-                      print('List of versis before $selectedIndex');
 
-                      /* for(int num in selectedIndex){
-                        if(selectedIndex.contains(index+1) == false && selectedIndex.last != index){
-                          selectedIndex.add(index+1);
+                      if (isSelectedVeirse) {
+                        if (index < firstIndex) {
+                          lastIndex = firstIndex;
+                          firstIndex = index;
+                          lastIndexPage = firstIndexPage;
+                          firstIndexPage = indexPage;
+                        } else {
+                          lastIndex = index;
+                          lastIndexPage = indexPage;
                         }
-                        return null; // No missing value
                       }
-                      selectedIndex.sort();
 
-                      print('List of versis before $selectedIndex');*/
+                      print('List of versis before $selectedIndex');
+                      if (lastIndex > firstIndex) {
+                        selectedIndex.clear();
+                        for (int i = firstIndexPage; i <= lastIndexPage; i++) {
+                          selectedIndex[i] = [];
+                          for (int idx = firstIndex; idx <= lastIndex; idx++) {
+                            selectedIndex[i]!.add(idx);
+                          }
+                        }
+                      }
+
+                      print('List of versis before $selectedIndex');
                     });
                     widget.onLongTap(pages[indexPage]
                         .verses![index]
@@ -179,31 +195,55 @@ class _QuranPageState extends State<QuranPage> {
                         .toString());
                   },
                   onTap: () {
-                    if(isSelectedVeirse){
-
+                    if (isSelectedVeirse) {
                       setState(() {
-                        if (selectedIndex.contains(index)) {
-                          selectedIndex.remove(index);
-                        } else {
-                          selectedIndex.add(index);
-                        }
-                        selectedIndex.sort();
-                        if (selectedIndex.isNotEmpty) {
-                          isSelectedVeirse = true;
-                        } else {
+                        if (selectedIndex.containsKey(indexPage) &&
+                            selectedIndex[indexPage]!.contains(index)) {
+                          selectedIndex.clear();
                           isSelectedVeirse = false;
+                          firstIndex = 0;
+                          lastIndex = 0;
+                          firstIndexPage = 0;
+                          lastIndexPage = 0;
+                        } else {
+                          if (!isSelectedVeirse) {
+                            firstIndex = index;
+                            firstIndexPage = indexPage;
+                            selectedIndex.addAll({
+                              indexPage: [index]
+                            });
+                            isSelectedVeirse = true;
+                          }
+                          if (isSelectedVeirse) {
+                            if (index < firstIndex) {
+                              lastIndex = firstIndex;
+                              firstIndex = index;
+                              lastIndexPage = firstIndexPage;
+                              firstIndexPage = indexPage;
+                            } else {
+                              lastIndex = index;
+                              lastIndexPage = indexPage;
+                            }
+                          }
+
+                          print('List of versis before $selectedIndex');
+                          if (lastIndex > firstIndex) {
+                            selectedIndex.clear();
+                            for (int i = firstIndexPage;
+                                i <= lastIndexPage;
+                                i++) {
+                              selectedIndex[i] = [];
+
+                              for (int idx = firstIndex;
+                                  idx <= lastIndex;
+                                  idx++) {
+                                selectedIndex[i]!.add(idx);
+                              }
+                            }
+                          }
                         }
+
                         print('List of versis before $selectedIndex');
-
-                        /* for(int num in selectedIndex){
-                        if(selectedIndex.contains(index+1) == false && selectedIndex.last != index){
-                          selectedIndex.add(index+1);
-                        }
-                        return null; // No missing value
-                      }
-                      selectedIndex.sort();
-
-                      print('List of versis before $selectedIndex');*/
                       });
                     }
                     widget.onTap(pages[indexPage]
@@ -211,16 +251,21 @@ class _QuranPageState extends State<QuranPage> {
                         .uthmanicText
                         .toString());
                   },
-                  child: Text(
-                    pages[indexPage].verses![index].uthmanicText.toString(),
-                    style: TextStyle(
-                        backgroundColor: (selectedIndex.contains(index))
+                  child: Container(
+                    color: selectedIndex.containsKey(indexPage)
+                        ? (selectedIndex[indexPage]!.contains(index))
                             ? Colors.yellow.withOpacity(.2)
-                            : Colors.white.withOpacity(0),
+                            : Colors.white.withOpacity(0)
+                        : Colors.white.withOpacity(0),
+                    child: Text(
+                      pages[indexPage].verses![index].uthmanicText.toString(),
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 25,
-                        fontFamily: Q.hafs15),
-                    textAlign: TextAlign.start,
+                        fontFamily: Q.hafs15,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                 ),
               ),
