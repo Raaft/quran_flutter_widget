@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
+
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
 import 'package:quran_widget_flutter/model/reciter.dart';
@@ -15,18 +18,14 @@ class Recitation extends BaseModel {
   int? narrationId;
   @ColumnInfo(name: 'reciter')
   int? reciterId;
+  String? name;
 
   Recitation(
     this.id,
     this.narrationId,
     this.reciterId,
+    this.name,
   );
-
-  Recitation.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    narrationId = json['narration'];
-    reciterId = json['reciter'];
-  }
 
   @override
   Map<String, dynamic> toJson() {
@@ -34,6 +33,7 @@ class Recitation extends BaseModel {
     data['id'] = id;
     data['narration'] = narrationId;
     data['reciter'] = reciterId;
+    data['name'] = name;
     return data;
   }
 
@@ -41,25 +41,20 @@ class Recitation extends BaseModel {
     int? id,
     int? narrationId,
     int? reciterId,
+    String? name,
   }) {
     return Recitation(
       id ?? this.id,
       narrationId ?? this.narrationId,
       reciterId ?? this.reciterId,
+      name ?? this.name,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'narration': narrationId,
-      'reciter': reciterId,
-    };
-  }
-
   @override
-  String toString() =>
-      'Recitation(id: $id, narrationId: $narrationId, reciterId: $reciterId)';
+  String toString() {
+    return 'Recitation(id: $id, narrationId: $narrationId, reciterId: $reciterId, name: $name)';
+  }
 
   @override
   bool operator ==(Object other) {
@@ -68,9 +63,24 @@ class Recitation extends BaseModel {
     return other is Recitation &&
         other.id == id &&
         other.narrationId == narrationId &&
-        other.reciterId == reciterId;
+        other.reciterId == reciterId &&
+        other.name == name;
   }
 
   @override
-  int get hashCode => id.hashCode ^ narrationId.hashCode ^ reciterId.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+        narrationId.hashCode ^
+        reciterId.hashCode ^
+        name.hashCode;
+  }
+
+  factory Recitation.fromJson(Map<String, dynamic> map) {
+    return Recitation(
+      map['id']?.toInt(),
+      map['narrationId']?.toInt(),
+      map['reciterId']?.toInt(),
+      map['name'],
+    );
+  }
 }

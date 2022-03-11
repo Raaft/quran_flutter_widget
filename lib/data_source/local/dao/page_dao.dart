@@ -12,7 +12,7 @@ abstract class PageDao {
   ///* you can filter pages by >book, >narration, >part, subpart or >chapter (by id)
 
   @Query(
-      'SELECT * FROM Page WHERE narration = :narrationId or chapter= :chapterid or book =:bookId or part =:partId or sub_part =:subPartId')
+      'SELECT * FROM Page WHERE narration = :narrationId or chapters= :chapterid or book =:bookId or part =:partId or sub_part =:subPartId')
   Future<Page?> findPageFilters(
     int narrationId,
     int chapterid,
@@ -22,7 +22,7 @@ abstract class PageDao {
   );
 
   @Query(
-      'SELECT * FROM Page WHERE narration = :narrationId and chapter= :chapterid and book =:bookId ')
+      'SELECT * FROM Page WHERE narration = :narrationId and chapters= :chapterid and book =:bookId ')
   Future<List<Page>?> findChapterPage(
     int narrationId,
     int chapterid,
