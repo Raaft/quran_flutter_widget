@@ -34,6 +34,64 @@ class _QuranPageState extends State<QuranPage> {
   int firstIndexPage = 0;
   int lastIndexPage = 0;
 
+  void onTap(index, indexPage, pages) {
+    if (selectedIndex.containsKey(indexPage) &&
+        selectedIndex[indexPage]!.contains(index)) {
+      selectedIndex.clear();
+      isSelectedVeirse = false;
+      firstIndex = 0;
+      lastIndex = 0;
+      firstIndexPage = 0;
+      lastIndexPage = 0;
+    } else {
+      if (!isSelectedVeirse) {
+        firstIndex = index;
+        firstIndexPage = indexPage;
+        lastIndexPage = indexPage;
+        selectedIndex.addAll({
+          indexPage: [index]
+        });
+        isSelectedVeirse = true;
+      }
+      if (isSelectedVeirse) {
+        if (firstIndexPage >= lastIndexPage) {
+          if (index < firstIndex) {
+            lastIndex = firstIndex;
+            firstIndex = index;
+            lastIndexPage = firstIndexPage;
+            firstIndexPage = indexPage;
+          } else {
+            lastIndex = index;
+            lastIndexPage = indexPage;
+          }
+        }
+      }
+
+      print('List of versis before $selectedIndex');
+
+      // selectedIndex.clear();
+
+      for (int i = firstIndexPage; i <= lastIndexPage; i++) {
+        selectedIndex[i] = [];
+        if (i == lastIndexPage) {
+          for (int idx = (i == firstIndexPage ? firstIndex : 0);
+              idx <= lastIndex;
+              idx++) {
+            selectedIndex[i]!.add(idx);
+          }
+        } else {
+          for (int idx = (i == firstIndexPage ? firstIndex : 0);
+              idx <= pages[i].verses!.length - 1;
+              idx++) {
+            selectedIndex[i]!.add(idx);
+          }
+        }
+      }
+    }
+
+    print('List of versis before $selectedIndex');
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<QuranCubit, QuranState>(
@@ -165,23 +223,34 @@ class _QuranPageState extends State<QuranPage> {
                       }
 
                       if (isSelectedVeirse) {
-                        if (index < firstIndex) {
-                          lastIndex = firstIndex;
-                          firstIndex = index;
-                          lastIndexPage = firstIndexPage;
-                          firstIndexPage = indexPage;
-                        } else {
-                          lastIndex = index;
-                          lastIndexPage = indexPage;
+                        if (firstIndexPage == lastIndexPage) {
+                          if (index < firstIndex) {
+                            lastIndex = firstIndex;
+                            firstIndex = index;
+                            lastIndexPage = firstIndexPage;
+                            firstIndexPage = indexPage;
+                          } else {
+                            lastIndex = index;
+                            lastIndexPage = indexPage;
+                          }
                         }
                       }
 
                       print('List of versis before $selectedIndex');
-                      if (lastIndex > firstIndex) {
-                        selectedIndex.clear();
-                        for (int i = firstIndexPage; i <= lastIndexPage; i++) {
-                          selectedIndex[i] = [];
-                          for (int idx = firstIndex; idx <= lastIndex; idx++) {
+
+                      // selectedIndex.clear();
+                      for (int i = firstIndexPage; i <= lastIndexPage; i++) {
+                        selectedIndex[i] = [];
+                        if (i == lastIndexPage) {
+                          for (int idx = (i == firstIndexPage ? firstIndex : 0);
+                              idx <= lastIndex;
+                              idx++) {
+                            selectedIndex[i]!.add(idx);
+                          }
+                        } else {
+                          for (int idx = (i == firstIndexPage ? firstIndex : 0);
+                              idx <= pages[i].verses!.length - 1;
+                              idx++) {
                             selectedIndex[i]!.add(idx);
                           }
                         }
@@ -196,55 +265,7 @@ class _QuranPageState extends State<QuranPage> {
                   },
                   onTap: () {
                     if (isSelectedVeirse) {
-                      setState(() {
-                        if (selectedIndex.containsKey(indexPage) &&
-                            selectedIndex[indexPage]!.contains(index)) {
-                          selectedIndex.clear();
-                          isSelectedVeirse = false;
-                          firstIndex = 0;
-                          lastIndex = 0;
-                          firstIndexPage = 0;
-                          lastIndexPage = 0;
-                        } else {
-                          if (!isSelectedVeirse) {
-                            firstIndex = index;
-                            firstIndexPage = indexPage;
-                            selectedIndex.addAll({
-                              indexPage: [index]
-                            });
-                            isSelectedVeirse = true;
-                          }
-                          if (isSelectedVeirse) {
-                            if (index < firstIndex) {
-                              lastIndex = firstIndex;
-                              firstIndex = index;
-                              lastIndexPage = firstIndexPage;
-                              firstIndexPage = indexPage;
-                            } else {
-                              lastIndex = index;
-                              lastIndexPage = indexPage;
-                            }
-                          }
-
-                          print('List of versis before $selectedIndex');
-                          if (lastIndex > firstIndex) {
-                            selectedIndex.clear();
-                            for (int i = firstIndexPage;
-                                i <= lastIndexPage;
-                                i++) {
-                              selectedIndex[i] = [];
-
-                              for (int idx = firstIndex;
-                                  idx <= lastIndex;
-                                  idx++) {
-                                selectedIndex[i]!.add(idx);
-                              }
-                            }
-                          }
-                        }
-
-                        print('List of versis before $selectedIndex');
-                      });
+                      setState(() => onTap(index, indexPage, pages));
                     }
                     widget.onTap(pages[indexPage]
                         .verses![index]
