@@ -3,6 +3,7 @@ import 'package:quran_widget_flutter/model/page.dart';
 
 class PageLocalDataSource {
   Future<List<Page>?> fetchPagesList({
+    int? chapterId,
     int? bookId,
     int? narrationId,
   }) async {

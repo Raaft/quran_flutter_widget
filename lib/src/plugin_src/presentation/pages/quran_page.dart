@@ -165,12 +165,13 @@ class _QuranPageState extends State<QuranPage> {
                   child: Text(
                     pages[indexPage].verses![index].uthmanicText.toString(),
                     style: TextStyle(
-                        backgroundColor: (index == _selectedIndex)
-                            ? Colors.yellow.withOpacity(.2)
-                            : Colors.white.withOpacity(0),
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontFamily: Q.hafs15),
+                      backgroundColor: (index == _selectedIndex)
+                          ? Colors.yellow.withOpacity(.2)
+                          : Colors.white.withOpacity(0),
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontFamily: Q.hafs17,
+                    ),
                     textAlign: TextAlign.start,
                   ),
                 ),
