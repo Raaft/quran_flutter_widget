@@ -43,7 +43,7 @@ class QuranWidget extends StatelessWidget {
         {
           return QuranPage(
             onTap: onTap,
-            onLongTap: onLongTap,
+            onLongTap: onLongTap, cubit: cubit,
           );
         }
 
@@ -65,6 +65,7 @@ class QuranWidget extends StatelessWidget {
           return QuranPage(
             onTap: onTap,
             onLongTap: onLongTap,
+            cubit: cubit,
           );
         }
     }
