@@ -32,6 +32,7 @@ class _QuranPageState extends State<QuranPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<QuranCubit, QuranState>(
       builder: (context, state) {
+        print('State Is ' + state.toString());
         return Stack(
           children: [
             if (state is PagesFetchLoadingState)
@@ -42,10 +43,7 @@ class _QuranPageState extends State<QuranPage> {
               const Center(
                 child: CircularProgressIndicator(),
               ),
-            if (state is QuranInitial)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
+            if (state is PagesFetchedState) _viewData(state.pages),
             if (state is PagesFetchErrorState) _errorView(state.error),
           ],
         );
@@ -120,7 +118,7 @@ class _QuranPageState extends State<QuranPage> {
     );
   }
 
-  Widget _viewData(List<page.Page> pages, QuranCubit cubit) {
+  Widget _viewData(List<page.Page> pages) {
     if (pages.isNotEmpty) {
       List<page.Page> pagesf = <page.Page>[];
       for (var element in pages) {
