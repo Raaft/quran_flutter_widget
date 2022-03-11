@@ -226,13 +226,13 @@ class _$NarrationDao extends NarrationDao {
   @override
   Future<List<Narration>> findAllNarrations() async {
     return _queryAdapter.queryList('SELECT * FROM Narration',
-        mapper: (Map<String, Object?> row) => Narration());
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row));
   }
 
   @override
   Stream<Narration?> findNarrationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Narration WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Narration(),
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
         arguments: [id],
         queryableName: 'Narration',
         isView: false);
@@ -242,7 +242,7 @@ class _$NarrationDao extends NarrationDao {
   Future<List<Narration>> searchInNarration(String qurey) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Narration WHERE name like ?1 or description like ?1',
-        mapper: (Map<String, Object?> row) => Narration(),
+        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
         arguments: [qurey]);
   }
 

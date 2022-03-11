@@ -18,7 +18,7 @@ class PageRepository {
       for (var element in pagesList) {
         element.verses =
             await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
-        print('getVerse ${element.verses}');
+        //print('getVerse ${element.verses}');
       }
 
       return pagesList;
@@ -44,7 +44,7 @@ class PageRepository {
       for (var element in pagesList) {
         element.verses =
             await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
-        print('getVerse ${element.verses}');
+        //print('getVerse ${element.verses}');
       }
 
       return pagesList;
@@ -77,7 +77,7 @@ class PageRepository {
     Page? page = await _pageLocalDataSource.fetchPageById(pageId);
     if (page != null) {
       page.verses = await _pageLocalDataSource.fetchVerseById(page.id ?? 0);
-      print('getVerse ${page.verses}');
+      //print('getVerse ${page.verses}');
       return page;
     } else {
       final MyResponse<Page> response = await _pageApi.fetchPageById(pageId);

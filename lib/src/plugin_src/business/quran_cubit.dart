@@ -12,13 +12,17 @@ class QuranCubit extends Cubit<QuranState> {
   QuranCubit get(context) => BlocProvider.of(context);
 
   List<Page> pages = [];
-  bool selected=false;
+  bool selected = false;
 
-  fetchPages() {
+  fetchPages({
+    required int chapterId,
+    required int bookId,
+    required int narrationId,
+  }) {
     emit(PagesFetchLoadingState());
     try {
       DataSource.instance
-          .fetchPagesList(bookId: 1, narrationId: 1)
+          .fetchPagesList(bookId: bookId, narrationId: 1, chapterId: chapterId)
           .then((value) async {
         print('Pages QuranCubit  $value');
         if (value != null) {
@@ -44,7 +48,7 @@ class QuranCubit extends Cubit<QuranState> {
 
   onLongPress(int index) {
     print('Long Press Done');
-    selected=!selected;
+    selected = !selected;
     emit(OnLongPressState());
   }
 

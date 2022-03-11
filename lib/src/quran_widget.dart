@@ -14,9 +14,15 @@ class QuranWidget extends StatelessWidget {
     required this.page,
     required this.onTap,
     required this.onLongTap,
+    required this.chapterId,
+    required this.bookId,
+    required this.narrationId,
   }) : super(key: key);
 
   final PageType page;
+  final int chapterId;
+  final int bookId;
+  final int narrationId;
 
   final Function(String data) onTap;
   final Function(String data) onLongTap;
@@ -24,7 +30,8 @@ class QuranWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => QuranCubit()..fetchPages(),
+      create: (context) => QuranCubit()
+        ..fetchPages(chapterId: 1, bookId: 1, narrationId: narrationId),
       child: BlocConsumer<QuranCubit, QuranState>(
         listener: (context, state) {
           print(page.toString());
@@ -43,7 +50,8 @@ class QuranWidget extends StatelessWidget {
         {
           return QuranPage(
             onTap: onTap,
-            onLongTap: onLongTap, cubit: cubit,
+            onLongTap: onLongTap,
+            cubit: cubit,
           );
         }
 
