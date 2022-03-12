@@ -11,10 +11,12 @@ class QuranPage extends StatefulWidget {
     required this.onTap,
     required this.onLongTap,
     required this.cubit,
+    required this.getPage,
   }) : super(key: key);
 
   final Function(String data) onTap;
   final Function(String data) onLongTap;
+  final Function(page.Page data) getPage;
 
   final QuranCubit cubit;
 
@@ -207,6 +209,9 @@ class _QuranPageState extends State<QuranPage> {
         padding: const EdgeInsets.all(8),
         child: PageView.builder(
           itemCount: pages.length,
+          onPageChanged: (index) {
+            widget.getPage(pages[index]);
+          },
           itemBuilder: (context, indexPage) => Stack(
             children: [
               ListView.builder(

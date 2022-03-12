@@ -188,6 +188,8 @@ class DioUtils {
       );
     }*/
 
+    print('uri of api ${response!.realUri}');
+
     return response;
   }
 

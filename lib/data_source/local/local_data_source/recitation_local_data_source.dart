@@ -1,10 +1,21 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 
-class RecitationLocalDataSource{
-
+class RecitationLocalDataSource {
   Future<List<Recitation>?> fetchRecitationsList() async {
     final db = await QuranDatabaseSource.instance.database;
+    return db?.recitationDao.findAllRecitations();
+  }
+
+  Future<List<Recitation>?> fetchRecitationsListQurey({
+    String? qurey,
+    int? reciterId,
+    int? narrationId,
+  }) async {
+    final db = await QuranDatabaseSource.instance.database;
+    if (narrationId != null) {
+      return db?.recitationDao.findRecitationInNarrationId(narrationId);
+    }
     return db?.recitationDao.findAllRecitations();
   }
 
