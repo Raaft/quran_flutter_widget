@@ -24,3 +24,4 @@ class PagesFetchErrorState extends QuranState {
 class OnPressState extends QuranState {}
 
 class OnLongPressState extends QuranState {}
+class HandelSelectedListState extends QuranState {}

@@ -11,8 +11,22 @@ class QuranCubit extends Cubit<QuranState> {
 
   QuranCubit get(context) => BlocProvider.of(context);
 
+  Map<int, List<int>> selectedIndex = {};
+
   List<Page> pages = [];
   bool selected = false;
+
+  int key =0;
+  dynamic verses=1;
+
+  handelList(){
+    if (selectedIndex.isNotEmpty) {
+      key = selectedIndex.keys.elementAt(0);
+      verses = selectedIndex[0];
+      emit(HandelSelectedListState());
+    }
+  }
+
 
   fetchPages({
     required int chapterId,
