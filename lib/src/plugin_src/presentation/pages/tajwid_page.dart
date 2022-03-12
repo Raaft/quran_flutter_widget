@@ -4,7 +4,6 @@ import 'package:quran_widget_flutter/model/page.dart' as page;
 
 import '../../../../helper/q.dart';
 import '../../../../quran_widget_flutter.dart';
-import '../widgets/paint_point.dart';
 
 class TajwidPage extends StatelessWidget {
   const TajwidPage({Key? key}) : super(key: key);
