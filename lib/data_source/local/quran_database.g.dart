@@ -110,7 +110,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `chapters` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, `name` TEXT, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Reciter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
@@ -641,7 +641,7 @@ class _$PageDao extends PageDao {
   Future<Page?> findPageFilters(int narrationId, int chapterid, int bookId,
       int partId, int subPartId) async {
     return _queryAdapter.query(
-        'SELECT * FROM Page WHERE narration = ?1 or chapter= ?2 or book =?3 or part =?4 or sub_part =?5',
+        'SELECT * FROM Page WHERE narration = ?1 or chapters= ?2 or book =?3 or part =?4 or sub_part =?5',
         mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, chapterId: row['chapters'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
         arguments: [narrationId, chapterid, bookId, partId, subPartId]);
   }
@@ -649,8 +649,9 @@ class _$PageDao extends PageDao {
   @override
   Future<List<Page>?> findChapterPage(
       int narrationId, int chapterid, int bookId) async {
+    print('page qu $chapterid');
     return _queryAdapter.queryList(
-        'SELECT * FROM Page WHERE narration = ?1 and chapter= ?2 and book =?3',
+        'SELECT * FROM Page WHERE narration = ?1 and chapters= ?2 and book =?3',
         mapper: (Map<String, Object?> row) => Page(
             id: row['id'] as int?,
             pageNumber: row['page_number'] as int?,
@@ -689,7 +690,8 @@ class _$RecitationDao extends RecitationDao {
             (Recitation item) => <String, Object?>{
                   'id': item.id,
                   'narration': item.narrationId,
-                  'reciter': item.reciterId
+                  'reciter': item.reciterId,
+                  'name': item.name
                 },
             changeListener),
         _recitationUpdateAdapter = UpdateAdapter(
@@ -699,7 +701,8 @@ class _$RecitationDao extends RecitationDao {
             (Recitation item) => <String, Object?>{
                   'id': item.id,
                   'narration': item.narrationId,
-                  'reciter': item.reciterId
+                  'reciter': item.reciterId,
+                  'name': item.name
                 },
             changeListener),
         _recitationDeletionAdapter = DeletionAdapter(
@@ -709,7 +712,8 @@ class _$RecitationDao extends RecitationDao {
             (Recitation item) => <String, Object?>{
                   'id': item.id,
                   'narration': item.narrationId,
-                  'reciter': item.reciterId
+                  'reciter': item.reciterId,
+                  'name': item.name
                 },
             changeListener);
 
@@ -728,24 +732,33 @@ class _$RecitationDao extends RecitationDao {
   @override
   Future<List<Recitation>> findAllRecitations() async {
     return _queryAdapter.queryList('SELECT * FROM Recitation',
-        mapper: (Map<String, Object?> row) => Recitation(row['id'] as int?,
-            row['narration'] as int?, row['reciter'] as int?));
+        mapper: (Map<String, Object?> row) => Recitation(
+            row['id'] as int?,
+            row['narration'] as int?,
+            row['reciter'] as int?,
+            row['name'] as String?));
   }
 
   @override
   Future<List<Recitation>> findRecitationInNarrationId(int narrationId) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Recitation WHERE narration = ?1',
-        mapper: (Map<String, Object?> row) => Recitation(row['id'] as int?,
-            row['narration'] as int?, row['reciter'] as int?),
+        mapper: (Map<String, Object?> row) => Recitation(
+            row['id'] as int?,
+            row['narration'] as int?,
+            row['reciter'] as int?,
+            row['name'] as String?),
         arguments: [narrationId]);
   }
 
   @override
   Stream<Recitation?> findRecitationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Recitation WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Recitation(row['id'] as int?,
-            row['narration'] as int?, row['reciter'] as int?),
+        mapper: (Map<String, Object?> row) => Recitation(
+            row['id'] as int?,
+            row['narration'] as int?,
+            row['reciter'] as int?,
+            row['name'] as String?),
         arguments: [id],
         queryableName: 'Recitation',
         isView: false);

@@ -272,9 +272,25 @@ class _QuranPageState extends State<QuranPage> {
                         .uthmanicText
                         .toString());
                   },
+<<<<<<< HEAD
                   child: Container(
                     color: selectedIndex.containsKey(indexPage)
                         ? (selectedIndex[indexPage]!.contains(index))
+=======
+                  child: Text(
+                    pages[indexPage].verses![index].uthmanicText.toString(),
+                    style: TextStyle(
+<<<<<<< HEAD
+                      backgroundColor: (index == _selectedIndex)
+                          ? Colors.yellow.withOpacity(.2)
+                          : Colors.white.withOpacity(0),
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontFamily: Q.hafs17,
+                    ),
+=======
+                        backgroundColor: (selectedIndex.contains(index))
+>>>>>>> f2586b1689d3297e6257563d7438ffb66bc5b2f1
                             ? Colors.yellow.withOpacity(.2)
                             : Colors.white.withOpacity(0)
                         : Colors.white.withOpacity(0),
@@ -283,10 +299,16 @@ class _QuranPageState extends State<QuranPage> {
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 25,
+<<<<<<< HEAD
                         fontFamily: Q.hafs15,
                       ),
                       textAlign: TextAlign.start,
                     ),
+=======
+                        fontFamily: Q.hafs15),
+>>>>>>> 8a99380eec34bc8088453110fe405811e2417ce6
+                    textAlign: TextAlign.start,
+>>>>>>> f2586b1689d3297e6257563d7438ffb66bc5b2f1
                   ),
                 ),
               ),
