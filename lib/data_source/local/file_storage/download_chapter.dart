@@ -25,7 +25,7 @@ class DownloadChapter {
               .download2(
             url: Apis.baseUrl + page.image.toString(),
             savePath:
-                '/pages_images/narraton_${page.narrationId}/book_${page.bookId}/chapter_${page.chapterId}/page_${page.pageNumber}',
+                '/pages_images/narraton_${page.narrationId}/book_${page.bookId}/chapter_${page.chapters![0].chapterId}/page_${page.pageNumber}',
             showDownloadProgress: (p0, p1) {
               double progress = index / sizePage;
               if ((p0 / p1) <= .5) {

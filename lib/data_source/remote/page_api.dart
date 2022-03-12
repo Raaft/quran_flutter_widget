@@ -6,9 +6,17 @@ import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
 class PageApi {
-  Future<MyResponse<Page>> fetchPagesList() async {
-    var response =
-        await DioUtils.request(DioUtils.requestGET, Apis.fetchAllPAGES);
+  Future<MyResponse<Page>> fetchPagesList({
+    int? chapterId,
+    int? bookId,
+    int? narrationId,
+  }) async {
+    var response = await DioUtils.request(
+        DioUtils.requestGET, Apis.fetchAllPAGES, queryParameters: {
+      'narration': narrationId,
+      'book': bookId,
+      'chapter': chapterId
+    });
     if (response != null) {
       if (response.statusCode == 200) {
         return MyResponse<Page>.fromJson(response.data, Apis.list);

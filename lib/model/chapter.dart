@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:floor/floor.dart';
 
 import 'base_model.dart';
@@ -7,9 +9,14 @@ class Chapter extends BaseModel {
   @primaryKey
   int? id;
   String? name;
+  int? chapter_number;
+  String? origin;
+
   Chapter({
     this.id,
     this.name,
+    this.chapter_number,
+    this.origin,
   });
 
   @override
@@ -23,10 +30,14 @@ class Chapter extends BaseModel {
   Chapter copyWith({
     int? id,
     String? name,
+    int? chapter_number,
+    String? origin,
   }) {
     return Chapter(
       id: id ?? this.id,
       name: name ?? this.name,
+      chapter_number: chapter_number ?? this.chapter_number,
+      origin: origin ?? this.origin,
     );
   }
 
@@ -34,6 +45,8 @@ class Chapter extends BaseModel {
     return {
       'id': id,
       'name': name,
+      'chapter_number': chapter_number,
+      'origin': origin,
     };
   }
 
@@ -45,15 +58,35 @@ class Chapter extends BaseModel {
   }
 
   @override
-  String toString() => 'Chapter(id: $id, name: $name)';
+  String toString() {
+    return 'Chapter(id: $id, name: $name, chapter_number: $chapter_number, origin: $origin)';
+  }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Chapter && other.id == id && other.name == name;
+    return other is Chapter &&
+        other.id == id &&
+        other.name == name &&
+        other.chapter_number == chapter_number &&
+        other.origin == origin;
   }
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        chapter_number.hashCode ^
+        origin.hashCode;
+  }
+
+  factory Chapter.fromMap(Map<String, dynamic> map) {
+    return Chapter(
+      id: map['id']?.toInt(),
+      name: map['name'],
+      chapter_number: map['chapter_number']?.toInt(),
+      origin: map['origin'],
+    );
+  }
 }
