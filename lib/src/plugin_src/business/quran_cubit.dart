@@ -30,7 +30,6 @@ class QuranCubit extends Cubit<QuranState> {
   late final int chapterId;
   late final int bookId;
   late final int narrationId;
-
   fetchPages({
     required int chapterId,
     required int bookId,

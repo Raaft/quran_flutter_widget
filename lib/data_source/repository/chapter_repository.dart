@@ -19,6 +19,7 @@ class ChapterRepository {
     List<Chapter>? chaptersList = (qurey != null && qurey.isNotEmpty)
         ? await _chapterLocalDataSource.searchInChapter(qurey: qurey)
         : await _chapterLocalDataSource.fetchChaptersList();
+
     if ((chaptersList != null && chaptersList.isNotEmpty)) {
       if (fromIndex ?? false) {
         for (var element in chaptersList) {
