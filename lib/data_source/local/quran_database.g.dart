@@ -81,6 +81,8 @@ class _$QuranDatabase extends QuranDatabase {
 
   GlyphDao? _glyphDaoInstance;
 
+  ChaptersPageDao? _chaptersPageDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -108,7 +110,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Part` (`id` INTEGER, `name` TEXT, `alias` TEXT, `part_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `chapters` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, `name` TEXT, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
@@ -119,6 +121,8 @@ class _$QuranDatabase extends QuranDatabase {
             'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, `verse_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse` INTEGER, `page` INTEGER, `chapter` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ChaptersPage` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `pageId` INTEGER, `chapterId` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -176,6 +180,12 @@ class _$QuranDatabase extends QuranDatabase {
   GlyphDao get glyphDao {
     return _glyphDaoInstance ??= _$GlyphDao(database, changeListener);
   }
+
+  @override
+  ChaptersPageDao get chaptersPageDao {
+    return _chaptersPageDaoInstance ??=
+        _$ChaptersPageDao(database, changeListener);
+  }
 }
 
 class _$NarrationDao extends NarrationDao {
@@ -226,13 +236,13 @@ class _$NarrationDao extends NarrationDao {
   @override
   Future<List<Narration>> findAllNarrations() async {
     return _queryAdapter.queryList('SELECT * FROM Narration',
-        mapper: (Map<String, Object?> row) => Narration.fromJson(row));
+        mapper: (Map<String, Object?> row) => Narration());
   }
 
   @override
   Stream<Narration?> findNarrationById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Narration WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
+        mapper: (Map<String, Object?> row) => Narration(),
         arguments: [id],
         queryableName: 'Narration',
         isView: false);
@@ -242,19 +252,19 @@ class _$NarrationDao extends NarrationDao {
   Future<List<Narration>> searchInNarration(String qurey) async {
     return _queryAdapter.queryList(
         'SELECT * FROM Narration WHERE name like ?1 or description like ?1',
-        mapper: (Map<String, Object?> row) => Narration.fromJson(row),
+        mapper: (Map<String, Object?> row) => Narration(),
         arguments: [qurey]);
   }
 
   @override
   Future<void> insertNarration(Narration narration) async {
     await _narrationInsertionAdapter.insert(
-        narration, OnConflictStrategy.abort);
+        narration, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateNarration(Narration narration) async {
-    await _narrationUpdateAdapter.update(narration, OnConflictStrategy.abort);
+    await _narrationUpdateAdapter.update(narration, OnConflictStrategy.replace);
   }
 
   @override
@@ -351,12 +361,12 @@ class _$BookDao extends BookDao {
 
   @override
   Future<void> insertBook(Book book) async {
-    await _bookInsertionAdapter.insert(book, OnConflictStrategy.abort);
+    await _bookInsertionAdapter.insert(book, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateBook(Book book) async {
-    await _bookUpdateAdapter.update(book, OnConflictStrategy.abort);
+    await _bookUpdateAdapter.update(book, OnConflictStrategy.replace);
   }
 
   @override
@@ -428,12 +438,12 @@ class _$ChapterDao extends ChapterDao {
 
   @override
   Future<void> insertChapter(Chapter chapter) async {
-    await _chapterInsertionAdapter.insert(chapter, OnConflictStrategy.abort);
+    await _chapterInsertionAdapter.insert(chapter, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateChapter(Chapter chapter) async {
-    await _chapterUpdateAdapter.update(chapter, OnConflictStrategy.abort);
+    await _chapterUpdateAdapter.update(chapter, OnConflictStrategy.replace);
   }
 
   @override
@@ -527,12 +537,12 @@ class _$PartDao extends PartDao {
 
   @override
   Future<void> insertPart(Part part) async {
-    await _partInsertionAdapter.insert(part, OnConflictStrategy.abort);
+    await _partInsertionAdapter.insert(part, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updatePart(Part part) async {
-    await _partUpdateAdapter.update(part, OnConflictStrategy.abort);
+    await _partUpdateAdapter.update(part, OnConflictStrategy.replace);
   }
 
   @override
@@ -551,7 +561,6 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -567,7 +576,6 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -583,7 +591,6 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -607,31 +614,13 @@ class _$PageDao extends PageDao {
   @override
   Future<List<Page>> findAllPages() async {
     return _queryAdapter.queryList('SELECT * FROM Page',
-        mapper: (Map<String, Object?> row) => Page(
-            id: row['id'] as int?,
-            pageNumber: row['page_number'] as int?,
-            narrationId: row['narration'] as int?,
-            chapterId: row['chapters'] as int?,
-            bookId: row['book'] as int?,
-            partId: row['part'] as int?,
-            subPartId: row['sub_part'] as int?,
-            image: row['image'] as String?,
-            localImage: row['localImage'] as String?));
+        mapper: (Map<String, Object?> row) => Page.fromJson(row));
   }
 
   @override
   Stream<Page?> findPageById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Page WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Page(
-            id: row['id'] as int?,
-            pageNumber: row['page_number'] as int?,
-            narrationId: row['narration'] as int?,
-            chapterId: row['chapters'] as int?,
-            bookId: row['book'] as int?,
-            partId: row['part'] as int?,
-            subPartId: row['sub_part'] as int?,
-            image: row['image'] as String?,
-            localImage: row['localImage'] as String?),
+        mapper: (Map<String, Object?> row) => Page.fromJson(row),
         arguments: [id],
         queryableName: 'Page',
         isView: false);
@@ -642,37 +631,28 @@ class _$PageDao extends PageDao {
       int partId, int subPartId) async {
     return _queryAdapter.query(
         'SELECT * FROM Page WHERE narration = ?1 or chapters= ?2 or book =?3 or part =?4 or sub_part =?5',
-        mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, chapterId: row['chapters'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
+        mapper: (Map<String, Object?> row) => Page.fromJson(row),
         arguments: [narrationId, chapterid, bookId, partId, subPartId]);
   }
 
   @override
   Future<List<Page>?> findChapterPage(
       int narrationId, int chapterid, int bookId) async {
-    print('page qu $chapterid');
+    print('data narration $narrationId book $bookId chapter $chapterid');
     return _queryAdapter.queryList(
-        'SELECT * FROM Page WHERE narration = ?1 and chapters= ?2 and book =?3',
-        mapper: (Map<String, Object?> row) => Page(
-            id: row['id'] as int?,
-            pageNumber: row['page_number'] as int?,
-            narrationId: row['narration'] as int?,
-            chapterId: row['chapters'] as int?,
-            bookId: row['book'] as int?,
-            partId: row['part'] as int?,
-            subPartId: row['sub_part'] as int?,
-            image: row['image'] as String?,
-            localImage: row['localImage'] as String?),
+        'SELECT  DISTINCT(Page.id), Page.* FROM Page,ChaptersPage WHERE narration = ?1 and ChaptersPage.chapterId = ?2 and book = ?3 and ChaptersPage.pageId = Page.id',
+        mapper: (Map<String, Object?> row) => Page.fromJson(row),
         arguments: [narrationId, chapterid, bookId]);
   }
 
   @override
   Future<void> insertPage(Page page) async {
-    await _pageInsertionAdapter.insert(page, OnConflictStrategy.abort);
+    await _pageInsertionAdapter.insert(page, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updatePage(Page page) async {
-    await _pageUpdateAdapter.update(page, OnConflictStrategy.abort);
+    await _pageUpdateAdapter.update(page, OnConflictStrategy.replace);
   }
 
   @override
@@ -767,12 +747,13 @@ class _$RecitationDao extends RecitationDao {
   @override
   Future<void> insertRecitation(Recitation recitation) async {
     await _recitationInsertionAdapter.insert(
-        recitation, OnConflictStrategy.abort);
+        recitation, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateRecitation(Recitation recitation) async {
-    await _recitationUpdateAdapter.update(recitation, OnConflictStrategy.abort);
+    await _recitationUpdateAdapter.update(
+        recitation, OnConflictStrategy.replace);
   }
 
   @override
@@ -844,12 +825,12 @@ class _$ReciterDao extends ReciterDao {
 
   @override
   Future<void> insertReciter(Reciter reciter) async {
-    await _reciterInsertionAdapter.insert(reciter, OnConflictStrategy.abort);
+    await _reciterInsertionAdapter.insert(reciter, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateReciter(Reciter reciter) async {
-    await _reciterUpdateAdapter.update(reciter, OnConflictStrategy.abort);
+    await _reciterUpdateAdapter.update(reciter, OnConflictStrategy.replace);
   }
 
   @override
@@ -943,13 +924,13 @@ class _$RecitationVersesDao extends RecitationVersesDao {
   @override
   Future<void> insertRecitationVerses(RecitationVerses recitationVerses) async {
     await _recitationVersesInsertionAdapter.insert(
-        recitationVerses, OnConflictStrategy.abort);
+        recitationVerses, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateRecitationVerses(RecitationVerses recitationVerses) async {
     await _recitationVersesUpdateAdapter.update(
-        recitationVerses, OnConflictStrategy.abort);
+        recitationVerses, OnConflictStrategy.replace);
   }
 
   @override
@@ -1068,6 +1049,26 @@ class _$VerseDao extends VerseDao {
   }
 
   @override
+  Future<List<Verse>> findAllVersesChapterPage(int page, int chapter) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Verse WHERE page = ?1 and chapter = ?2',
+        mapper: (Map<String, Object?> row) => Verse(
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            uthmanicText: row['uthmanic_text'] as String?,
+            lineStart: row['line_start'] as int?,
+            lineEnd: row['line_end'] as int?,
+            image: row['image'] as String?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            pageId: row['page'] as int?,
+            verseNumber: row['verse_number'] as int?),
+        arguments: [page, chapter]);
+  }
+
+  @override
   Stream<Verse?> findVerseById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Verse WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Verse(
@@ -1090,12 +1091,12 @@ class _$VerseDao extends VerseDao {
 
   @override
   Future<void> insertVerse(Verse verse) async {
-    await _verseInsertionAdapter.insert(verse, OnConflictStrategy.abort);
+    await _verseInsertionAdapter.insert(verse, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateVerse(Verse verse) async {
-    await _verseUpdateAdapter.update(verse, OnConflictStrategy.abort);
+    await _verseUpdateAdapter.update(verse, OnConflictStrategy.replace);
   }
 
   @override
@@ -1207,16 +1208,40 @@ class _$GlyphDao extends GlyphDao {
 
   @override
   Future<void> insertGlyph(Glyph glyph) async {
-    await _glyphInsertionAdapter.insert(glyph, OnConflictStrategy.abort);
+    await _glyphInsertionAdapter.insert(glyph, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateGlyph(Glyph glyph) async {
-    await _glyphUpdateAdapter.update(glyph, OnConflictStrategy.abort);
+    await _glyphUpdateAdapter.update(glyph, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> deleteGlyph(Glyph glyph) async {
     await _glyphDeletionAdapter.delete(glyph);
+  }
+}
+
+class _$ChaptersPageDao extends ChaptersPageDao {
+  _$ChaptersPageDao(this.database, this.changeListener)
+      : _chaptersPageInsertionAdapter = InsertionAdapter(
+            database,
+            'ChaptersPage',
+            (ChaptersPage item) => <String, Object?>{
+                  'id': item.id,
+                  'pageId': item.pageId,
+                  'chapterId': item.chapterId
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final InsertionAdapter<ChaptersPage> _chaptersPageInsertionAdapter;
+
+  @override
+  Future<void> insertChaptersPage(ChaptersPage chaptersPage) async {
+    await _chaptersPageInsertionAdapter.insert(
+        chaptersPage, OnConflictStrategy.replace);
   }
 }

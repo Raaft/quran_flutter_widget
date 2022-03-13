@@ -36,7 +36,8 @@ class QuranCubit extends Cubit<QuranState> {
     emit(PagesFetchLoadingState());
     try {
       DataSource.instance
-          .fetchPagesList(bookId: bookId, narrationId: 1, chapterId: chapterId)
+          .fetchPagesList(
+              bookId: bookId, narrationId: narrationId, chapterId: chapterId)
           .then((value) async {
         print('Pages QuranCubit  $value');
         if (value != null) {
@@ -45,9 +46,9 @@ class QuranCubit extends Cubit<QuranState> {
         } else {
           emit(PagesFetchErrorState(error: 'No Data'));
         }
-      }).onError((error, stackTrace) {
-        emit(PagesFetchErrorState(error: 'OnError' + error.toString()));
-      });
+      }); /*.onError((error, stackTrace) {
+        emit(PagesFetchErrorState(error: 'OnError ' + error.toString()));
+      });*/
     } catch (e) {
       print(e.toString());
       emit(PagesFetchErrorState(error: 'CatchError' + e.toString()));

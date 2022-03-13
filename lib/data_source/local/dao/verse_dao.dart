@@ -9,6 +9,9 @@ abstract class VerseDao {
   @Query('SELECT * FROM Verse WHERE page = :page')
   Future<List<Verse>> findAllVersesPage(int page);
 
+  @Query('SELECT * FROM Verse WHERE page = :page and chapter = :chapter')
+  Future<List<Verse>> findAllVersesChapterPage(int page, int chapter);
+
   @Query('SELECT * FROM Verse WHERE id = :id')
   Stream<Verse?> findVerseById(int id);
 

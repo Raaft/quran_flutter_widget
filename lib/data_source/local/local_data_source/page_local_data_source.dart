@@ -18,7 +18,7 @@ class PageLocalDataSource {
   }) async {
     final db = await QuranDatabaseSource.instance.database;
     return db?.pageDao
-        .findChapterPage(narrationId ?? 0, bookId ?? 0, chapterid ?? 0);
+        .findChapterPage(narrationId ?? 1, chapterid ?? 1, bookId ?? 1);
   }
 
   Future<Page?> fetchPageById(int pageId) async {
@@ -27,6 +27,11 @@ class PageLocalDataSource {
   }
 
   fetchVerseById(int pageId) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return await db?.verseDao.findAllVersesPage(pageId);
+  }
+
+  fetchChaptersById(int pageId) async {
     final db = await QuranDatabaseSource.instance.database;
     return await db?.verseDao.findAllVersesPage(pageId);
   }
@@ -44,6 +49,11 @@ class PageLocalDataSource {
       if (page.glyphs != null) {
         for (var glyph in page.glyphs!) {
           await db?.glyphDao.insertGlyph(glyph);
+        }
+      }
+      if (page.chapters != null) {
+        for (var chaptersPage in page.chapters!) {
+          await db?.chaptersPageDao.insertChaptersPage(chaptersPage);
         }
       }
     }

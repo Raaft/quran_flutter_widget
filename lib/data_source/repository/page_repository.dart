@@ -16,16 +16,21 @@ class PageRepository {
     List<Page>? pagesList = await _pageLocalDataSource.findChapterPage(
         bookId: bookId, narrationId: narrationId, chapterid: chapterId);
 
+    print('fetchPagesList $pagesList');
+
     if ((pagesList != null && pagesList.isNotEmpty)) {
       for (var element in pagesList) {
         element.verses =
             await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
+        //element.chaptersPage =  await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
+
         //print('getVerse ${element.verses}');
       }
 
       return pagesList;
     } else {
-      final MyResponse<Page> response = await _pageApi.fetchPagesList();
+      final MyResponse<Page> response = await _pageApi.fetchPagesList(
+          bookId: bookId, narrationId: narrationId, chapterId: chapterId);
       if (response.code == Apis.codeSUCCESS) {
         pagesList = response.data as List<Page>;
         _pageLocalDataSource.savePagesList(pagesList);
