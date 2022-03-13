@@ -84,13 +84,49 @@ class QuranCubit extends Cubit<QuranState> {
     'صراط الذين أنعمت عليهم غير المغضوب عليهم ولا الضالين	'
   ];
 
-  void changePage(int index, int sizePage) {
+  void changePage(int index, int sizePage, int chapterId) {
     if (index < 2) {
-      fetchPages(
-          chapterId: chapterId - 1, bookId: bookId, narrationId: narrationId);
+      try {
+        DataSource.instance
+            .fetchPagesList(
+                bookId: bookId,
+                narrationId: narrationId,
+                chapterId: chapterId + 1)
+            .then((value) async {
+          print('Pages QuranCubit  $value');
+          if (value != null) {
+            var temp = pages;
+            pages = value;
+            pages.addAll(temp);
+            emit(PagesFetchedState(pages: pages));
+          } else {
+            emit(PagesFetchErrorState(error: 'No Data'));
+          }
+        });
+      } catch (e) {
+        print(e.toString());
+        emit(PagesFetchErrorState(error: 'CatchError' + e.toString()));
+      }
     } else if (index - sizePage < 3) {
-      fetchPages(
-          chapterId: chapterId + 1, bookId: bookId, narrationId: narrationId);
+      try {
+        DataSource.instance
+            .fetchPagesList(
+                bookId: bookId,
+                narrationId: narrationId,
+                chapterId: chapterId + 1)
+            .then((value) async {
+          print('Pages QuranCubit  $value');
+          if (value != null) {
+            pages.addAll(value);
+            emit(PagesFetchedState(pages: pages));
+          } else {
+            emit(PagesFetchErrorState(error: 'No Data'));
+          }
+        });
+      } catch (e) {
+        print(e.toString());
+        emit(PagesFetchErrorState(error: 'CatchError' + e.toString()));
+      }
     }
   }
 }

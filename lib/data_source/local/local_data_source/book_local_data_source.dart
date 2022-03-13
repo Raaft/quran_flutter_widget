@@ -29,6 +29,11 @@ class BookLocalDataSource {
     }
   }
 
+  Future<void> saveBook(Book book) async {
+    final db = await QuranDatabaseSource.instance.database;
+    await db?.bookDao.updateBook(book);
+  }
+
   Future<void> deleteBooksList(List<Book> booksList) async {
     final db = await QuranDatabaseSource.instance.database;
     for (var book in booksList) {

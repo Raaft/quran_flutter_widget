@@ -209,7 +209,8 @@ class _QuranPageState extends State<QuranPage> {
         child: PageView.builder(
           itemCount: pages.length,
           onPageChanged: (index) {
-            widget.cubit.changePage(index, pages.length);
+            widget.cubit.changePage(
+                index, pages.length, pages[index].chapters![0].id ?? 0);
             widget.getPage(pages[index]);
           },
           itemBuilder: (context, indexPage) => Stack(
