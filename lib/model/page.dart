@@ -1,6 +1,7 @@
 import 'package:floor/floor.dart';
 
 import 'package:quran_widget_flutter/model/base_model.dart';
+import 'package:quran_widget_flutter/model/chapters_page.dart';
 import 'package:quran_widget_flutter/model/glyph.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 
@@ -23,8 +24,6 @@ class Page extends BaseModel {
   int? pageNumber;
   @ColumnInfo(name: 'narration')
   int? narrationId;
-  @ColumnInfo(name: 'chapters')
-  int? chapterId;
   @ColumnInfo(name: 'book')
   int? bookId;
   @ColumnInfo(name: 'part')
@@ -34,23 +33,17 @@ class Page extends BaseModel {
   String? image;
   String? localImage;
 
-  /*
-  DatabaseException(FOREIGN     KEY constraint failed (code 787 SQLITE_CONSTRAINT_FOREIGNKEY)) sql 
-  'INSERT OR ABORT INTO Page 
-  (id, page_number, narration, chapters, book, part, sub_part, image, localImage) VALUES
-   (?, ?,            ?,         ?,      ?,    ?,     NULL,    NULL, NULL)' args [1, 1, 1, 1, 1, 1]
-   */
-
   @ignore
   List<Verse>? verses;
   @ignore
   List<Glyph>? glyphs;
+  @ignore
+  List<ChaptersPage>? chapters;
 
   Page({
     this.id,
     this.pageNumber,
     this.narrationId,
-    this.chapterId,
     this.bookId,
     this.partId,
     this.subPartId,
@@ -58,6 +51,7 @@ class Page extends BaseModel {
     this.localImage,
     this.verses,
     this.glyphs,
+    this.chapters,
   });
 
   @override
@@ -66,7 +60,6 @@ class Page extends BaseModel {
     data['id'] = id;
     data['page_number'] = pageNumber;
     data['narration'] = narrationId;
-    data['chapters'] = chapterId;
     data['book'] = bookId;
     data['part'] = partId;
     data['sub_part'] = subPartId;
@@ -77,13 +70,20 @@ class Page extends BaseModel {
     if (glyphs != null) {
       data['glyphs'] = glyphs!.map((v) => v.toJson()).toList();
     }
+    if (glyphs != null) {
+      data['chapters'] = chapters!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 
   factory Page.fromJson(Map<String, dynamic> map) {
+    print('Start fromJson map');
+
     List<Verse>? verses;
     List<Glyph>? glyphs;
+    List<ChaptersPage>? chaptersPage;
     int chapter = 0;
+
     if (map['verses'] != null) {
       verses = <Verse>[];
       map['verses'].forEach((v) {
@@ -96,23 +96,34 @@ class Page extends BaseModel {
         glyphs!.add(Glyph.fromJson(v));
       });
     }
-    if (map['chapters'] != null) {
-      glyphs = <Glyph>[];
-      map['chapters'].forEach((v) {
-        chapter = v;
-      });
+
+    try {
+      if (map['chapters'] != null) {
+        chaptersPage = <ChaptersPage>[];
+
+        map['chapters'].forEach((v) {
+          chapter = (v as int);
+          chaptersPage!.add(ChaptersPage(
+            chapterId: chapter,
+            pageId: map['id']?.toInt(),
+          ));
+        });
+      }
+    } catch (e) {
+      print('Error FromJson' + e.toString());
     }
+
     return Page(
         id: map['id']?.toInt(),
         pageNumber: map['page_number']?.toInt(),
         narrationId: map['narration']?.toInt(),
-        chapterId: chapter,
         bookId: map['book']?.toInt(),
         partId: map['part']?.toInt(),
         subPartId: map['sub_part']?.toInt(),
         image: map['image'],
         localImage: map['localImage'],
         verses: verses,
-        glyphs: glyphs);
+        glyphs: glyphs,
+        chapters: chaptersPage);
   }
 }

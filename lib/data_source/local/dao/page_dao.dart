@@ -22,7 +22,7 @@ abstract class PageDao {
   );
 
   @Query(
-      'SELECT * FROM Page WHERE narration = :narrationId and chapters= :chapterid and book =:bookId ')
+      'SELECT  DISTINCT(Page.id), Page.* FROM Page,ChaptersPage WHERE narration = :narrationId and ChaptersPage.chapterId = :chapterid and book = :bookId and ChaptersPage.pageId = Page.id ORDER by Page.page_number')
   Future<List<Page>?> findChapterPage(
     int narrationId,
     int chapterid,

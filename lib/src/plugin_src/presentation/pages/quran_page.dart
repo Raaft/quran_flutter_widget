@@ -11,10 +11,12 @@ class QuranPage extends StatefulWidget {
     required this.onTap,
     required this.onLongTap,
     required this.cubit,
+    required this.getPage,
   }) : super(key: key);
 
   final Function(String data) onTap;
   final Function(String data) onLongTap;
+  final Function(page.Page data) getPage;
 
   final QuranCubit cubit;
 
@@ -26,7 +28,7 @@ class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
 
   final offset2 = const Offset(200, 400);
- // Map<int, List<int>> selectedIndex = {};
+  // Map<int, List<int>> selectedIndex = {};
   bool isSelectedVeirse = false;
 
   int firstIndex = 0;
@@ -96,7 +98,6 @@ class _QuranPageState extends State<QuranPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<QuranCubit, QuranState>(
       builder: (context, state) {
-
         print('State Is ' + state.toString());
         return Stack(
           children: [
@@ -125,6 +126,7 @@ class _QuranPageState extends State<QuranPage> {
       padding: const EdgeInsets.all(8),
       child: PageView.builder(
         itemCount: pages!.length,
+        onPageChanged: (inedx) {},
         itemBuilder: (context, indexPage) => Stack(
           children: [
             if ((state is PagesFetchedState))
@@ -172,7 +174,6 @@ class _QuranPageState extends State<QuranPage> {
     );
   }
 
-
   Center _errorView(String error) {
     return Center(
       child: Text(
@@ -207,6 +208,11 @@ class _QuranPageState extends State<QuranPage> {
         padding: const EdgeInsets.all(8),
         child: PageView.builder(
           itemCount: pages.length,
+          onPageChanged: (index) {
+            widget.cubit.changePage(
+                index, pages.length, pages[index].chapters![0].id ?? 0);
+            widget.getPage(pages[index]);
+          },
           itemBuilder: (context, indexPage) => Stack(
             children: [
               ListView.builder(
@@ -238,7 +244,8 @@ class _QuranPageState extends State<QuranPage> {
                         }
                       }
 
-                      print('List of versis before $widget.cubit.selectedIndex');
+                      print(
+                          'List of versis before $widget.cubit.selectedIndex');
 
                       // selectedIndex.clear();
                       for (int i = firstIndexPage; i <= lastIndexPage; i++) {
@@ -258,7 +265,8 @@ class _QuranPageState extends State<QuranPage> {
                         }
                       }
 
-                      print('List of versis before $widget.cubit.selectedIndex');
+                      print(
+                          'List of versis before $widget.cubit.selectedIndex');
                     });
                     widget.onLongTap(pages[indexPage]
                         .verses![index]
@@ -276,7 +284,8 @@ class _QuranPageState extends State<QuranPage> {
                   },
                   child: Container(
                     color: widget.cubit.selectedIndex.containsKey(indexPage)
-                        ? (widget.cubit.selectedIndex[indexPage]!.contains(index))
+                        ? (widget.cubit.selectedIndex[indexPage]!
+                                .contains(index))
                             ? Colors.yellow.withOpacity(.2)
                             : Colors.white.withOpacity(0)
                         : Colors.white.withOpacity(0),

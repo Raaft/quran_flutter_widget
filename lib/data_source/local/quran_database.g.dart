@@ -81,6 +81,10 @@ class _$QuranDatabase extends QuranDatabase {
 
   GlyphDao? _glyphDaoInstance;
 
+  ChaptersPageDao? _chaptersPageDaoInstance;
+
+  ChapterDownloadDao? _chapterDownloadDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -102,13 +106,13 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Narration` (`id` INTEGER, `name` TEXT, `description` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Book` (`id` INTEGER, `name` TEXT, `narration` INTEGER, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Book` (`id` INTEGER, `name` TEXT, `narration` INTEGER, `downloaded` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Chapter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Chapter` (`id` INTEGER, `name` TEXT, `chapter_number` INTEGER, `origin` TEXT, `pageFrom` INTEGER, `pageTo` INTEGER, `versesSize` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Part` (`id` INTEGER, `name` TEXT, `alias` TEXT, `part_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `chapters` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, `name` TEXT, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
@@ -119,6 +123,10 @@ class _$QuranDatabase extends QuranDatabase {
             'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, `verse_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse` INTEGER, `page` INTEGER, `chapter` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ChaptersPage` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `pageId` INTEGER, `chapterId` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ChapterDownload` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `narrationId` INTEGER, `reciterId` INTEGER, `recitationId` INTEGER, `chapterId` INTEGER, `downloaded` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -175,6 +183,18 @@ class _$QuranDatabase extends QuranDatabase {
   @override
   GlyphDao get glyphDao {
     return _glyphDaoInstance ??= _$GlyphDao(database, changeListener);
+  }
+
+  @override
+  ChaptersPageDao get chaptersPageDao {
+    return _chaptersPageDaoInstance ??=
+        _$ChaptersPageDao(database, changeListener);
+  }
+
+  @override
+  ChapterDownloadDao get chapterDownloadDao {
+    return _chapterDownloadDaoInstance ??=
+        _$ChapterDownloadDao(database, changeListener);
   }
 }
 
@@ -249,12 +269,12 @@ class _$NarrationDao extends NarrationDao {
   @override
   Future<void> insertNarration(Narration narration) async {
     await _narrationInsertionAdapter.insert(
-        narration, OnConflictStrategy.abort);
+        narration, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateNarration(Narration narration) async {
-    await _narrationUpdateAdapter.update(narration, OnConflictStrategy.abort);
+    await _narrationUpdateAdapter.update(narration, OnConflictStrategy.replace);
   }
 
   @override
@@ -272,7 +292,10 @@ class _$BookDao extends BookDao {
             (Book item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'narration': item.narrationId
+                  'narration': item.narrationId,
+                  'downloaded': item.downloaded == null
+                      ? null
+                      : (item.downloaded! ? 1 : 0)
                 },
             changeListener),
         _bookUpdateAdapter = UpdateAdapter(
@@ -282,7 +305,10 @@ class _$BookDao extends BookDao {
             (Book item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'narration': item.narrationId
+                  'narration': item.narrationId,
+                  'downloaded': item.downloaded == null
+                      ? null
+                      : (item.downloaded! ? 1 : 0)
                 },
             changeListener),
         _bookDeletionAdapter = DeletionAdapter(
@@ -292,7 +318,10 @@ class _$BookDao extends BookDao {
             (Book item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
-                  'narration': item.narrationId
+                  'narration': item.narrationId,
+                  'downloaded': item.downloaded == null
+                      ? null
+                      : (item.downloaded! ? 1 : 0)
                 },
             changeListener);
 
@@ -314,7 +343,10 @@ class _$BookDao extends BookDao {
         mapper: (Map<String, Object?> row) => Book(
             id: row['id'] as int?,
             name: row['name'] as String?,
-            narrationId: row['narration'] as int?));
+            narrationId: row['narration'] as int?,
+            downloaded: row['downloaded'] == null
+                ? null
+                : (row['downloaded'] as int) != 0));
   }
 
   @override
@@ -323,17 +355,24 @@ class _$BookDao extends BookDao {
         mapper: (Map<String, Object?> row) => Book(
             id: row['id'] as int?,
             name: row['name'] as String?,
-            narrationId: row['narration'] as int?),
+            narrationId: row['narration'] as int?,
+            downloaded: row['downloaded'] == null
+                ? null
+                : (row['downloaded'] as int) != 0),
         arguments: [qurey]);
   }
 
   @override
   Future<List<Book>> findBooksInNarrationId(int narrationId) async {
-    return _queryAdapter.queryList('SELECT * FROM Book WHERE narration = ?1',
+    return _queryAdapter.queryList(
+        'SELECT * FROM Book WHERE narration = ?1 or downloaded > 0',
         mapper: (Map<String, Object?> row) => Book(
             id: row['id'] as int?,
             name: row['name'] as String?,
-            narrationId: row['narration'] as int?),
+            narrationId: row['narration'] as int?,
+            downloaded: row['downloaded'] == null
+                ? null
+                : (row['downloaded'] as int) != 0),
         arguments: [narrationId]);
   }
 
@@ -343,7 +382,10 @@ class _$BookDao extends BookDao {
         mapper: (Map<String, Object?> row) => Book(
             id: row['id'] as int?,
             name: row['name'] as String?,
-            narrationId: row['narration'] as int?),
+            narrationId: row['narration'] as int?,
+            downloaded: row['downloaded'] == null
+                ? null
+                : (row['downloaded'] as int) != 0),
         arguments: [id],
         queryableName: 'Book',
         isView: false);
@@ -351,12 +393,12 @@ class _$BookDao extends BookDao {
 
   @override
   Future<void> insertBook(Book book) async {
-    await _bookInsertionAdapter.insert(book, OnConflictStrategy.abort);
+    await _bookInsertionAdapter.insert(book, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateBook(Book book) async {
-    await _bookUpdateAdapter.update(book, OnConflictStrategy.abort);
+    await _bookUpdateAdapter.update(book, OnConflictStrategy.replace);
   }
 
   @override
@@ -371,22 +413,43 @@ class _$ChapterDao extends ChapterDao {
         _chapterInsertionAdapter = InsertionAdapter(
             database,
             'Chapter',
-            (Chapter item) =>
-                <String, Object?>{'id': item.id, 'name': item.name},
+            (Chapter item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'chapter_number': item.chapterNumber,
+                  'origin': item.origin,
+                  'pageFrom': item.pageFrom,
+                  'pageTo': item.pageTo,
+                  'versesSize': item.versesSize
+                },
             changeListener),
         _chapterUpdateAdapter = UpdateAdapter(
             database,
             'Chapter',
             ['id'],
-            (Chapter item) =>
-                <String, Object?>{'id': item.id, 'name': item.name},
+            (Chapter item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'chapter_number': item.chapterNumber,
+                  'origin': item.origin,
+                  'pageFrom': item.pageFrom,
+                  'pageTo': item.pageTo,
+                  'versesSize': item.versesSize
+                },
             changeListener),
         _chapterDeletionAdapter = DeletionAdapter(
             database,
             'Chapter',
             ['id'],
-            (Chapter item) =>
-                <String, Object?>{'id': item.id, 'name': item.name},
+            (Chapter item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'chapter_number': item.chapterNumber,
+                  'origin': item.origin,
+                  'pageFrom': item.pageFrom,
+                  'pageTo': item.pageTo,
+                  'versesSize': item.versesSize
+                },
             changeListener);
 
   final sqflite.DatabaseExecutor database;
@@ -404,15 +467,27 @@ class _$ChapterDao extends ChapterDao {
   @override
   Future<List<Chapter>> findAllChapters() async {
     return _queryAdapter.queryList('SELECT * FROM Chapter',
-        mapper: (Map<String, Object?> row) =>
-            Chapter(id: row['id'] as int?, name: row['name'] as String?));
+        mapper: (Map<String, Object?> row) => Chapter(
+            id: row['id'] as int?,
+            name: row['name'] as String?,
+            chapterNumber: row['chapter_number'] as int?,
+            origin: row['origin'] as String?,
+            pageFrom: row['pageFrom'] as int?,
+            pageTo: row['pageTo'] as int?,
+            versesSize: row['versesSize'] as int?));
   }
 
   @override
   Stream<Chapter?> findChapterById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Chapter WHERE id = ?1',
-        mapper: (Map<String, Object?> row) =>
-            Chapter(id: row['id'] as int?, name: row['name'] as String?),
+        mapper: (Map<String, Object?> row) => Chapter(
+            id: row['id'] as int?,
+            name: row['name'] as String?,
+            chapterNumber: row['chapter_number'] as int?,
+            origin: row['origin'] as String?,
+            pageFrom: row['pageFrom'] as int?,
+            pageTo: row['pageTo'] as int?,
+            versesSize: row['versesSize'] as int?),
         arguments: [id],
         queryableName: 'Chapter',
         isView: false);
@@ -421,19 +496,25 @@ class _$ChapterDao extends ChapterDao {
   @override
   Future<List<Chapter>> searchInChapter(String qurey) async {
     return _queryAdapter.queryList('SELECT * FROM Chapter WHERE name like ?1',
-        mapper: (Map<String, Object?> row) =>
-            Chapter(id: row['id'] as int?, name: row['name'] as String?),
+        mapper: (Map<String, Object?> row) => Chapter(
+            id: row['id'] as int?,
+            name: row['name'] as String?,
+            chapterNumber: row['chapter_number'] as int?,
+            origin: row['origin'] as String?,
+            pageFrom: row['pageFrom'] as int?,
+            pageTo: row['pageTo'] as int?,
+            versesSize: row['versesSize'] as int?),
         arguments: [qurey]);
   }
 
   @override
   Future<void> insertChapter(Chapter chapter) async {
-    await _chapterInsertionAdapter.insert(chapter, OnConflictStrategy.abort);
+    await _chapterInsertionAdapter.insert(chapter, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateChapter(Chapter chapter) async {
-    await _chapterUpdateAdapter.update(chapter, OnConflictStrategy.abort);
+    await _chapterUpdateAdapter.update(chapter, OnConflictStrategy.replace);
   }
 
   @override
@@ -527,12 +608,12 @@ class _$PartDao extends PartDao {
 
   @override
   Future<void> insertPart(Part part) async {
-    await _partInsertionAdapter.insert(part, OnConflictStrategy.abort);
+    await _partInsertionAdapter.insert(part, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updatePart(Part part) async {
-    await _partUpdateAdapter.update(part, OnConflictStrategy.abort);
+    await _partUpdateAdapter.update(part, OnConflictStrategy.replace);
   }
 
   @override
@@ -551,7 +632,6 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -567,7 +647,6 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -583,7 +662,6 @@ class _$PageDao extends PageDao {
                   'id': item.id,
                   'page_number': item.pageNumber,
                   'narration': item.narrationId,
-                  'chapters': item.chapterId,
                   'book': item.bookId,
                   'part': item.partId,
                   'sub_part': item.subPartId,
@@ -611,7 +689,6 @@ class _$PageDao extends PageDao {
             id: row['id'] as int?,
             pageNumber: row['page_number'] as int?,
             narrationId: row['narration'] as int?,
-            chapterId: row['chapters'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
             subPartId: row['sub_part'] as int?,
@@ -626,7 +703,6 @@ class _$PageDao extends PageDao {
             id: row['id'] as int?,
             pageNumber: row['page_number'] as int?,
             narrationId: row['narration'] as int?,
-            chapterId: row['chapters'] as int?,
             bookId: row['book'] as int?,
             partId: row['part'] as int?,
             subPartId: row['sub_part'] as int?,
@@ -642,37 +718,27 @@ class _$PageDao extends PageDao {
       int partId, int subPartId) async {
     return _queryAdapter.query(
         'SELECT * FROM Page WHERE narration = ?1 or chapters= ?2 or book =?3 or part =?4 or sub_part =?5',
-        mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, chapterId: row['chapters'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
+        mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
         arguments: [narrationId, chapterid, bookId, partId, subPartId]);
   }
 
   @override
   Future<List<Page>?> findChapterPage(
       int narrationId, int chapterid, int bookId) async {
-    print('page qu $chapterid');
     return _queryAdapter.queryList(
-        'SELECT * FROM Page WHERE narration = ?1 and chapters= ?2 and book =?3',
-        mapper: (Map<String, Object?> row) => Page(
-            id: row['id'] as int?,
-            pageNumber: row['page_number'] as int?,
-            narrationId: row['narration'] as int?,
-            chapterId: row['chapters'] as int?,
-            bookId: row['book'] as int?,
-            partId: row['part'] as int?,
-            subPartId: row['sub_part'] as int?,
-            image: row['image'] as String?,
-            localImage: row['localImage'] as String?),
+        'SELECT  DISTINCT(Page.id), Page.* FROM Page,ChaptersPage WHERE narration = ?1 and ChaptersPage.chapterId = ?2 and book = ?3 and ChaptersPage.pageId = Page.id ORDER by Page.page_number',
+        mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
         arguments: [narrationId, chapterid, bookId]);
   }
 
   @override
   Future<void> insertPage(Page page) async {
-    await _pageInsertionAdapter.insert(page, OnConflictStrategy.abort);
+    await _pageInsertionAdapter.insert(page, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updatePage(Page page) async {
-    await _pageUpdateAdapter.update(page, OnConflictStrategy.abort);
+    await _pageUpdateAdapter.update(page, OnConflictStrategy.replace);
   }
 
   @override
@@ -767,12 +833,13 @@ class _$RecitationDao extends RecitationDao {
   @override
   Future<void> insertRecitation(Recitation recitation) async {
     await _recitationInsertionAdapter.insert(
-        recitation, OnConflictStrategy.abort);
+        recitation, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateRecitation(Recitation recitation) async {
-    await _recitationUpdateAdapter.update(recitation, OnConflictStrategy.abort);
+    await _recitationUpdateAdapter.update(
+        recitation, OnConflictStrategy.replace);
   }
 
   @override
@@ -844,12 +911,12 @@ class _$ReciterDao extends ReciterDao {
 
   @override
   Future<void> insertReciter(Reciter reciter) async {
-    await _reciterInsertionAdapter.insert(reciter, OnConflictStrategy.abort);
+    await _reciterInsertionAdapter.insert(reciter, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateReciter(Reciter reciter) async {
-    await _reciterUpdateAdapter.update(reciter, OnConflictStrategy.abort);
+    await _reciterUpdateAdapter.update(reciter, OnConflictStrategy.replace);
   }
 
   @override
@@ -943,13 +1010,13 @@ class _$RecitationVersesDao extends RecitationVersesDao {
   @override
   Future<void> insertRecitationVerses(RecitationVerses recitationVerses) async {
     await _recitationVersesInsertionAdapter.insert(
-        recitationVerses, OnConflictStrategy.abort);
+        recitationVerses, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateRecitationVerses(RecitationVerses recitationVerses) async {
     await _recitationVersesUpdateAdapter.update(
-        recitationVerses, OnConflictStrategy.abort);
+        recitationVerses, OnConflictStrategy.replace);
   }
 
   @override
@@ -1068,6 +1135,26 @@ class _$VerseDao extends VerseDao {
   }
 
   @override
+  Future<List<Verse>> findAllVersesChapterPage(int page, int chapter) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Verse WHERE page = ?1 and chapter = ?2',
+        mapper: (Map<String, Object?> row) => Verse(
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            uthmanicText: row['uthmanic_text'] as String?,
+            lineStart: row['line_start'] as int?,
+            lineEnd: row['line_end'] as int?,
+            image: row['image'] as String?,
+            narrationId: row['narration'] as int?,
+            chapterId: row['chapter'] as int?,
+            bookId: row['book'] as int?,
+            partId: row['part'] as int?,
+            pageId: row['page'] as int?,
+            verseNumber: row['verse_number'] as int?),
+        arguments: [page, chapter]);
+  }
+
+  @override
   Stream<Verse?> findVerseById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM Verse WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Verse(
@@ -1090,12 +1177,12 @@ class _$VerseDao extends VerseDao {
 
   @override
   Future<void> insertVerse(Verse verse) async {
-    await _verseInsertionAdapter.insert(verse, OnConflictStrategy.abort);
+    await _verseInsertionAdapter.insert(verse, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateVerse(Verse verse) async {
-    await _verseUpdateAdapter.update(verse, OnConflictStrategy.abort);
+    await _verseUpdateAdapter.update(verse, OnConflictStrategy.replace);
   }
 
   @override
@@ -1207,16 +1294,140 @@ class _$GlyphDao extends GlyphDao {
 
   @override
   Future<void> insertGlyph(Glyph glyph) async {
-    await _glyphInsertionAdapter.insert(glyph, OnConflictStrategy.abort);
+    await _glyphInsertionAdapter.insert(glyph, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> updateGlyph(Glyph glyph) async {
-    await _glyphUpdateAdapter.update(glyph, OnConflictStrategy.abort);
+    await _glyphUpdateAdapter.update(glyph, OnConflictStrategy.replace);
   }
 
   @override
   Future<void> deleteGlyph(Glyph glyph) async {
     await _glyphDeletionAdapter.delete(glyph);
+  }
+}
+
+class _$ChaptersPageDao extends ChaptersPageDao {
+  _$ChaptersPageDao(this.database, this.changeListener)
+      : _chaptersPageInsertionAdapter = InsertionAdapter(
+            database,
+            'ChaptersPage',
+            (ChaptersPage item) => <String, Object?>{
+                  'id': item.id,
+                  'pageId': item.pageId,
+                  'chapterId': item.chapterId
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final InsertionAdapter<ChaptersPage> _chaptersPageInsertionAdapter;
+
+  @override
+  Future<void> insertChaptersPage(ChaptersPage chaptersPage) async {
+    await _chaptersPageInsertionAdapter.insert(
+        chaptersPage, OnConflictStrategy.replace);
+  }
+}
+
+class _$ChapterDownloadDao extends ChapterDownloadDao {
+  _$ChapterDownloadDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _chapterDownloadInsertionAdapter = InsertionAdapter(
+            database,
+            'ChapterDownload',
+            (ChapterDownload item) => <String, Object?>{
+                  'id': item.id,
+                  'narrationId': item.narrationId,
+                  'reciterId': item.reciterId,
+                  'recitationId': item.recitationId,
+                  'chapterId': item.chapterId,
+                  'downloaded': item.downloaded ? 1 : 0
+                },
+            changeListener),
+        _chapterDownloadUpdateAdapter = UpdateAdapter(
+            database,
+            'ChapterDownload',
+            ['id'],
+            (ChapterDownload item) => <String, Object?>{
+                  'id': item.id,
+                  'narrationId': item.narrationId,
+                  'reciterId': item.reciterId,
+                  'recitationId': item.recitationId,
+                  'chapterId': item.chapterId,
+                  'downloaded': item.downloaded ? 1 : 0
+                },
+            changeListener),
+        _chapterDownloadDeletionAdapter = DeletionAdapter(
+            database,
+            'ChapterDownload',
+            ['id'],
+            (ChapterDownload item) => <String, Object?>{
+                  'id': item.id,
+                  'narrationId': item.narrationId,
+                  'reciterId': item.reciterId,
+                  'recitationId': item.recitationId,
+                  'chapterId': item.chapterId,
+                  'downloaded': item.downloaded ? 1 : 0
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ChapterDownload> _chapterDownloadInsertionAdapter;
+
+  final UpdateAdapter<ChapterDownload> _chapterDownloadUpdateAdapter;
+
+  final DeletionAdapter<ChapterDownload> _chapterDownloadDeletionAdapter;
+
+  @override
+  Future<List<ChapterDownload>> findAllChapterDownloads() async {
+    return _queryAdapter.queryList('SELECT * FROM ChapterDownload',
+        mapper: (Map<String, Object?> row) => ChapterDownload(
+            id: row['id'] as int?,
+            narrationId: row['narrationId'] as int?,
+            reciterId: row['reciterId'] as int?,
+            recitationId: row['recitationId'] as int?,
+            chapterId: row['chapterId'] as int?,
+            downloaded: (row['downloaded'] as int) != 0));
+  }
+
+  @override
+  Stream<ChapterDownload?> findChapterDownloadById(int id) {
+    return _queryAdapter.queryStream(
+        'SELECT * FROM ChapterDownload WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => ChapterDownload(
+            id: row['id'] as int?,
+            narrationId: row['narrationId'] as int?,
+            reciterId: row['reciterId'] as int?,
+            recitationId: row['recitationId'] as int?,
+            chapterId: row['chapterId'] as int?,
+            downloaded: (row['downloaded'] as int) != 0),
+        arguments: [id],
+        queryableName: 'ChapterDownload',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertChapterDownload(ChapterDownload chapterDownload) async {
+    await _chapterDownloadInsertionAdapter.insert(
+        chapterDownload, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateChapterDownload(ChapterDownload chapterDownload) async {
+    await _chapterDownloadUpdateAdapter.update(
+        chapterDownload, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteChapterDownload(ChapterDownload chapterDownload) async {
+    await _chapterDownloadDeletionAdapter.delete(chapterDownload);
   }
 }

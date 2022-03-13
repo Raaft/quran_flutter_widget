@@ -27,15 +27,22 @@ class QuranCubit extends Cubit<QuranState> {
     }
   }
 
+  late final int chapterId;
+  late final int bookId;
+  late final int narrationId;
   fetchPages({
     required int chapterId,
     required int bookId,
     required int narrationId,
   }) {
+    this.chapterId = chapterId;
+    this.bookId = bookId;
+    this.narrationId = narrationId;
     emit(PagesFetchLoadingState());
     try {
       DataSource.instance
-          .fetchPagesList(bookId: bookId, narrationId: 1, chapterId: chapterId)
+          .fetchPagesList(
+              bookId: bookId, narrationId: narrationId, chapterId: chapterId)
           .then((value) async {
         print('Pages QuranCubit  $value');
         if (value != null) {
@@ -44,9 +51,9 @@ class QuranCubit extends Cubit<QuranState> {
         } else {
           emit(PagesFetchErrorState(error: 'No Data'));
         }
-      }).onError((error, stackTrace) {
-        emit(PagesFetchErrorState(error: 'OnError' + error.toString()));
-      });
+      }); /*.onError((error, stackTrace) {
+        emit(PagesFetchErrorState(error: 'OnError ' + error.toString()));
+      });*/
     } catch (e) {
       print(e.toString());
       emit(PagesFetchErrorState(error: 'CatchError' + e.toString()));
@@ -75,4 +82,50 @@ class QuranCubit extends Cubit<QuranState> {
     'اهدنا الصراط المستقيم	',
     'صراط الذين أنعمت عليهم غير المغضوب عليهم ولا الضالين	'
   ];
+
+  void changePage(int index, int sizePage, int chapterId) {
+    if (index < 2) {
+      try {
+        DataSource.instance
+            .fetchPagesList(
+                bookId: bookId,
+                narrationId: narrationId,
+                chapterId: chapterId + 1)
+            .then((value) async {
+          print('Pages QuranCubit  $value');
+          if (value != null) {
+            var temp = pages;
+            pages = value;
+            pages.addAll(temp);
+            emit(PagesFetchedState(pages: pages));
+          } else {
+            emit(PagesFetchErrorState(error: 'No Data'));
+          }
+        });
+      } catch (e) {
+        print(e.toString());
+        emit(PagesFetchErrorState(error: 'CatchError' + e.toString()));
+      }
+    } else if (index - sizePage < 3) {
+      try {
+        DataSource.instance
+            .fetchPagesList(
+                bookId: bookId,
+                narrationId: narrationId,
+                chapterId: chapterId + 1)
+            .then((value) async {
+          print('Pages QuranCubit  $value');
+          if (value != null) {
+            pages.addAll(value);
+            emit(PagesFetchedState(pages: pages));
+          } else {
+            emit(PagesFetchErrorState(error: 'No Data'));
+          }
+        });
+      } catch (e) {
+        print(e.toString());
+        emit(PagesFetchErrorState(error: 'CatchError' + e.toString()));
+      }
+    }
+  }
 }
