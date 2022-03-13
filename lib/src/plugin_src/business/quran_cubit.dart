@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:quran_widget_flutter/helper/chash_helper.dart';
 import 'package:quran_widget_flutter/model/page.dart';
 
 import '../../../data_source/data_source.dart';
@@ -9,6 +10,8 @@ part 'quran_state.dart';
 class QuranCubit extends Cubit<QuranState> {
   QuranCubit() : super(QuranInitial());
 
+  chashIn() {}
+
   QuranCubit get(context) => BlocProvider.of(context);
 
   Map<int, List<int>> selectedIndex = {};
@@ -16,17 +19,25 @@ class QuranCubit extends Cubit<QuranState> {
   List<Page> pages = [];
   bool selected = false;
 
-  int key =0;
-  dynamic verses=1;
+  int key = 0;
+  dynamic verses = 0;
 
-  handelList(){
+  int currentPage = 1;
+  int currentVerse = 1;
+
+  getNavTarget() {
+    if (selectedIndex.isNotEmpty) {
+    }
+  }
+
+  handelList() async {
+    key = await CacheHelper.getData(key: 'pageId') ?? 0;
     if (selectedIndex.isNotEmpty) {
       key = selectedIndex.keys.elementAt(0);
       verses = selectedIndex[0];
       emit(HandelSelectedListState());
     }
   }
-
 
   fetchPages({
     required int chapterId,

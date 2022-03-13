@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran_widget_flutter/helper/chash_helper.dart';
 import 'package:quran_widget_flutter/model/page.dart' as objectPaoge;
 
 import 'package:quran_widget_flutter/src/plugin_src/business/quran_cubit.dart';
@@ -26,10 +27,9 @@ class QuranWidget extends StatelessWidget {
   final int bookId;
   final int narrationId;
 
-  final Function(String data) onTap;
-  final Function(String data) onLongTap;
+  final Function(String data, bool isVerSelected) onTap;
+  final Function(String data, bool isVerSelected) onLongTap;
   final Function(objectPaoge.Page data) getPage;
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,8 @@ class QuranWidget extends StatelessWidget {
     return BlocProvider(
       create: (context) => QuranCubit()
         ..fetchPages(
-            chapterId: chapterId, bookId: bookId, narrationId: narrationId),
+            chapterId: chapterId, bookId: bookId, narrationId: narrationId)
+        ..chashIn(),
       child: BlocConsumer<QuranCubit, QuranState>(
         listener: (context, state) {
           print(page.toString());
@@ -64,15 +65,27 @@ class QuranWidget extends StatelessWidget {
 
       case PageType.tafsir:
         {
-          return const TafsirPage();
+          return TafsirPage(
+            onTap: onTap,
+            onLongTap: onLongTap,
+            cubit: cubit,
+          );
         }
       case PageType.tajwid:
         {
-          return const TajwidPage();
+          return TajwidPage(
+            onTap: onTap,
+            onLongTap: onLongTap,
+            cubit: cubit,
+          );
         }
       case PageType.translation:
         {
-          return const TranslationPage();
+          return TranslationPage(
+            onTap: onTap,
+            onLongTap: onLongTap,
+            cubit: cubit,
+          );
         }
 
       default:

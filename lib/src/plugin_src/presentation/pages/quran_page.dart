@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quran_widget_flutter/helper/chash_helper.dart';
 
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
@@ -14,11 +15,11 @@ class QuranPage extends StatefulWidget {
     required this.getPage,
   }) : super(key: key);
 
-  final Function(String data) onTap;
-  final Function(String data) onLongTap;
-  final Function(page.Page data) getPage;
-
+  final Function(String data, bool isVerseSelected) onTap;
+  final Function(String data, bool isVerseSelected) onLongTap;
   final QuranCubit cubit;
+
+  final Function(page.Page data) getPage;
 
   @override
   State<QuranPage> createState() => _QuranPageState();
@@ -28,7 +29,8 @@ class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
 
   final offset2 = const Offset(200, 400);
- // Map<int, List<int>> selectedIndex = {};
+
+  // Map<int, List<int>> selectedIndex = {};
   bool isSelectedVeirse = false;
 
   int firstIndex = 0;
@@ -98,7 +100,6 @@ class _QuranPageState extends State<QuranPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<QuranCubit, QuranState>(
       builder: (context, state) {
-
         print('State Is ' + state.toString());
         return Stack(
           children: [
@@ -106,10 +107,10 @@ class _QuranPageState extends State<QuranPage> {
               const Center(
                 child: CircularProgressIndicator(),
               ),
-            if (state is QuranInitial)
+            /* if (state is QuranInitial)
               const Center(
-                child: CircularProgressIndicator(),
-              ),
+                child: CircularProgressIndicator(),),*/
+
             if (state is PagesFetchedState) _viewData(state.pages),
             if (state is PagesFetchErrorState) _errorView(state.error),
           ],
@@ -174,7 +175,6 @@ class _QuranPageState extends State<QuranPage> {
     );
   }
 
-
   Center _errorView(String error) {
     return Center(
       child: Text(
@@ -220,6 +220,10 @@ class _QuranPageState extends State<QuranPage> {
                 itemBuilder: (context, index) => GestureDetector(
                   onLongPress: () {
                     setState(() {
+                   /*     CacheHelper.saveData(key: 'pageId', value: [indexPage,index])
+                          .then((value) => print('Saved Done $value'));
+                      widget.cubit.handelList();  */
+
                       if (!isSelectedVeirse) {
                         firstIndex = index;
                         firstIndexPage = indexPage;
@@ -243,7 +247,8 @@ class _QuranPageState extends State<QuranPage> {
                         }
                       }
 
-                      print('List of versis before $widget.cubit.selectedIndex');
+                      print(
+                          'List of versis before $widget.cubit.selectedIndex');
 
                       // selectedIndex.clear();
                       for (int i = firstIndexPage; i <= lastIndexPage; i++) {
@@ -263,25 +268,28 @@ class _QuranPageState extends State<QuranPage> {
                         }
                       }
 
-                      print('List of versis before $widget.cubit.selectedIndex');
+                      print(
+                          'List of verses before $widget.cubit.selectedIndex');
                     });
-                    widget.onLongTap(pages[indexPage]
-                        .verses![index]
-                        .uthmanicText
-                        .toString());
+                    widget.onLongTap(
+                        pages[indexPage].verses![index].uthmanicText.toString(),
+                        widget.cubit.selectedIndex.isNotEmpty);
                   },
                   onTap: () {
+                  /*  CacheHelper.saveData(key: 'pageId', value: indexPage)
+                        .then((value) => print('Saved Done $value'));
+                    widget.cubit.handelList();  */
                     if (isSelectedVeirse) {
                       setState(() => onTap(index, indexPage, pages));
                     }
-                    widget.onTap(pages[indexPage]
-                        .verses![index]
-                        .uthmanicText
-                        .toString());
+                    widget.onTap(
+                        pages[indexPage].verses![index].uthmanicText.toString(),
+                        widget.cubit.selectedIndex.isNotEmpty);
                   },
                   child: Container(
                     color: widget.cubit.selectedIndex.containsKey(indexPage)
-                        ? (widget.cubit.selectedIndex[indexPage]!.contains(index))
+                        ? (widget.cubit.selectedIndex[indexPage]!
+                                .contains(index))
                             ? Colors.yellow.withOpacity(.2)
                             : Colors.white.withOpacity(0)
                         : Colors.white.withOpacity(0),
