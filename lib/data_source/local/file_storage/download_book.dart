@@ -1,11 +1,14 @@
 import 'package:quran_widget_flutter/data_source/data_source.dart';
 import 'package:quran_widget_flutter/data_source/local/file_storage/file_storage.dart';
+import 'package:quran_widget_flutter/data_source/local/local_data_source/book_local_data_source.dart';
 import 'package:quran_widget_flutter/data_source/local/local_data_source/page_local_data_source.dart';
 import 'package:quran_widget_flutter/model/page.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
 
 class DownloadBook {
   static final PageLocalDataSource _pageLocalDataSource = PageLocalDataSource();
+
+  static final BookLocalDataSource _bookLocalDataSource = BookLocalDataSource();
 
   static startDownload(
       {int? bookId, int? narrationId, Function(double)? retunProgress}) async {
@@ -50,6 +53,15 @@ class DownloadBook {
         }
       }
     }
-    retunProgress!(1.0);
+
+    await DataSource.instance.fetchBookById(bookId ?? 0).then((value) async {
+      if (value != null) {
+        value.downloaded = true;
+        await _bookLocalDataSource.saveBook(value).then((value) {
+          retunProgress!(1.0);
+        });
+        print('Save Book $value');
+      }
+    });
   }
 }
