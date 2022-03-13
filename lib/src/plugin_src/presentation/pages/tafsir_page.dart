@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
-import '../../../../helper/q.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
 
 class TafsirPage extends StatefulWidget {
