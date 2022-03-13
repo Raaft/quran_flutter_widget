@@ -12,6 +12,11 @@ class ChapterLocalDataSource {
     return db?.chapterDao.searchInChapter('%${qurey ?? ''}%');
   }
 
+  Future<void> saveChapter(Chapter chapter) async {
+    final db = await QuranDatabaseSource.instance.database;
+    db?.chapterDao.insertChapter(chapter);
+  }
+
   Future<Chapter?> fetchChapterById(int chapterId) async {
     final db = await QuranDatabaseSource.instance.database;
     return db?.chapterDao.findChapterById(chapterId).first;

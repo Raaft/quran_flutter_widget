@@ -9,35 +9,56 @@ class Chapter extends BaseModel {
   @primaryKey
   int? id;
   String? name;
-  int? chapter_number;
+  @ColumnInfo(name: 'chapter_number')
+  int? chapterNumber;
   String? origin;
+
+  int? pageFrom;
+
+  int? pageTo;
+
+  int? versesSize;
 
   Chapter({
     this.id,
     this.name,
-    this.chapter_number,
+    this.chapterNumber,
     this.origin,
+    this.pageFrom,
+    this.pageTo,
+    this.versesSize,
   });
 
   @override
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['id'] = id;
-    data['name'] = name;
-    return data;
+    return {
+      'id': id,
+      'name': name,
+      'chapter_number': chapterNumber,
+      'origin': origin,
+      'pageFrom': pageFrom,
+      'pageTo': pageTo,
+      'versesSize': versesSize,
+    };
   }
 
   Chapter copyWith({
     int? id,
     String? name,
-    int? chapter_number,
+    int? chapterNumber,
     String? origin,
+    int? pageFrom,
+    int? pageTo,
+    int? versesSize,
   }) {
     return Chapter(
       id: id ?? this.id,
       name: name ?? this.name,
-      chapter_number: chapter_number ?? this.chapter_number,
+      chapterNumber: chapterNumber ?? this.chapterNumber,
       origin: origin ?? this.origin,
+      pageFrom: pageFrom ?? this.pageFrom,
+      pageTo: pageTo ?? this.pageTo,
+      versesSize: versesSize ?? this.versesSize,
     );
   }
 
@@ -45,21 +66,17 @@ class Chapter extends BaseModel {
     return {
       'id': id,
       'name': name,
-      'chapter_number': chapter_number,
+      'chapter_number': chapterNumber,
       'origin': origin,
+      'pageFrom': pageFrom,
+      'pageTo': pageTo,
+      'versesSize': versesSize,
     };
-  }
-
-  factory Chapter.fromJson(Map<String, dynamic> map) {
-    return Chapter(
-      id: map['id']?.toInt(),
-      name: map['name'],
-    );
   }
 
   @override
   String toString() {
-    return 'Chapter(id: $id, name: $name, chapter_number: $chapter_number, origin: $origin)';
+    return 'Chapter(id: $id, name: $name, chapterNumber: $chapterNumber, origin: $origin, pageFrom: $pageFrom, pageTo: $pageTo, versesSize: $versesSize)';
   }
 
   @override
@@ -69,24 +86,33 @@ class Chapter extends BaseModel {
     return other is Chapter &&
         other.id == id &&
         other.name == name &&
-        other.chapter_number == chapter_number &&
-        other.origin == origin;
+        other.chapterNumber == chapterNumber &&
+        other.origin == origin &&
+        other.pageFrom == pageFrom &&
+        other.pageTo == pageTo &&
+        other.versesSize == versesSize;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
         name.hashCode ^
-        chapter_number.hashCode ^
-        origin.hashCode;
+        chapterNumber.hashCode ^
+        origin.hashCode ^
+        pageFrom.hashCode ^
+        pageTo.hashCode ^
+        versesSize.hashCode;
   }
 
-  factory Chapter.fromMap(Map<String, dynamic> map) {
+  factory Chapter.fromJson(Map<String, dynamic> map) {
     return Chapter(
       id: map['id']?.toInt(),
       name: map['name'],
-      chapter_number: map['chapter_number']?.toInt(),
+      chapterNumber: map['chapter_number']?.toInt(),
       origin: map['origin'],
+      pageFrom: map['pageFrom']?.toInt(),
+      pageTo: map['pageTo']?.toInt(),
+      versesSize: map['versesSize']?.toInt(),
     );
   }
 }
