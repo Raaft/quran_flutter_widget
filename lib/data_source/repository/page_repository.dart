@@ -22,9 +22,6 @@ class PageRepository {
       for (var element in pagesList) {
         element.verses =
             await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
-        //element.chaptersPage =  await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
-
-        //print('getVerse ${element.verses}');
       }
 
       return pagesList;

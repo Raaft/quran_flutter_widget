@@ -16,10 +16,10 @@ class QuranCubit extends Cubit<QuranState> {
   List<Page> pages = [];
   bool selected = false;
 
-  int key =0;
-  dynamic verses=1;
+  int key = 0;
+  dynamic verses = 1;
 
-  handelList(){
+  handelList() {
     if (selectedIndex.isNotEmpty) {
       key = selectedIndex.keys.elementAt(0);
       verses = selectedIndex[0];
@@ -27,12 +27,18 @@ class QuranCubit extends Cubit<QuranState> {
     }
   }
 
+  late final int chapterId;
+  late final int bookId;
+  late final int narrationId;
 
   fetchPages({
     required int chapterId,
     required int bookId,
     required int narrationId,
   }) {
+    this.chapterId = chapterId;
+    this.bookId = bookId;
+    this.narrationId = narrationId;
     emit(PagesFetchLoadingState());
     try {
       DataSource.instance
@@ -77,4 +83,14 @@ class QuranCubit extends Cubit<QuranState> {
     'اهدنا الصراط المستقيم	',
     'صراط الذين أنعمت عليهم غير المغضوب عليهم ولا الضالين	'
   ];
+
+  void changePage(int index, int sizePage) {
+    if (index < 2) {
+      fetchPages(
+          chapterId: chapterId - 1, bookId: bookId, narrationId: narrationId);
+    } else if (index - sizePage < 3) {
+      fetchPages(
+          chapterId: chapterId + 1, bookId: bookId, narrationId: narrationId);
+    }
+  }
 }
