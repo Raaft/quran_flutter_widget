@@ -27,9 +27,11 @@ class QuranWidget extends StatelessWidget {
   final int bookId;
   final int narrationId;
 
-  final Function(String data, bool isVerSelected) onTap;
-  final Function(String data, bool isVerSelected) onLongTap;
+  final Function(String data,bool isVerSelected) onTap;
+  final Function(String data,bool isVerSelected) onLongTap;
   final Function(objectPaoge.Page data) getPage;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +39,7 @@ class QuranWidget extends StatelessWidget {
     return BlocProvider(
       create: (context) => QuranCubit()
         ..fetchPages(
-            chapterId: chapterId, bookId: bookId, narrationId: narrationId)
-        ..chashIn(),
+            chapterId: chapterId, bookId: bookId, narrationId: narrationId),
       child: BlocConsumer<QuranCubit, QuranState>(
         listener: (context, state) {
           print(page.toString());
@@ -65,7 +66,7 @@ class QuranWidget extends StatelessWidget {
 
       case PageType.tafsir:
         {
-          return TafsirPage(
+          return  TafsirPage(
             onTap: onTap,
             onLongTap: onLongTap,
             cubit: cubit,
@@ -73,18 +74,12 @@ class QuranWidget extends StatelessWidget {
         }
       case PageType.tajwid:
         {
-          return TajwidPage(
-            onTap: onTap,
-            onLongTap: onLongTap,
-            cubit: cubit,
-          );
+          return  TajwidPage(onTap: onTap,cubit: cubit,onLongTap: onLongTap,);
         }
       case PageType.translation:
         {
-          return TranslationPage(
-            onTap: onTap,
-            onLongTap: onLongTap,
-            cubit: cubit,
+          return  TranslationPage(
+              onTap: onTap,cubit: cubit,onLongTap: onLongTap
           );
         }
 

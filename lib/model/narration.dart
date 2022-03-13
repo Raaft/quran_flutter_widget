@@ -22,11 +22,11 @@ class Narration extends BaseModel {
 
   @override
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['id'] = id;
-    data['name'] = name;
-    data['description'] = description;
-    return data;
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+    };
   }
 
   Narration copyWith({
@@ -39,14 +39,6 @@ class Narration extends BaseModel {
       name: name ?? this.name,
       description: description ?? this.description,
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-    };
   }
 
   factory Narration.fromMap(Map<String, dynamic> map) {

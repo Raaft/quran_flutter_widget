@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quran_widget_flutter/helper/chash_helper.dart';
 
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
@@ -15,11 +14,11 @@ class QuranPage extends StatefulWidget {
     required this.getPage,
   }) : super(key: key);
 
-  final Function(String data, bool isVerseSelected) onTap;
-  final Function(String data, bool isVerseSelected) onLongTap;
-  final QuranCubit cubit;
-
+  final Function(String data,bool isSelextedVerse) onTap;
+  final Function(String data,bool isSelextedVerse) onLongTap;
   final Function(page.Page data) getPage;
+
+  final QuranCubit cubit;
 
   @override
   State<QuranPage> createState() => _QuranPageState();
@@ -29,7 +28,6 @@ class _QuranPageState extends State<QuranPage> {
   final offset1 = const Offset(50, 400);
 
   final offset2 = const Offset(200, 400);
-
   // Map<int, List<int>> selectedIndex = {};
   bool isSelectedVeirse = false;
 
@@ -107,10 +105,10 @@ class _QuranPageState extends State<QuranPage> {
               const Center(
                 child: CircularProgressIndicator(),
               ),
-            /* if (state is QuranInitial)
+            if (state is QuranInitial)
               const Center(
-                child: CircularProgressIndicator(),),*/
-
+                child: CircularProgressIndicator(),
+              ),
             if (state is PagesFetchedState) _viewData(state.pages),
             if (state is PagesFetchErrorState) _errorView(state.error),
           ],
@@ -128,6 +126,7 @@ class _QuranPageState extends State<QuranPage> {
       padding: const EdgeInsets.all(8),
       child: PageView.builder(
         itemCount: pages!.length,
+        onPageChanged: (inedx) {},
         itemBuilder: (context, indexPage) => Stack(
           children: [
             if ((state is PagesFetchedState))
@@ -210,6 +209,8 @@ class _QuranPageState extends State<QuranPage> {
         child: PageView.builder(
           itemCount: pages.length,
           onPageChanged: (index) {
+            widget.cubit.changePage(
+                index, pages.length, pages[index].chapters![0].id ?? 0);
             widget.getPage(pages[index]);
           },
           itemBuilder: (context, indexPage) => Stack(
@@ -220,10 +221,6 @@ class _QuranPageState extends State<QuranPage> {
                 itemBuilder: (context, index) => GestureDetector(
                   onLongPress: () {
                     setState(() {
-                   /*     CacheHelper.saveData(key: 'pageId', value: [indexPage,index])
-                          .then((value) => print('Saved Done $value'));
-                      widget.cubit.handelList();  */
-
                       if (!isSelectedVeirse) {
                         firstIndex = index;
                         firstIndexPage = indexPage;
@@ -269,22 +266,21 @@ class _QuranPageState extends State<QuranPage> {
                       }
 
                       print(
-                          'List of verses before $widget.cubit.selectedIndex');
+                          'List of versis before $widget.cubit.selectedIndex');
                     });
-                    widget.onLongTap(
-                        pages[indexPage].verses![index].uthmanicText.toString(),
-                        widget.cubit.selectedIndex.isNotEmpty);
+                    widget.onLongTap(pages[indexPage]
+                        .verses![index]
+                        .uthmanicText
+                        .toString(),widget.cubit.selectedIndex.isNotEmpty);
                   },
                   onTap: () {
-                  /*  CacheHelper.saveData(key: 'pageId', value: indexPage)
-                        .then((value) => print('Saved Done $value'));
-                    widget.cubit.handelList();  */
                     if (isSelectedVeirse) {
                       setState(() => onTap(index, indexPage, pages));
                     }
-                    widget.onTap(
-                        pages[indexPage].verses![index].uthmanicText.toString(),
-                        widget.cubit.selectedIndex.isNotEmpty);
+                    widget.onTap(pages[indexPage]
+                        .verses![index]
+                        .uthmanicText
+                        .toString(),widget.cubit.selectedIndex.isNotEmpty);
                   },
                   child: Container(
                     color: widget.cubit.selectedIndex.containsKey(indexPage)

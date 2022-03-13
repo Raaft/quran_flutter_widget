@@ -33,13 +33,6 @@ class Page extends BaseModel {
   String? image;
   String? localImage;
 
-  /*
-  DatabaseException(FOREIGN     KEY constraint failed (code 787 SQLITE_CONSTRAINT_FOREIGNKEY)) sql 
-  'INSERT OR ABORT INTO Page 
-  (id, page_number, narration, chapters, book, part, sub_part, image, localImage) VALUES
-   (?, ?,            ?,         ?,      ?,    ?,     NULL,    NULL, NULL)' args [1, 1, 1, 1, 1, 1]
-   */
-
   @ignore
   List<Verse>? verses;
   @ignore
