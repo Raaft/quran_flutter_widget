@@ -27,6 +27,7 @@ class QuranWidget extends StatelessWidget {
   final Function(String data) onTap;
   final Function(String data) onLongTap;
 
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
