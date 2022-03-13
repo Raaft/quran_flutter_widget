@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:floor/floor.dart';
 
 import 'package:quran_widget_flutter/model/base_model.dart';
