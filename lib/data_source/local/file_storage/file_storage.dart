@@ -8,7 +8,6 @@ import 'package:quran_widget_flutter/network_helper/apis.dart';
 class FileStorage {
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-
     return directory.path;
   }
 
@@ -41,7 +40,7 @@ class FileStorage {
 
         //Received data with List<int>
         options: Options(
-          headers: {'Authorization': Apis.authorization},
+            headers: {'Authorization': Apis.authorization},
             responseType: ResponseType.bytes,
             followRedirects: false,
             validateStatus: (status) {
@@ -49,7 +48,7 @@ class FileStorage {
             }),
       );
 
-  //    authOptions?.headers?['Authorization'] = Apis.authorization;
+      //    authOptions?.headers?['Authorization'] = Apis.authorization;
 
       print(response.headers);
 

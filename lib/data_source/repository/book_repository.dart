@@ -9,7 +9,9 @@ class BookRepository {
   final BookApi _bookApi = BookApi();
 
   Future<List<Book>?> fetchBooksList({String? qurey, int? narrationId}) async {
-    List<Book>? booksList = (narrationId != null && narrationId > 0)
+    List<Book>? booksList = [];
+
+    booksList = (narrationId != null && narrationId > 0)
         ? await _bookLocalDataSource.findBooksInNarrationId(narrationId)
         : (qurey != null && qurey.isNotEmpty)
             ? await _bookLocalDataSource.searchInBooks(qurey)
@@ -17,13 +19,21 @@ class BookRepository {
 
     print('BookRepository 1 $booksList');
 
-    if ((booksList != null && booksList.isNotEmpty)) {
+    bool isOther = false;
+
+    for (var element in booksList!) {
+      if (element.narrationId == narrationId) {
+        isOther = true;
+      }
+    }
+
+    if (booksList.isNotEmpty && isOther) {
       return booksList;
     } else {
       final MyResponse<Book> response =
           await _bookApi.fetchBooksList(qurey: qurey, narrationId: narrationId);
       if (response.code == Apis.codeSUCCESS) {
-        booksList = response.data as List<Book>;
+        booksList.addAll(response.data as List<Book>);
         print('BookRepository $booksList');
         _bookLocalDataSource.saveBooksList(booksList);
       }

@@ -114,15 +114,15 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Page` (`id` INTEGER, `page_number` INTEGER, `narration` INTEGER, `book` INTEGER, `part` INTEGER, `sub_part` INTEGER, `image` TEXT, `localImage` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, `name` TEXT, FOREIGN KEY (`narration`) REFERENCES `Narration` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`reciter`) REFERENCES `Reciter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Recitation` (`id` INTEGER, `narration` INTEGER, `reciter` INTEGER, `name` TEXT,  PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Reciter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `record` TEXT, `recordLocal` TEXT, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`recitation`) REFERENCES `Recitation` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `record` TEXT, `recordLocal` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, `verse_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse` INTEGER, `page` INTEGER, `chapter` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`page`) REFERENCES `Page` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`verse`) REFERENCES `Verse` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Glyph` (`id` INTEGER, `verse` INTEGER, `page` INTEGER, `chapter` INTEGER, `line_number` INTEGER, `position` INTEGER, `minX` INTEGER, `maxX` INTEGER, `minY` INTEGER, `maxY` INTEGER,  PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ChaptersPage` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `pageId` INTEGER, `chapterId` INTEGER)');
         await database.execute(
@@ -726,7 +726,7 @@ class _$PageDao extends PageDao {
   Future<List<Page>?> findChapterPage(
       int narrationId, int chapterid, int bookId) async {
     return _queryAdapter.queryList(
-        'SELECT  DISTINCT(Page.id), Page.* FROM Page,ChaptersPage WHERE narration = ?1 and ChaptersPage.chapterId = ?2 and book = ?3 and ChaptersPage.pageId = Page.id ORDER by Page.page_number',
+        'SELECT  DISTINCT(Page.page_number), Page.* FROM Page,ChaptersPage WHERE narration = ?1 and ChaptersPage.chapterId = ?2 and book = ?3 and ChaptersPage.pageId = Page.id ORDER by Page.page_number',
         mapper: (Map<String, Object?> row) => Page(id: row['id'] as int?, pageNumber: row['page_number'] as int?, narrationId: row['narration'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, subPartId: row['sub_part'] as int?, image: row['image'] as String?, localImage: row['localImage'] as String?),
         arguments: [narrationId, chapterid, bookId]);
   }
@@ -1135,23 +1135,12 @@ class _$VerseDao extends VerseDao {
   }
 
   @override
-  Future<List<Verse>> findAllVersesChapterPage(int page, int chapter) async {
+  Future<List<Verse>> findAllVersesChapterPage(
+      int page, int chapter, int narration, int book) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Verse WHERE page = ?1 and chapter = ?2',
-        mapper: (Map<String, Object?> row) => Verse(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            uthmanicText: row['uthmanic_text'] as String?,
-            lineStart: row['line_start'] as int?,
-            lineEnd: row['line_end'] as int?,
-            image: row['image'] as String?,
-            narrationId: row['narration'] as int?,
-            chapterId: row['chapter'] as int?,
-            bookId: row['book'] as int?,
-            partId: row['part'] as int?,
-            pageId: row['page'] as int?,
-            verseNumber: row['verse_number'] as int?),
-        arguments: [page, chapter]);
+        'SELECT * FROM Verse WHERE page = ?1 and chapter = ?2 and narration = ?3 and book = ?4',
+        mapper: (Map<String, Object?> row) => Verse(id: row['id'] as int?, text: row['text'] as String?, uthmanicText: row['uthmanic_text'] as String?, lineStart: row['line_start'] as int?, lineEnd: row['line_end'] as int?, image: row['image'] as String?, narrationId: row['narration'] as int?, chapterId: row['chapter'] as int?, bookId: row['book'] as int?, partId: row['part'] as int?, pageId: row['page'] as int?, verseNumber: row['verse_number'] as int?),
+        arguments: [page, chapter, narration, book]);
   }
 
   @override

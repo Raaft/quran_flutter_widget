@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
 
-import '../../../../helper/q.dart';
 import '../../../../quran_widget_flutter.dart';
 
 class TajwidPage extends StatelessWidget {
-  const TajwidPage({Key? key, required this.onTap, required this.onLongTap, required this.cubit}) : super(key: key);
+  const TajwidPage(
+      {Key? key,
+      required this.onTap,
+      required this.onLongTap,
+      required this.cubit})
+      : super(key: key);
 
   final offset1 = const Offset(50, 200);
   final offset2 = const Offset(50, 300);
 
-  final Function(String data,bool isVerseSelected) onTap;
-  final Function(String data,bool isVerseSelected) onLongTap;
+  final Function(String data, bool isVerseSelected) onTap;
+  final Function(String data, bool isVerseSelected) onLongTap;
   final QuranCubit cubit;
 
   @override
@@ -39,8 +43,8 @@ class TajwidPage extends StatelessWidget {
                   ),*/
 
                       GestureDetector(
-                        onTap: (){
-                          onTap('',cubit.selectedIndex.isNotEmpty);
+                        onTap: () {
+                          onTap('', cubit.selectedIndex.isNotEmpty);
                         },
                         child: Image.network(
                           'https://df61994948e9a54a5259-ad04094bac72ed4d481dba65a1920e88.ssl.cf1.rackcdn.com/4_1.png',
