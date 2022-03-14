@@ -16,8 +16,6 @@ class PageRepository {
     List<Page>? pagesList = await _pageLocalDataSource.findChapterPage(
         bookId: bookId, narrationId: narrationId, chapterid: chapterId);
 
-    print('fetchPagesList $pagesList');
-
     if ((pagesList != null && pagesList.isNotEmpty)) {
       for (var element in pagesList) {
         element.verses =
