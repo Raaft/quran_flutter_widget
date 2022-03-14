@@ -26,8 +26,14 @@ class QuranWidget extends StatelessWidget {
   final int bookId;
   final int narrationId;
 
-  final Function(String data, bool isVerSelected) onTap;
-  final Function(String data, bool isVerSelected) onLongTap;
+  final Function(
+          String data, bool isVerSelected, Map<int, List<int>>? selectedIndex)
+      onTap;
+  final Function(
+    String data,
+    bool isVerSelected,
+    Map<int, List<int>>? selectedIndex,
+  ) onLongTap;
   final Function(objectpage.Page data) getPage;
 
   @override
@@ -64,23 +70,20 @@ class QuranWidget extends StatelessWidget {
       case PageType.tafsir:
         {
           return TafsirPage(
-            onTap: onTap,
-            onLongTap: onLongTap,
             cubit: cubit,
           );
         }
       case PageType.tajwid:
         {
           return TajwidPage(
-            onTap: onTap,
             cubit: cubit,
-            onLongTap: onLongTap,
           );
         }
       case PageType.translation:
         {
           return TranslationPage(
-              onTap: onTap, cubit: cubit, onLongTap: onLongTap);
+            cubit: cubit,
+          );
         }
 
       default:

@@ -14,8 +14,12 @@ class QuranPage extends StatefulWidget {
     required this.getPage,
   }) : super(key: key);
 
-  final Function(String data, bool isSelextedVerse) onTap;
-  final Function(String data, bool isSelextedVerse) onLongTap;
+  final Function(
+          String data, bool isSelextedVerse, Map<int, List<int>>? selectedIndex)
+      onTap;
+  final Function(
+          String data, bool isSelextedVerse, Map<int, List<int>>? selectedIndex)
+      onLongTap;
   final Function(page.Page data) getPage;
 
   final QuranCubit cubit;
@@ -269,16 +273,20 @@ class _QuranPageState extends State<QuranPage> {
                           'List of versis before $widget.cubit.selectedIndex');
                     });
                     widget.onLongTap(
-                        pages[indexPage].verses![index].uthmanicText.toString(),
-                        widget.cubit.selectedIndex.isNotEmpty);
+                      pages[indexPage].verses![index].uthmanicText.toString(),
+                      widget.cubit.selectedIndex.isNotEmpty,
+                      widget.cubit.selectedIndex,
+                    );
                   },
                   onTap: () {
                     if (isSelectedVeirse) {
                       setState(() => onTap(index, indexPage, pages));
                     }
                     widget.onTap(
-                        pages[indexPage].verses![index].uthmanicText.toString(),
-                        widget.cubit.selectedIndex.isNotEmpty);
+                      pages[indexPage].verses![index].uthmanicText.toString(),
+                      widget.cubit.selectedIndex.isNotEmpty,
+                      widget.cubit.selectedIndex,
+                    );
                   },
                   child: Container(
                     color: widget.cubit.selectedIndex.containsKey(indexPage)
