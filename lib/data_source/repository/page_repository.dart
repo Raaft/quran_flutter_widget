@@ -18,8 +18,11 @@ class PageRepository {
 
     if ((pagesList != null && pagesList.isNotEmpty)) {
       for (var element in pagesList) {
-        element.verses =
-            await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
+        element.verses = await _pageLocalDataSource.findAllVersesChapterPage(
+            bookId: bookId,
+            chapterid: chapterId,
+            narrationId: narrationId,
+            pageId: element.id);
       }
 
       return pagesList;

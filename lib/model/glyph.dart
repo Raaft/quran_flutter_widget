@@ -1,15 +1,17 @@
 import 'package:floor/floor.dart';
 
 import 'package:quran_widget_flutter/model/base_model.dart';
-import 'package:quran_widget_flutter/model/chapter.dart';
-import 'package:quran_widget_flutter/model/page.dart';
-import 'package:quran_widget_flutter/model/verse.dart';
 
-@Entity(tableName: 'Glyph', foreignKeys: [
+/*
+foreignKeys: [
   ForeignKey(childColumns: ['chapter'], parentColumns: ['id'], entity: Chapter),
   ForeignKey(childColumns: ['page'], parentColumns: ['id'], entity: Page),
   ForeignKey(childColumns: ['verse'], parentColumns: ['id'], entity: Verse),
-])
+] */
+
+@Entity(
+  tableName: 'Glyph',
+)
 class Glyph extends BaseModel {
   @primaryKey
   int? id;

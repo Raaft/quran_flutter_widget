@@ -14,8 +14,8 @@ class QuranPage extends StatefulWidget {
     required this.getPage,
   }) : super(key: key);
 
-  final Function(String data,bool isSelextedVerse) onTap;
-  final Function(String data,bool isSelextedVerse) onLongTap;
+  final Function(String data, bool isSelextedVerse) onTap;
+  final Function(String data, bool isSelextedVerse) onLongTap;
   final Function(page.Page data) getPage;
 
   final QuranCubit cubit;
@@ -208,11 +208,11 @@ class _QuranPageState extends State<QuranPage> {
         padding: const EdgeInsets.all(8),
         child: PageView.builder(
           itemCount: pages.length,
-          onPageChanged: (index) {
+          /*   onPageChanged: (index) {
             widget.cubit.changePage(
                 index, pages.length, pages[index].chapters![0].id ?? 0);
             widget.getPage(pages[index]);
-          },
+          },*/
           itemBuilder: (context, indexPage) => Stack(
             children: [
               ListView.builder(
@@ -268,19 +268,17 @@ class _QuranPageState extends State<QuranPage> {
                       print(
                           'List of versis before $widget.cubit.selectedIndex');
                     });
-                    widget.onLongTap(pages[indexPage]
-                        .verses![index]
-                        .uthmanicText
-                        .toString(),widget.cubit.selectedIndex.isNotEmpty);
+                    widget.onLongTap(
+                        pages[indexPage].verses![index].uthmanicText.toString(),
+                        widget.cubit.selectedIndex.isNotEmpty);
                   },
                   onTap: () {
                     if (isSelectedVeirse) {
                       setState(() => onTap(index, indexPage, pages));
                     }
-                    widget.onTap(pages[indexPage]
-                        .verses![index]
-                        .uthmanicText
-                        .toString(),widget.cubit.selectedIndex.isNotEmpty);
+                    widget.onTap(
+                        pages[indexPage].verses![index].uthmanicText.toString(),
+                        widget.cubit.selectedIndex.isNotEmpty);
                   },
                   child: Container(
                     color: widget.cubit.selectedIndex.containsKey(indexPage)
