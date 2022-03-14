@@ -1,14 +1,18 @@
 import 'package:floor/floor.dart';
 
 import 'package:quran_widget_flutter/model/base_model.dart';
-import 'package:quran_widget_flutter/model/narration.dart';
-import 'package:quran_widget_flutter/model/reciter.dart';
 
-@Entity(tableName: 'Recitation', foreignKeys: [
+/*
+foreignKeys: [
   ForeignKey(
       childColumns: ['narration'], parentColumns: ['id'], entity: Narration),
   ForeignKey(childColumns: ['reciter'], parentColumns: ['id'], entity: Reciter)
-])
+]
+ */
+
+@Entity(
+  tableName: 'Recitation',
+)
 class Recitation extends BaseModel {
   @primaryKey
   int? id;

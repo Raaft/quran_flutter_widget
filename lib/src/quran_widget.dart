@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quran_widget_flutter/helper/chash_helper.dart';
-import 'package:quran_widget_flutter/model/page.dart' as objectPaoge;
+import 'package:quran_widget_flutter/model/page.dart' as objectpage;
 
 import 'package:quran_widget_flutter/src/plugin_src/business/quran_cubit.dart';
 import 'package:quran_widget_flutter/src/plugin_src/data/models/page_type.dart';
@@ -27,11 +26,9 @@ class QuranWidget extends StatelessWidget {
   final int bookId;
   final int narrationId;
 
-  final Function(String data,bool isVerSelected) onTap;
-  final Function(String data,bool isVerSelected) onLongTap;
-  final Function(objectPaoge.Page data) getPage;
-
-
+  final Function(String data, bool isVerSelected) onTap;
+  final Function(String data, bool isVerSelected) onLongTap;
+  final Function(objectpage.Page data) getPage;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +63,7 @@ class QuranWidget extends StatelessWidget {
 
       case PageType.tafsir:
         {
-          return  TafsirPage(
+          return TafsirPage(
             onTap: onTap,
             onLongTap: onLongTap,
             cubit: cubit,
@@ -74,13 +71,16 @@ class QuranWidget extends StatelessWidget {
         }
       case PageType.tajwid:
         {
-          return  TajwidPage(onTap: onTap,cubit: cubit,onLongTap: onLongTap,);
+          return TajwidPage(
+            onTap: onTap,
+            cubit: cubit,
+            onLongTap: onLongTap,
+          );
         }
       case PageType.translation:
         {
-          return  TranslationPage(
-              onTap: onTap,cubit: cubit,onLongTap: onLongTap
-          );
+          return TranslationPage(
+              onTap: onTap, cubit: cubit, onLongTap: onLongTap);
         }
 
       default:
