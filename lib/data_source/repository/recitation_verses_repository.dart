@@ -10,14 +10,14 @@ class RecitationVersesRepository {
   final RecitationVersesApi _recitationVersesApi = RecitationVersesApi();
 
   Future<List<RecitationVerses>?> fetchRecitationsVersesList(
-      int recitationId) async {
+      int recitationId, chapterId) async {
     List<RecitationVerses>? recitationsVersesList =
         await _recitationVersesLocalDataSource.fetchRecitationsVersesList();
     if ((recitationsVersesList != null && recitationsVersesList.isNotEmpty)) {
       return recitationsVersesList;
     } else {
-      final MyResponse<RecitationVerses> response =
-          await _recitationVersesApi.fetchRecitationVersesList(recitationId);
+      final MyResponse<RecitationVerses> response = await _recitationVersesApi
+          .fetchRecitationVersesList(recitationId, chapterId);
       if (response.code == Apis.codeSUCCESS) {
         recitationsVersesList = response.data as List<RecitationVerses>;
         _recitationVersesLocalDataSource

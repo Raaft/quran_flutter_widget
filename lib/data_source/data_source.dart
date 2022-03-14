@@ -105,7 +105,8 @@ class DataSource {
     int? chapterId,
     required int recitationId,
   }) =>
-      _recitationVersesRepository.fetchRecitationsVersesList(recitationId);
+      _recitationVersesRepository.fetchRecitationsVersesList(
+          recitationId, chapterId);
   Future<RecitationVerses?> fetchRecitationVersesById(
           int recitationId, int recitationVersesId) =>
       _recitationVersesRepository.fetchRecitationVersesById(
