@@ -1,4 +1,5 @@
 import 'package:quran_widget_flutter/data_source/local/file_storage/download_book.dart';
+import 'package:quran_widget_flutter/data_source/local/file_storage/download_chapter.dart';
 import 'package:quran_widget_flutter/data_source/repository/book_repository.dart';
 import 'package:quran_widget_flutter/data_source/repository/chapter_repository.dart';
 import 'package:quran_widget_flutter/data_source/repository/narration_repository.dart';
@@ -112,13 +113,26 @@ class DataSource {
       _recitationVersesRepository.fetchRecitationVersesById(
           recitationId, recitationVersesId);
 
+  Future<List<RecitationVerses>?> fetchRecitationsVersesChapterList(
+          {required int chapterId, required int recitationId}) =>
+      _recitationVersesRepository.fetchRecitationsVersesChapterList(
+          chapterId, recitationId);
+
   Future<List<Reciter>?> fetchRecitersList({String? qurey}) =>
       _reciterRepository.fetchRecitersList(qurey: qurey);
 
   Future<Reciter?> fetchReciterById(int reciterId) =>
       _reciterRepository.fetchReciterById(reciterId);
 
-  Future<void> downloadChapter({int? chapterId, int? recitationId}) async {}
+  Future<void> downloadChapter(
+      {required int chapterId,
+      required int recitationId,
+      Function(double)? retunProgress}) async {
+    DownloadChapter.startDownload(
+        chapterId: chapterId,
+        recitationId: recitationId,
+        retunProgress: retunProgress);
+  }
 
   Future<void> downloadBook(
       {int? bookId, int? narrationId, Function(double)? retunProgress}) async {

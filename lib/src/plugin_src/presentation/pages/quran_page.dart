@@ -73,7 +73,7 @@ class _QuranPageState extends State<QuranPage> {
         }
       }
 
-      print('List of versis before $widget.cubit.selectedIndex');
+      print('List of versis before ${widget.cubit.selectedIndex}');
 
       // selectedIndex.clear();
 
@@ -95,7 +95,7 @@ class _QuranPageState extends State<QuranPage> {
       }
     }
 
-    print('List of versis before $widget.cubit.selectedIndex');
+    print('List of versis before ${widget.cubit.selectedIndex}');
   }
 
   @override

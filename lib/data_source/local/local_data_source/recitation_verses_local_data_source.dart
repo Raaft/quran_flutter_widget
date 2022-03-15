@@ -7,6 +7,13 @@ class RecitationVersesLocalDataSource {
     return db?.recitationVersesDao.findAllRecitationsVerses();
   }
 
+  Future<List<RecitationVerses>?> fetchRecitationsVersesChapterList(
+      int chapterId, int recitationId) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return db?.recitationVersesDao
+        .findRecitationVersesChapterList(chapterId, recitationId);
+  }
+
   Future<RecitationVerses?> fetchRecitationVersesById(
       int recitationVersesId) async {
     final db = await QuranDatabaseSource.instance.database;

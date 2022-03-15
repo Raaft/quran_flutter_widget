@@ -72,17 +72,6 @@ class QuranCubit extends Cubit<QuranState> {
     emit(OnLongPressState());
   }
 
-  final List<String> quran = [
-    'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ  ١	',
-    'ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ ٣',
-    'الحمد لله رب العالمين	',
-    'الرحمن الرحيم	',
-    'مالك يوم الدين	',
-    'إياك نعبد وإياك نستعين	',
-    'اهدنا الصراط المستقيم	',
-    'صراط الذين أنعمت عليهم غير المغضوب عليهم ولا الضالين	'
-  ];
-
   void changePage(int index, int sizePage, int chapterId) {
     if (index < 2) {
       try {

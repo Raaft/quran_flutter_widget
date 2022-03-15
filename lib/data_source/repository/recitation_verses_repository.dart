@@ -16,8 +16,30 @@ class RecitationVersesRepository {
     if ((recitationsVersesList != null && recitationsVersesList.isNotEmpty)) {
       return recitationsVersesList;
     } else {
-      final MyResponse<RecitationVerses> response = await _recitationVersesApi
-          .fetchRecitationVersesList(recitationId, chapterId);
+      final MyResponse<RecitationVerses> response =
+          await _recitationVersesApi.fetchRecitationVersesList();
+      if (response.code == Apis.codeSUCCESS) {
+        recitationsVersesList = response.data as List<RecitationVerses>;
+        _recitationVersesLocalDataSource
+            .saveRecitationsVersesList(recitationsVersesList);
+      }
+      return recitationsVersesList;
+    }
+  }
+
+  Future<List<RecitationVerses>?> fetchRecitationsVersesChapterList(
+      int recitationId, int chapterId) async {
+    List<RecitationVerses>? recitationsVersesList =
+        await _recitationVersesLocalDataSource
+            .fetchRecitationsVersesChapterList(chapterId, recitationId);
+    if ((recitationsVersesList != null && recitationsVersesList.isNotEmpty)) {
+      return recitationsVersesList;
+    } else {
+      final MyResponse<RecitationVerses> response =
+          await _recitationVersesApi.fetchRecitationVersesList(
+        recitationId: recitationId,
+        chapterId: chapterId,
+      );
       if (response.code == Apis.codeSUCCESS) {
         recitationsVersesList = response.data as List<RecitationVerses>;
         _recitationVersesLocalDataSource

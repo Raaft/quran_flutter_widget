@@ -5,7 +5,7 @@ import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
 @Entity(tableName: 'RecitationVerses', foreignKeys: [
   ForeignKey(
-      childColumns: ['recitstion'], parentColumns: ['id'], entity: Recitation),
+      childColumns: ['recitation'], parentColumns: ['id'], entity: Recitation),
   ForeignKey(childColumns: ['chapter'], parentColumns: ['id'], entity: Chapter),
 ])
 class RecitationVerses extends BaseModel {

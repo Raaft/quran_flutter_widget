@@ -13,8 +13,8 @@ class RecitationLocalDataSource {
     int? narrationId,
   }) async {
     final db = await QuranDatabaseSource.instance.database;
-    if (narrationId != null) {
-      return db?.recitationDao.findRecitationInNarrationId(narrationId);
+    if (narrationId != null && reciterId != null) {
+      return db?.recitationDao.findRecitations(narrationId, reciterId);
     }
     return db?.recitationDao.findAllRecitations();
   }
