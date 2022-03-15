@@ -38,7 +38,10 @@ class _QuranPageState extends State<QuranPage> {
   int firstIndex = 0;
   int lastIndex = 0;
   int firstIndexPage = 0;
+
   int lastIndexPage = 0;
+
+  bool isFist = true;
 
   void onTap(index, indexPage, pages) {
     if (widget.cubit.selectedIndex.containsKey(indexPage) &&
@@ -103,6 +106,12 @@ class _QuranPageState extends State<QuranPage> {
     return BlocBuilder<QuranCubit, QuranState>(
       builder: (context, state) {
         print('State Is ' + state.toString());
+
+        if (state is PagesFetchedState && isFist) {
+          widget.getPage(state.pages[0]);
+          isFist = false;
+        }
+
         return Stack(
           children: [
             if (state is PagesFetchLoadingState)
@@ -206,8 +215,6 @@ class _QuranPageState extends State<QuranPage> {
     } else {
       return const Text('Empty data');
     }
-
-    widget.getPage(pages[0]);
 
     return Container(
         color: Colors.white,

@@ -1320,7 +1320,7 @@ class _$ChaptersPageDao extends ChaptersPageDao {
   @override
   Future<List<ChaptersPage>> searchInChapter(int pageId) async {
     return _queryAdapter.queryList(
-        'SELECT DISTINCT(pageId),* FROM Chapter WHERE pageId = ?1',
+        'SELECT DISTINCT(pageId),* FROM ChaptersPage WHERE pageId = ?1',
         mapper: (Map<String, Object?> row) => ChaptersPage(
             id: row['id'] as int?,
             pageId: row['pageId'] as int?,
