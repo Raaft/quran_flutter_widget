@@ -118,7 +118,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Reciter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `chapter` INTEGER, `record` TEXT, `recordLocal` TEXT, FOREIGN KEY (`recitstion`) REFERENCES `Recitation` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `chapter` INTEGER, `record` TEXT, `recordLocal` TEXT,  PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, `verse_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
@@ -1133,6 +1133,8 @@ class _$VerseDao extends VerseDao {
             verseNumber: row['verse_number'] as int?),
         arguments: [page]);
   }
+
+  //findAllVersesChapterPageSELECT * FROM Verse WHERE page = 1 and chapter = 1 and narration = 1 and book = 1;
 
   @override
   Future<List<Verse>> findAllVersesChapterPage(
