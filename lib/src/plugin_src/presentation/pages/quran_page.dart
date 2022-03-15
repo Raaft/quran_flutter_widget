@@ -207,16 +207,16 @@ class _QuranPageState extends State<QuranPage> {
       return const Text('Empty data');
     }
 
+    widget.getPage(pages[0]);
+
     return Container(
         color: Colors.white,
         padding: const EdgeInsets.all(8),
         child: PageView.builder(
           itemCount: pages.length,
-          /*   onPageChanged: (index) {
-            widget.cubit.changePage(
-                index, pages.length, pages[index].chapters![0].id ?? 0);
+          onPageChanged: (index) {
             widget.getPage(pages[index]);
-          },*/
+          },
           itemBuilder: (context, indexPage) => Stack(
             children: [
               ListView.builder(

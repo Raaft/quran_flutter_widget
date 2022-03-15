@@ -1,4 +1,5 @@
 import 'package:quran_widget_flutter/data_source/local/quran_database_source.dart';
+import 'package:quran_widget_flutter/model/chapters_page.dart';
 import 'package:quran_widget_flutter/model/page.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 
@@ -37,6 +38,11 @@ class PageLocalDataSource {
   fetchVerseById(int pageId) async {
     final db = await QuranDatabaseSource.instance.database;
     return await db?.verseDao.findAllVersesPage(pageId);
+  }
+
+  Future<List<ChaptersPage>?>? fetchCahoterPageById(int pageId) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return await db?.chaptersPageDao.searchInChapter(pageId);
   }
 
   fetchChaptersById(int pageId) async {

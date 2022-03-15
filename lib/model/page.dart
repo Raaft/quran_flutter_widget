@@ -1,5 +1,4 @@
 import 'package:floor/floor.dart';
-
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/chapters_page.dart';
 import 'package:quran_widget_flutter/model/glyph.dart';
@@ -125,5 +124,10 @@ class Page extends BaseModel {
         verses: verses,
         glyphs: glyphs,
         chapters: chaptersPage);
+  }
+
+  @override
+  String toString() {
+    return 'Page(id: $id, pageNumber: $pageNumber, narrationId: $narrationId, bookId: $bookId, partId: $partId, subPartId: $subPartId, image: $image, localImage: $localImage,  chapters: $chapters)';
   }
 }
