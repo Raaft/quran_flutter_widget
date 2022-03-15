@@ -6,7 +6,7 @@ import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 /**
  * , foreignKeys: [
   ForeignKey(
-      childColumns: ['recitstion'], parentColumns: ['id'], entity: Recitation),
+      childColumns: ['recitation'], parentColumns: ['id'], entity: Recitation),
   ForeignKey(childColumns: ['chapter'], parentColumns: ['id'], entity: Chapter),
 ]
  */

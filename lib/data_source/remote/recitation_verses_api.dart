@@ -5,10 +5,11 @@ import 'package:quran_widget_flutter/network_helper/dio_utils.dart';
 
 class RecitationVersesApi {
   Future<MyResponse<RecitationVerses>> fetchRecitationVersesList(
-      int recitationId, int chapterId) async {
+      {int? recitationId, int? chapterId}) async {
     var response = await DioUtils.request(
-        DioUtils.requestGET, '${Apis.fetchAllRECITATIONS}/verses/',
+        DioUtils.requestGET, '${Apis.fetchAllRECITATIONS}verse/',
         queryParameters: {'chapter': chapterId, 'recitation': recitationId});
+
     if (response != null) {
       if (response.statusCode == 200) {
         return MyResponse<RecitationVerses>.fromJson(response.data, Apis.list);
