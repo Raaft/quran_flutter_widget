@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:quran_widget_flutter/data_source/local/local_data_source/page_local_data_source.dart';
 import 'package:quran_widget_flutter/data_source/remote/page_api.dart';
 import 'package:quran_widget_flutter/model/apis_response/my_response.dart';
@@ -23,6 +25,8 @@ class PageRepository {
             chapterid: chapterId,
             narrationId: narrationId,
             pageId: element.id);
+        element.chapters =
+            await _pageLocalDataSource.fetchCahoterPageById(element.id ?? 0);
       }
 
       return pagesList;

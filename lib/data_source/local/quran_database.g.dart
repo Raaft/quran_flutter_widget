@@ -118,7 +118,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Reciter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `chapter` INTEGER, `record` TEXT, `recordLocal` TEXT, FOREIGN KEY (`recitation`) REFERENCES `Recitation` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`chapter`) REFERENCES `Chapter` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `chapter` INTEGER, `record` TEXT, `recordLocal` TEXT,  PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, `verse_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
@@ -1149,6 +1149,8 @@ class _$VerseDao extends VerseDao {
         arguments: [page]);
   }
 
+  //findAllVersesChapterPageSELECT * FROM Verse WHERE page = 1 and chapter = 1 and narration = 1 and book = 1;
+
   @override
   Future<List<Verse>> findAllVersesChapterPage(
       int page, int chapter, int narration, int book) async {
@@ -1314,7 +1316,8 @@ class _$GlyphDao extends GlyphDao {
 
 class _$ChaptersPageDao extends ChaptersPageDao {
   _$ChaptersPageDao(this.database, this.changeListener)
-      : _chaptersPageInsertionAdapter = InsertionAdapter(
+      : _queryAdapter = QueryAdapter(database),
+        _chaptersPageInsertionAdapter = InsertionAdapter(
             database,
             'ChaptersPage',
             (ChaptersPage item) => <String, Object?>{
@@ -1327,7 +1330,20 @@ class _$ChaptersPageDao extends ChaptersPageDao {
 
   final StreamController<String> changeListener;
 
+  final QueryAdapter _queryAdapter;
+
   final InsertionAdapter<ChaptersPage> _chaptersPageInsertionAdapter;
+
+  @override
+  Future<List<ChaptersPage>> searchInChapter(int pageId) async {
+    return _queryAdapter.queryList(
+        'SELECT DISTINCT(pageId),* FROM ChaptersPage WHERE pageId = ?1',
+        mapper: (Map<String, Object?> row) => ChaptersPage(
+            id: row['id'] as int?,
+            pageId: row['pageId'] as int?,
+            chapterId: row['chapterId'] as int?),
+        arguments: [pageId]);
+  }
 
   @override
   Future<void> insertChaptersPage(ChaptersPage chaptersPage) async {
