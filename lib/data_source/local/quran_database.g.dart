@@ -118,7 +118,7 @@ class _$QuranDatabase extends QuranDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Reciter` (`id` INTEGER, `name` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `chapter` INTEGER, `record` TEXT, `recordLocal` TEXT,  PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `RecitationVerses` (`id` INTEGER, `verse_number` INTEGER, `recitation` INTEGER, `chapter` INTEGER, `record` TEXT, `recordLocal` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Verse` (`id` INTEGER, `text` TEXT, `uthmanic_text` TEXT, `line_start` INTEGER, `line_end` INTEGER, `image` TEXT, `narration` INTEGER, `chapter` INTEGER, `book` INTEGER, `part` INTEGER, `page` INTEGER, `verse_number` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
@@ -1149,8 +1149,6 @@ class _$VerseDao extends VerseDao {
         arguments: [page]);
   }
 
-  //findAllVersesChapterPageSELECT * FROM Verse WHERE page = 1 and chapter = 1 and narration = 1 and book = 1;
-
   @override
   Future<List<Verse>> findAllVersesChapterPage(
       int page, int chapter, int narration, int book) async {
@@ -1354,7 +1352,7 @@ class _$ChaptersPageDao extends ChaptersPageDao {
 
 class _$ChapterDownloadDao extends ChapterDownloadDao {
   _$ChapterDownloadDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _chapterDownloadInsertionAdapter = InsertionAdapter(
             database,
             'ChapterDownload',
@@ -1365,8 +1363,7 @@ class _$ChapterDownloadDao extends ChapterDownloadDao {
                   'recitationId': item.recitationId,
                   'chapterId': item.chapterId,
                   'downloaded': item.downloaded ? 1 : 0
-                },
-            changeListener),
+                }),
         _chapterDownloadUpdateAdapter = UpdateAdapter(
             database,
             'ChapterDownload',
@@ -1378,8 +1375,7 @@ class _$ChapterDownloadDao extends ChapterDownloadDao {
                   'recitationId': item.recitationId,
                   'chapterId': item.chapterId,
                   'downloaded': item.downloaded ? 1 : 0
-                },
-            changeListener),
+                }),
         _chapterDownloadDeletionAdapter = DeletionAdapter(
             database,
             'ChapterDownload',
@@ -1391,8 +1387,7 @@ class _$ChapterDownloadDao extends ChapterDownloadDao {
                   'recitationId': item.recitationId,
                   'chapterId': item.chapterId,
                   'downloaded': item.downloaded ? 1 : 0
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -1419,9 +1414,8 @@ class _$ChapterDownloadDao extends ChapterDownloadDao {
   }
 
   @override
-  Stream<ChapterDownload?> findChapterDownloadById(int id) {
-    return _queryAdapter.queryStream(
-        'SELECT * FROM ChapterDownload WHERE id = ?1',
+  Future<ChapterDownload?> findChapterDownloadById(int id) async {
+    return _queryAdapter.query('SELECT * FROM ChapterDownload WHERE id = ?1',
         mapper: (Map<String, Object?> row) => ChapterDownload(
             id: row['id'] as int?,
             narrationId: row['narrationId'] as int?,
@@ -1429,9 +1423,7 @@ class _$ChapterDownloadDao extends ChapterDownloadDao {
             recitationId: row['recitationId'] as int?,
             chapterId: row['chapterId'] as int?,
             downloaded: (row['downloaded'] as int) != 0),
-        arguments: [id],
-        queryableName: 'ChapterDownload',
-        isView: false);
+        arguments: [id]);
   }
 
   @override

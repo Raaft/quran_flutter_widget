@@ -124,14 +124,20 @@ class DataSource {
   Future<Reciter?> fetchReciterById(int reciterId) =>
       _reciterRepository.fetchReciterById(reciterId);
 
-  Future<void> downloadChapter(
-      {required int chapterId,
-      required int recitationId,
-      Function(double)? retunProgress}) async {
+  Future<void> downloadChapter({
+    required int chapterId,
+    required int recitationId,
+    required int reciterId,
+    required int narrationId,
+    Function(double)? retunProgress,
+  }) async {
     DownloadChapter.startDownload(
-        chapterId: chapterId,
-        recitationId: recitationId,
-        retunProgress: retunProgress);
+      chapterId: chapterId,
+      recitationId: recitationId,
+      retunProgress: retunProgress,
+      reciterId: reciterId,
+      narrationId: narrationId,
+    );
   }
 
   Future<void> downloadBook(

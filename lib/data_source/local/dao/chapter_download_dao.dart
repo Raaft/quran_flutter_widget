@@ -7,7 +7,7 @@ abstract class ChapterDownloadDao {
   Future<List<ChapterDownload>> findAllChapterDownloads();
 
   @Query('SELECT * FROM ChapterDownload WHERE id = :id')
-  Stream<ChapterDownload?> findChapterDownloadById(int id);
+  Future<ChapterDownload?> findChapterDownloadById(int id);
 
   @insert
   Future<void> insertChapterDownload(ChapterDownload chapterDownload);
