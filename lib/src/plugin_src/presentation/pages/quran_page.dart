@@ -173,9 +173,10 @@ class _QuranPageState extends State<QuranPage> {
                       child: Text(
                         pages[indexPage].verses![index].uthmanicText.toString(),
                         style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontFamily: Q.qaloon),
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontFamily: 'Hafs17',
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -307,7 +308,7 @@ class _QuranPageState extends State<QuranPage> {
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 25,
-                        fontFamily: Q.hafs15,
+                        fontFamily: Q.hafs17,
                       ),
                       textAlign: TextAlign.start,
                     ),

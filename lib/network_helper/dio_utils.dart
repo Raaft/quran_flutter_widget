@@ -168,7 +168,7 @@ class DioUtils {
       response = error.response;
     }
 
-    printResponse(url, response);
+    // printResponse(url, response);
 
     /* if (response != null && response.statusCode == 401) {
       await QuranWidgetInit.init(
@@ -193,13 +193,13 @@ class DioUtils {
     return response;
   }
 
-  static printResponse(String url, Response? response) {
-    if (response != null) {
-      print('$url : ${response.statusCode} ${response.data}');
-    } else {
-      print('$url : response == null');
-    }
-  }
+  // static printResponse(String url, Response? response) {
+  //   if (response != null) {
+  //     print('$url : ${response.statusCode} ${response.data}');
+  //   } else {
+  //     print('$url : response == null');
+  //   }
+  // }
 
   static clearCache() {
     dio?.interceptors.clear();
