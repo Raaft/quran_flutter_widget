@@ -16,6 +16,7 @@ import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/model/recitation_verses.dart';
 import 'package:quran_widget_flutter/model/reciter.dart';
+import 'package:quran_widget_flutter/model/verse.dart';
 import 'package:quran_widget_flutter/plugin_auth/quran_widget_init.dart';
 
 class DataSource {
@@ -47,6 +48,9 @@ class DataSource {
 
   Future<Narration?> fetchNarrationById(int narrationId) =>
       _narrationRepository.fetchNarrationById(narrationId);
+
+  Future<Verse?>? fetchVerseById(int vsersId) async =>
+      await _pageRepository.fetchVerseById(vsersId);
 
   Future<List<Book>?> fetchBooksList({String? qurey, int? narrationId}) =>
       _bookRepository.fetchBooksList(qurey: qurey, narrationId: narrationId);

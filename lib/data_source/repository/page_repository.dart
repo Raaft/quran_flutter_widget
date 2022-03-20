@@ -4,6 +4,7 @@ import 'package:quran_widget_flutter/data_source/local/local_data_source/page_lo
 import 'package:quran_widget_flutter/data_source/remote/page_api.dart';
 import 'package:quran_widget_flutter/model/apis_response/my_response.dart';
 import 'package:quran_widget_flutter/model/page.dart';
+import 'package:quran_widget_flutter/model/verse.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
 
 class PageRepository {
@@ -52,7 +53,7 @@ class PageRepository {
     if ((pagesList != null && pagesList.isNotEmpty)) {
       for (var element in pagesList) {
         element.verses =
-            await _pageLocalDataSource.fetchVerseById(element.id ?? 0);
+            await _pageLocalDataSource.fetchVerseByPageId(element.id ?? 0);
         //print('getVerse ${element.verses}');
       }
 
@@ -85,7 +86,7 @@ class PageRepository {
   Future<Page?> fetchPageById(int pageId) async {
     Page? page = await _pageLocalDataSource.fetchPageById(pageId);
     if (page != null) {
-      page.verses = await _pageLocalDataSource.fetchVerseById(page.id ?? 0);
+      page.verses = await _pageLocalDataSource.fetchVerseByPageId(page.id ?? 0);
       //print('getVerse ${page.verses}');
       return page;
     } else {
@@ -95,5 +96,13 @@ class PageRepository {
       }
       return page;
     }
+  }
+
+  Future<Verse?> fetchVerseById(int verseId) async {
+    Verse? verse = await _pageLocalDataSource.fetchVerseById(verseId);
+    if (verse != null) {
+      return verse;
+    }
+    return null;
   }
 }

@@ -35,9 +35,14 @@ class PageLocalDataSource {
     return db?.pageDao.findPageById(pageId).first;
   }
 
-  fetchVerseById(int pageId) async {
+  fetchVerseByPageId(int pageId) async {
     final db = await QuranDatabaseSource.instance.database;
     return await db?.verseDao.findAllVersesPage(pageId);
+  }
+
+  Future<Verse?>? fetchVerseById(int verseId) async {
+    final db = await QuranDatabaseSource.instance.database;
+    return await db?.verseDao.findVerseById(verseId).first;
   }
 
   Future<List<ChaptersPage>?>? fetchCahoterPageById(int pageId) async {
