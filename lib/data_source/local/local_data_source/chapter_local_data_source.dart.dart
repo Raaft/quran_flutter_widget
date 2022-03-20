@@ -35,4 +35,9 @@ class ChapterLocalDataSource {
       await db?.chapterDao.deleteChapter(chapter);
     }
   }
+
+  Future<void> updateChapter(Chapter chapter) async {
+    final db = await QuranDatabaseSource.instance.database;
+    await db?.chapterDao.updateChapter(chapter);
+  }
 }
