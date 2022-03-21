@@ -32,6 +32,7 @@ class RecitationVersesRepository {
     List<RecitationVerses>? recitationsVersesList =
         await _recitationVersesLocalDataSource
             .fetchRecitationsVersesChapterList(chapterId, recitationId);
+
     if ((recitationsVersesList != null && recitationsVersesList.isNotEmpty)) {
       return recitationsVersesList;
     } else {
@@ -42,8 +43,8 @@ class RecitationVersesRepository {
       );
       if (response.code == Apis.codeSUCCESS) {
         recitationsVersesList = response.data as List<RecitationVerses>;
-        _recitationVersesLocalDataSource
-            .saveRecitationsVersesList(recitationsVersesList);
+        // _recitationVersesLocalDataSource
+        //     .saveRecitationsVersesList(recitationsVersesList);
       }
       return recitationsVersesList;
     }

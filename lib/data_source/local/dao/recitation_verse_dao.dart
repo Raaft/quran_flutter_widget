@@ -10,7 +10,7 @@ abstract class RecitationVersesDao {
   Stream<RecitationVerses?> findRecitationVersesById(int id);
 
   @Query(
-      'SELECT * FROM RecitationVerses WHERE recitation = :recitationId and chapter = :chapterId')
+      'SELECT * FROM RecitationVerses WHERE recitation = :recitationId AND chapter = :chapterId')
   Future<List<RecitationVerses>> findRecitationVersesChapterList(
       int chapterId, int recitationId);
 

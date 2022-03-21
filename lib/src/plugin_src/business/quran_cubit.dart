@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:quran_widget_flutter/model/page.dart';
+import 'package:quran_widget_flutter/model/verse.dart';
 
 import '../../../data_source/data_source.dart';
 
@@ -12,6 +13,7 @@ class QuranCubit extends Cubit<QuranState> {
   QuranCubit get(context) => BlocProvider.of(context);
 
   Map<int, List<int>> selectedIndex = {};
+  List<Verse> selectedVerses = [];
 
   List<Page> pages = [];
   bool selected = false;

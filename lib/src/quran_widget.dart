@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_widget_flutter/model/page.dart' as objectpage;
+import 'package:quran_widget_flutter/model/verse.dart';
 
 import 'package:quran_widget_flutter/src/plugin_src/business/quran_cubit.dart';
 import 'package:quran_widget_flutter/src/plugin_src/data/models/page_type.dart';
@@ -27,12 +28,16 @@ class QuranWidget extends StatelessWidget {
   final int narrationId;
 
   final Function(
-          String data, bool isVerSelected, Map<int, List<int>>? selectedIndex)
-      onTap;
+    String data,
+    bool isVerSelected,
+    Map<int, List<int>>? selectedIndex,
+    List<Verse>? selectedVerses,
+  ) onTap;
   final Function(
     String data,
     bool isVerSelected,
     Map<int, List<int>>? selectedIndex,
+    List<Verse>? selectedVerses,
   ) onLongTap;
   final Function(objectpage.Page data) getPage;
 

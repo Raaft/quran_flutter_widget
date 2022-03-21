@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:quran_widget_flutter/helper/q.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
+import 'package:quran_widget_flutter/model/verse.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
 class QuranPage extends StatefulWidget {
@@ -14,12 +15,13 @@ class QuranPage extends StatefulWidget {
     required this.getPage,
   }) : super(key: key);
 
+  final Function(String data, bool isSelextedVerse,
+      Map<int, List<int>>? selectedIndex, List<Verse>? selectedVerses) onTap;
   final Function(
-          String data, bool isSelextedVerse, Map<int, List<int>>? selectedIndex)
-      onTap;
-  final Function(
-          String data, bool isSelextedVerse, Map<int, List<int>>? selectedIndex)
-      onLongTap;
+      String data,
+      bool isSelextedVerse,
+      Map<int, List<int>>? selectedIndex,
+      List<Verse>? selectedVerses) onLongTap;
   final Function(page.Page data) getPage;
 
   final QuranCubit cubit;
@@ -47,6 +49,7 @@ class _QuranPageState extends State<QuranPage> {
     if (widget.cubit.selectedIndex.containsKey(indexPage) &&
         widget.cubit.selectedIndex[indexPage]!.contains(index)) {
       widget.cubit.selectedIndex.clear();
+      widget.cubit.selectedVerses.clear();
       isSelectedVeirse = false;
       firstIndex = 0;
       lastIndex = 0;
@@ -60,6 +63,8 @@ class _QuranPageState extends State<QuranPage> {
         widget.cubit.selectedIndex.addAll({
           indexPage: [index]
         });
+
+        widget.cubit.selectedVerses.add(pages[indexPage].verses![index]);
         isSelectedVeirse = true;
       }
       if (isSelectedVeirse) {
@@ -87,12 +92,14 @@ class _QuranPageState extends State<QuranPage> {
               idx <= lastIndex;
               idx++) {
             widget.cubit.selectedIndex[i]!.add(idx);
+            widget.cubit.selectedVerses.add(pages[indexPage].verses![idx]);
           }
         } else {
           for (int idx = (i == firstIndexPage ? firstIndex : 0);
               idx <= pages[i].verses!.length - 1;
               idx++) {
             widget.cubit.selectedIndex[i]!.add(idx);
+            widget.cubit.selectedVerses.add(pages[indexPage].verses![idx]);
           }
         }
       }
@@ -239,6 +246,8 @@ class _QuranPageState extends State<QuranPage> {
                         widget.cubit.selectedIndex.addAll({
                           indexPage: [index]
                         });
+                        widget.cubit.selectedVerses
+                            .add(pages[indexPage].verses![index]);
                         isSelectedVeirse = true;
                       }
 
@@ -267,12 +276,16 @@ class _QuranPageState extends State<QuranPage> {
                               idx <= lastIndex;
                               idx++) {
                             widget.cubit.selectedIndex[i]!.add(idx);
+                            widget.cubit.selectedVerses
+                                .add(pages[indexPage].verses![idx]);
                           }
                         } else {
                           for (int idx = (i == firstIndexPage ? firstIndex : 0);
                               idx <= pages[i].verses!.length - 1;
                               idx++) {
                             widget.cubit.selectedIndex[i]!.add(idx);
+                            widget.cubit.selectedVerses
+                                .add(pages[indexPage].verses![idx]);
                           }
                         }
                       }
@@ -284,6 +297,7 @@ class _QuranPageState extends State<QuranPage> {
                       pages[indexPage].verses![index].uthmanicText.toString(),
                       widget.cubit.selectedIndex.isNotEmpty,
                       widget.cubit.selectedIndex,
+                      widget.cubit.selectedVerses,
                     );
                   },
                   onTap: () {
@@ -294,6 +308,7 @@ class _QuranPageState extends State<QuranPage> {
                       pages[indexPage].verses![index].uthmanicText.toString(),
                       widget.cubit.selectedIndex.isNotEmpty,
                       widget.cubit.selectedIndex,
+                      widget.cubit.selectedVerses,
                     );
                   },
                   child: Container(
