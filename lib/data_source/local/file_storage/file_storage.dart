@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,7 +26,7 @@ class FileStorage {
     return file;
   }
 
-  var dio = Dio();
+  Dio dio = Dio();
 
   Future<File?> download2(
       {required String url,
@@ -60,6 +61,39 @@ class FileStorage {
       await raf.close();
 
       return file;
+    } catch (e) {
+      print('error ' + e.toString());
+    }
+    return null;
+  }
+
+  Future<Uint8List?> download(
+      {required String url,
+      required Function(int, int) showDownloadProgress}) async {
+    print('Path $url');
+
+    try {
+      Response response = await Dio().get(
+        url,
+        onReceiveProgress: showDownloadProgress,
+
+        //Received data with List<int>
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+
+      //    authOptions?.headers?['Authorization'] = Apis.authorization;
+
+      print(response.headers);
+      List<int> intList =
+          response.data.cast<int>().toList(); //This is the magical line.
+      Uint8List data = Uint8List.fromList(intList);
+      return data;
     } catch (e) {
       print('error ' + e.toString());
     }
