@@ -68,6 +68,7 @@ class _QuranPageState extends State<QuranPage> {
         isSelectedVeirse = true;
       }
       if (isSelectedVeirse) {
+        widget.cubit.selectedVerses.clear();
         if (firstIndexPage >= lastIndexPage) {
           if (index < firstIndex) {
             lastIndex = firstIndex;
@@ -84,7 +85,7 @@ class _QuranPageState extends State<QuranPage> {
       print('List of versis before ${widget.cubit.selectedIndex}');
 
       // selectedIndex.clear();
-
+      // widget.cubit.selectedVerses.clear();
       for (int i = firstIndexPage; i <= lastIndexPage; i++) {
         widget.cubit.selectedIndex[i] = [];
         if (i == lastIndexPage) {
@@ -106,6 +107,7 @@ class _QuranPageState extends State<QuranPage> {
     }
 
     print('List of versis before ${widget.cubit.selectedIndex}');
+    print('List of selected versis ${widget.cubit.selectedVerses}');
   }
 
   @override
@@ -246,8 +248,6 @@ class _QuranPageState extends State<QuranPage> {
                         widget.cubit.selectedIndex.addAll({
                           indexPage: [index]
                         });
-                        widget.cubit.selectedVerses
-                            .add(pages[indexPage].verses![index]);
                         isSelectedVeirse = true;
                       }
 
@@ -267,6 +267,8 @@ class _QuranPageState extends State<QuranPage> {
 
                       print(
                           'List of versis before $widget.cubit.selectedIndex');
+                      print(
+                          'List of versis before ${widget.cubit.selectedVerses}');
 
                       // selectedIndex.clear();
                       for (int i = firstIndexPage; i <= lastIndexPage; i++) {
@@ -292,6 +294,8 @@ class _QuranPageState extends State<QuranPage> {
 
                       print(
                           'List of versis before $widget.cubit.selectedIndex');
+                      print(
+                          'List of versis before ${widget.cubit.selectedVerses}');
                     });
                     widget.onLongTap(
                       pages[indexPage].verses![index].uthmanicText.toString(),
