@@ -308,6 +308,10 @@ class _QuranPageState extends State<QuranPage> {
                     if (isSelectedVeirse) {
                       setState(() => onTap(index, indexPage, pages));
                     }
+
+                    print(
+                        'Data Return' + widget.cubit.selectedVerses.toString());
+
                     widget.onTap(
                       pages[indexPage].verses![index].uthmanicText.toString(),
                       widget.cubit.selectedIndex.isNotEmpty,
