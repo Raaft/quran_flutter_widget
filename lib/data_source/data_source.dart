@@ -1,5 +1,8 @@
 import 'package:quran_widget_flutter/data_source/local/file_storage/download_book.dart';
 import 'package:quran_widget_flutter/data_source/local/file_storage/download_chapter.dart';
+import 'package:quran_widget_flutter/data_source/remote/tafsir_api.dart';
+import 'package:quran_widget_flutter/data_source/remote/tajweed_api.dart';
+import 'package:quran_widget_flutter/data_source/remote/translation_api.dart';
 import 'package:quran_widget_flutter/data_source/repository/book_repository.dart';
 import 'package:quran_widget_flutter/data_source/repository/chapter_repository.dart';
 import 'package:quran_widget_flutter/data_source/repository/narration_repository.dart';
@@ -10,12 +13,15 @@ import 'package:quran_widget_flutter/data_source/repository/recitation_verses_re
 import 'package:quran_widget_flutter/data_source/repository/reciter_repository.dart';
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
+import 'package:quran_widget_flutter/model/explanation_model.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
 import 'package:quran_widget_flutter/model/page.dart' as page;
 import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/model/recitation_verses.dart';
 import 'package:quran_widget_flutter/model/reciter.dart';
+import 'package:quran_widget_flutter/model/tajweed_model.dart';
+import 'package:quran_widget_flutter/model/translation_model.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 import 'package:quran_widget_flutter/plugin_auth/quran_widget_init.dart';
 
@@ -35,6 +41,7 @@ class DataSource {
   final NarrationRepository _narrationRepository = NarrationRepository();
   final BookRepository _bookRepository = BookRepository();
 
+
   final ChapterRepository _chapterRepository = ChapterRepository();
   final PartRepository _partRepository = PartRepository();
   final PageRepository _pageRepository = PageRepository();
@@ -42,6 +49,18 @@ class DataSource {
   final RecitationVersesRepository _recitationVersesRepository =
       RecitationVersesRepository();
   final ReciterRepository _reciterRepository = ReciterRepository();
+
+  final TranslationApi _translationApi = TranslationApi();
+  final TajweedApi _tajweedApi = TajweedApi();
+  final TafseerApi _tafseerApi = TafseerApi();
+
+  Future<TajweedModel?> fetchTajweedList() =>
+_tajweedApi.fetchTajweedList();
+
+  Future<TranslationModel?> fetchTranslationList() =>
+_translationApi.fetchTranslationList();
+
+  Future<ExplanationModel?> fetchTafseerList() => _tafseerApi.fetchTafseerList();
 
   Future<List<Narration>?> fetchNarrationsList({String? qurey}) =>
       _narrationRepository.fetchNarrationsList(qurey: qurey);
@@ -70,11 +89,13 @@ class DataSource {
         bookId: bookId,
         narrationId: narrationId,
       );
+
   Future<Chapter?> fetchChapterById(int chapterId) =>
       _chapterRepository.fetchChapterById(chapterId);
 
   Future<List<Part>?> fetchPartsList({String? qurey}) =>
       _partRepository.fetchPartsList();
+
   Future<Part?> fetchPartById(int partId) =>
       _partRepository.fetchPartById(partId);
 
@@ -92,6 +113,7 @@ class DataSource {
   }) =>
       _pageRepository.fetchPagesListDown(
           bookId: bookId, narrationId: narrationId);
+
   Future<page.Page?> fetchPageById(int pageId) =>
       _pageRepository.fetchPageById(pageId);
 
@@ -112,6 +134,7 @@ class DataSource {
   }) =>
       _recitationVersesRepository.fetchRecitationsVersesList(
           recitationId, chapterId);
+
   Future<RecitationVerses?> fetchRecitationVersesById(
           int recitationId, int recitationVersesId) =>
       _recitationVersesRepository.fetchRecitationVersesById(
@@ -150,7 +173,7 @@ class DataSource {
         bookId: bookId, narrationId: narrationId, retunProgress: retunProgress);
   }
 
-  /*  VoidCallback onPressFun;
+/*  VoidCallback onPressFun;
 
   void onPress(VoidCallback onPress) {
     onPressFun= onPress;

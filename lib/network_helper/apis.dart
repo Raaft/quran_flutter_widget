@@ -27,4 +27,7 @@ class Apis extends Object {
   static String fetchAllPAGES = '${basePath}pages/';
   static String fetchAllRECITATIONS = '${basePath}recitations/';
   static String fetchAllRECITERS = '${basePath}reciters/';
+  static String fetchAllTRANSLATION = '${basePath}translations/';
+  static String fetchAllTAJWEED = '${basePath}tajweed/books/';
+  static String fetchAllTAFSEER = '${basePath}explanations/';
 }
