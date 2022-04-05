@@ -14,7 +14,7 @@ class TranslationApi {
     await DioUtils.request(DioUtils.requestGET, Apis.fetchAllTRANSLATION);
     if (response != null) {
       if (response.statusCode == 200) {
-        return MyResponse<TranslationModel>.fromJson(response.data, Apis.list,) as List<TranslationModel>;
+        return  MyResponse<TranslationModel>.fromJson(response.data, Apis.list,) as List<TranslationModel>;
       } else {
         return MyResponse<TranslationModel>.init(Apis.codeERROR, null, null)as List<TranslationModel>;
       }
