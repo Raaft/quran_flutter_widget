@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:quran_widget_flutter/data_source/local/local_data_source/page_local_data_source.dart';
 import 'package:quran_widget_flutter/data_source/remote/page_api.dart';

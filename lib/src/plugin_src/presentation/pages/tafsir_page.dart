@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
-import 'package:quran_widget_flutter/model/page.dart' as page;
 
 class TafsirPage extends StatefulWidget {
   const TafsirPage({
@@ -40,7 +39,6 @@ class _TafsirPageState extends State<TafsirPage> {
       builder: (context, state) {
         var cubit = QuranCubit().get(context);
         cubit.handelList();
-        List<page.Page> pages = cubit.pages;
         cubit.handelList();
         return Container(
             padding: const EdgeInsets.all(20),

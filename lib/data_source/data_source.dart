@@ -54,13 +54,13 @@ class DataSource {
   final TajweedApi _tajweedApi = TajweedApi();
   final TafseerApi _tafseerApi = TafseerApi();
 
-  Future<TajweedModel?> fetchTajweedList() =>
+  Future<List<TajweedModel>?> fetchTajweedList() =>
 _tajweedApi.fetchTajweedList();
 
-  Future<TranslationModel?> fetchTranslationList() =>
+  Future<List<TranslationModel>?>fetchTranslationList() =>
 _translationApi.fetchTranslationList();
 
-  Future<ExplanationModel?> fetchTafseerList() => _tafseerApi.fetchTafseerList();
+  Future<List<ExplanationModel>?> fetchTafseerList() => _tafseerApi.fetchTafseerList();
 
   Future<List<Narration>?> fetchNarrationsList({String? qurey}) =>
       _narrationRepository.fetchNarrationsList(qurey: qurey);

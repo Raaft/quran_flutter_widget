@@ -1,4 +1,6 @@
-class TranslationModel {
+import 'package:quran_widget_flutter/model/base_model.dart';
+
+class TranslationModel extends BaseModel{
   int? id;
   String? name;
   String? author;
@@ -13,12 +15,13 @@ class TranslationModel {
     language = json['language'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['author'] = this.author;
-    data['language'] = this.language;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['author'] = author;
+    data['language'] = language;
     return data;
   }
 }

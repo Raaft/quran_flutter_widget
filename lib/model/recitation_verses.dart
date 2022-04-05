@@ -1,8 +1,8 @@
 import 'package:floor/floor.dart';
 
 import 'package:quran_widget_flutter/model/base_model.dart';
-import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 
+// ignore: slash_for_doc_comments
 /**
  * , foreignKeys: [
   ForeignKey(

@@ -1,10 +1,6 @@
-import 'package:quran_widget_flutter/data_source/data_source.dart';
-import 'package:quran_widget_flutter/data_source/local/file_storage/file_storage.dart';
 import 'package:quran_widget_flutter/data_source/local/local_data_source/chapter_download_data_source.dart';
 import 'package:quran_widget_flutter/data_source/local/local_data_source/recitation_verses_local_data_source.dart';
-import 'package:quran_widget_flutter/helper/chash_helper.dart';
 import 'package:quran_widget_flutter/model/chapter_download.dart';
-import 'package:quran_widget_flutter/model/recitation_verses.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
 import 'package:quran_widget_flutter/quran_widget_flutter.dart';
 

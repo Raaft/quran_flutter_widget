@@ -1,6 +1,7 @@
 import 'package:quran_widget_flutter/model/base_model.dart';
 import 'package:quran_widget_flutter/model/book.dart';
 import 'package:quran_widget_flutter/model/chapter.dart';
+import 'package:quran_widget_flutter/model/explanation_model.dart';
 import 'package:quran_widget_flutter/model/glyph.dart';
 import 'package:quran_widget_flutter/model/narration.dart';
 import 'package:quran_widget_flutter/model/page.dart';
@@ -8,6 +9,8 @@ import 'package:quran_widget_flutter/model/part.dart';
 import 'package:quran_widget_flutter/model/recitation.dart';
 import 'package:quran_widget_flutter/model/recitation_verses.dart';
 import 'package:quran_widget_flutter/model/reciter.dart';
+import 'package:quran_widget_flutter/model/tajweed_model.dart';
+import 'package:quran_widget_flutter/model/translation_model.dart';
 import 'package:quran_widget_flutter/model/verse.dart';
 import 'package:quran_widget_flutter/network_helper/apis.dart';
 
@@ -22,7 +25,11 @@ final factories = <Type, Function>{
   RecitationVerses: (Map<String, dynamic> data) =>
       RecitationVerses.fromJson(data),
   Reciter: (Map<String, dynamic> data) => Reciter.fromJson(data),
-  Verse: (Map<String, dynamic> data) => Verse.fromJson(data)
+  Verse: (Map<String, dynamic> data) => Verse.fromJson(data),
+  TajweedModel: (Map<String, dynamic> data) => TajweedModel.fromJson(data),
+  ExplanationModel: (Map<String, dynamic> data) => ExplanationModel.fromJson(data),
+  TranslationModel: (Map<String, dynamic> data) => TranslationModel.fromJson(data)
+
 };
 
 class MyResponse<T extends BaseModel> extends Object {

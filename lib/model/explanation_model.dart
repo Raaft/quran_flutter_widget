@@ -1,4 +1,6 @@
-class ExplanationModel {
+import 'base_model.dart';
+
+class ExplanationModel extends BaseModel{
   int? id;
   String? name;
   int? narration;
@@ -11,6 +13,7 @@ class ExplanationModel {
     narration = json['narration'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;

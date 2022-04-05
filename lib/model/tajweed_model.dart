@@ -1,4 +1,6 @@
-class TajweedModel {
+import 'package:quran_widget_flutter/model/base_model.dart';
+
+class TajweedModel extends BaseModel{
   int? id;
   String? name;
   String? author;
@@ -13,6 +15,7 @@ class TajweedModel {
     narration = json['narration'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
